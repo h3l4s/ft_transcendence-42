@@ -6,6 +6,8 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app: NestExpressApplication = await NestFactory.create(AppModule);
+  var cors = require('cors')
+  app.use(cors()) // Use this after the variable declaration
   const config: ConfigService = app.get(ConfigService);
   const port: number = config.get<number>('PORT');
 
