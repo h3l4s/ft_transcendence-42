@@ -18,6 +18,7 @@ export class UserService {
 
     user.name = body.name;
     user.email = body.email;
+	user.password = body.password;
 
     return this.repository.save(user);
   }

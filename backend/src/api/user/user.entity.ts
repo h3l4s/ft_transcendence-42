@@ -11,6 +11,9 @@ export class User {
   @Column({ type: 'varchar', length: 120 })
   public email: string;
 
+  @Column({ type: 'varchar', length: 120 })
+  public password: string;
+
   @Column({ type: 'boolean', default: false })
   public isDeleted: boolean;
 
