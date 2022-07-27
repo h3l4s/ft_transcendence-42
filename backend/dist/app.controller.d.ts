@@ -1,6 +1,6 @@
-import { Router } from 'express';
+import { AppService } from './app.service';
 export declare class AppController {
-    router: Router;
-    login(res: any, req: any): Promise<void>;
-    wlcome(): Promise<string>;
+    private readonly appService;
+    constructor(appService: AppService);
+    getHello(): string;
 }

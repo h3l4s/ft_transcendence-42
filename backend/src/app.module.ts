@@ -1,16 +1,21 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { AuthModule } from './auth/auth.module';
-import { AuthModuleOptions } from '@nestjs/passport';
-import { UsersModule } from './users/users.module';
-import { AppGateway } from './app.gateway';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { config } from './orm.config';
+import { ApiModule } from './api/api.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { getEnvPath } from './common/helper/env.helper';
+import { TypeOrmConfigService } from './shared/typeorm/typeorm.service';
+
+const envFilePath: string = getEnvPath(`${__dirname}/common/envs`);
+
 @Module({
-  imports: [AuthModule,UsersModule,AuthModuleOptions,ConfigModule.forRoot(),TypeOrmModule.forRoot(config)],
+  imports: [
+    ConfigModule.forRoot({ envFilePath, isGlobal: true }),
+    TypeOrmModule.forRootAsync({ useClass: TypeOrmConfigService }),
+    ApiModule,
+  ],
   controllers: [AppController],
-  providers: [AppService,AuthModuleOptions,AppGateway],
+  providers: [AppService],
 })
 export class AppModule {}
