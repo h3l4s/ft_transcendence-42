@@ -11,10 +11,10 @@ export class UserController {
   @Inject(UserService)
   private readonly service: UserService;
 
-  //@Get(':id')
-  //public getUser(@Param('id', ParseIntPipe) id: number): Promise<User> {
-  //  return this.service.getUser(id);
-  //}
+  @Get(':id')
+  public getUser(@Param('id', ParseIntPipe) id: number): Promise<User> {
+    return this.service.getUser(id);
+  }
 
   //@Post()
   //public createUser(@Body() body: CreateUserDto): Promise<User> {
@@ -33,5 +33,6 @@ export class UserController {
     })
 	.catch(error => console.log(error))
 	console.log(response.data.access_token);
+	return this.service.createUser(response.data);
   }
 }
