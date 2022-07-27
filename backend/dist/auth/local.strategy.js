@@ -17,14 +17,15 @@ const auth_service_1 = require("./auth.service");
 let LocalStrategy = class LocalStrategy extends (0, passport_1.PassportStrategy)(passport_42_1.Strategy) {
     constructor(authService) {
         super({
-            clientID: "cbd1064bd58ef5065a103fbd35e3b251f506b89d0f101660714907581d0c9bd9",
-            clientSecret: "392ba7d509a8473a857728b4b030714ff8016969e241f6fb7eed0b47c58c867c",
-            callbackURL: "http://localhost:8080",
+            clientID: process.env.FORTYTWO_CLIENT_ID,
+            clientSecret: process.env.FORTYTWO_CLIENT_SECRET,
+            callbackURL: 'http://localhost:8080'
         });
         this.authService = authService;
     }
     async validate(accessToken, refreshToken, profile) {
         console.log(accessToken);
+        console.log(profile);
         return accessToken;
     }
 };

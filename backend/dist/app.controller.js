@@ -14,7 +14,6 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppController = void 0;
 const common_1 = require("@nestjs/common");
-const passport_1 = require("@nestjs/passport");
 let AppController = class AppController {
     async login(res, req) {
         res.redirect('http://localhost:3001/?token=' + req.user);
@@ -24,7 +23,6 @@ let AppController = class AppController {
     }
 };
 __decorate([
-    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('42')),
     (0, common_1.Get)('/auth/42/callback'),
     __param(0, (0, common_1.Res)()),
     __param(1, (0, common_1.Request)()),

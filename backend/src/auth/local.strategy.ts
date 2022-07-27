@@ -8,15 +8,16 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(private authService: AuthService)
   {
     super({
-        clientID: "cbd1064bd58ef5065a103fbd35e3b251f506b89d0f101660714907581d0c9bd9",
-        clientSecret: "",
-        callbackURL: "http://localhost:8080",
+        clientID: process.env.FORTYTWO_CLIENT_ID,
+		clientSecret: process.env.FORTYTWO_CLIENT_SECRET,
+		callbackURL: 'http://localhost:8080'
     });
   }
 
   async validate (accessToken: string, refreshToken: string, profile: any) 
   {
     console.log(accessToken);
+	console.log(profile);
       return accessToken;
   }
 }

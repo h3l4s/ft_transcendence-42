@@ -31,14 +31,16 @@ const theme = createTheme();
 export default function SignIn() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-	axios
-		.get("http://localhost:3000/auth/42/callback")
-		.then(response => console.log(response))
-		.catch(err => {
-			console.log("Sing up data submit error: ", err);
-		});
-  };
+    window.location.replace("https://api.intra.42.fr/oauth/authorize?client_id=cbd1064bd58ef5065a103fbd35e3b251f506b89d0f101660714907581d0c9bd9&redirect_uri=http%3A%2F%2Flocalhost%3A3001&response_type=code");
+	//var url = window.location;
+	//var access_token = new URLSearchParams(url.search).get('access_token');
+};
+const getCode = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+	var url = window.location;
+	var access_token = new URLSearchParams(url.search).get('code');
+	console.log(access_token);
+};
 
   return (
     <ThemeProvider theme={theme}>
@@ -52,6 +54,16 @@ export default function SignIn() {
               sx={{ mt: 3, mb: 2 }}
             >
 			Sign in
+			</Button>
+		</Box>
+		<Box component="form" onSubmit={getCode} noValidate sx={{ mt: 1 }}>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+			Get code
 			</Button>
 		</Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />

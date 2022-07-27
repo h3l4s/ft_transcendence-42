@@ -8,7 +8,6 @@ import { Router} from 'express';
 export class AppController {
 
   router: Router;
-  @UseGuards(AuthGuard('42'))
   @Get('/auth/42/callback')
   async login(@Res() res, @Request() req)
   {
