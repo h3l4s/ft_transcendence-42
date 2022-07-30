@@ -1,0 +1,317 @@
+* {
+	box-sizing: border-box;
+}
+
+body {
+	font-family: System, monospace;
+	margin: 3rem;
+	background-color: #96c471;
+}
+
+::placeholder {
+	color: #ffffff80
+}
+
+h1 {
+	color: #d8d8d8;
+}
+
+h2 {
+	color: white;
+	text-align: center;
+}
+
+p {
+	font: inherit;
+	color: white;
+	font-family: inherit;
+	font-size: large;
+	text-align: left;
+	margin-left: 1rem;
+}
+
+input {
+	font: inherit;
+}
+
+.truncate {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.span--center {
+	display: inline-block;
+	vertical-align: middle;
+	line-height: normal;
+}
+
+.span--card--user {
+	color: #fff;
+	position: relative;
+	display: inline-block;
+	margin-left: 3rem;
+	margin-right: 3rem;
+	left: 0;
+	right: 0;
+	text-align: left;
+	justify-content: left;
+	width: 80%;
+}
+
+.split--chan {
+	height: 100%;
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	overflow-x: hidden;
+	padding-top: 20px;
+}
+
+.split--left {
+	left: 0;
+	width: 20%;
+	background-color: #3a3a3a00;
+}
+
+.split--center {
+	left: 20%;
+	width: 62%;
+	background-color: #4e4e4e00;
+}
+
+.split--right {
+	width: 18%;
+	right: 0;
+	background-color: #25252500;
+}
+
+.btn {
+	display: inline-block;
+	font: inherit;
+	font-weight: bolder;
+	cursor: pointer;
+	position: relative;
+	padding: 0 1em;
+	background-origin: padding-box;
+	transition: all .2s ease-in;
+	background-size: auto;
+	background-color: #008000;
+	color: white;
+	border: 0;
+	border-right: 2px outset #032800;
+	border-bottom: 2px outset #032800;
+	box-shadow: .5em .5em 3px rgba(0, 0, 0, .5);
+	height: 1.4rem;
+	text-align: center;
+	margin: 0;
+}
+
+.btn:hover {
+	position: absolute;
+	transition-property: all;
+	transition-duration: 0.2s;
+	background-color: #32CD32;
+	box-shadow: 0 0 0 rgba(0, 0, 0, .5);
+	margin-left: 0.3rem;
+	margin-top: 0.3rem;
+}
+
+.btn:hover:after {
+	content: '';
+	position: absolute;
+	top: -0.3rem;
+	left: -0.3rem;
+	height: calc(100% + 0.3rem);
+	width: calc(100% + 0.3rem);
+	/*border: 3px solid blue;*/
+	box-sizing: border-box;
+}
+
+.btn--alt {
+	background-color: transparent;
+	color: #800040;
+}
+
+.btn--alt:hover {
+	background-color: #f8dae9;
+}
+
+.btn--cross {
+	background-color: #00000080;
+	border: 0px;
+	color: #51a30d;
+	margin-right: -90%;
+	border-radius: 10%;
+	width: 1.75rem;
+	height: 1.75rem;
+}
+
+.card {
+	position: relative;
+	cursor: default;
+	margin-left: 5%;
+	width: 90%;
+	background-color: #51a30d;
+	color: #fff;
+	padding: 0.85rem;
+}
+
+.card--alt {
+	background-color: #000000;
+	border: 8px double #ffffff80;
+	box-shadow: 0 0 0 4px #000000, 1em 1em 3px 0 rgb(0 0 0 / 50%);
+}
+
+.card--border {
+	border: 8px double #00000080;
+	box-shadow: 0 0 0 4px #51a30d, 1em 1em 3px 0 rgb(0 0 0 / 50%);
+}
+
+.card--input {
+	position: absolute;
+	cursor: text;
+	font-size: large;
+	background-color: rgb(0, 0, 0, 0.40);
+	color: white;
+	padding: 0.5rem;
+	border-style: solid;
+	border-width: 4px;
+	border-top-color: rgba(0, 0, 0, 0.75);
+	border-left-color: rgba(0, 0, 0, 0.75);
+	border-right-color: rgba(255, 255, 255, 0.25);
+	border-bottom-color: rgba(255, 255, 255, 0.25);
+	width: 96%;
+	margin-left: 2%;
+	margin-bottom: 2%;
+	left: 0;
+	bottom: 0;
+}
+
+.card--btn {
+	font-family: inherit;
+	font-weight: bold;
+	color: #d8d8d8;
+	font-size: large;
+	cursor: pointer;
+	background: #51a30d;
+	margin-top: 0.75rem;
+}
+
+.card--btn:hover {
+	background: #67c61a;
+	box-shadow: 0 0 0 4px #67c61a, 1em 1em 3px 0 rgb(0 0 0 / 50%);
+}
+
+.card--chat {
+	left: 0;
+	margin-left: 8px;
+	width: 97%;
+	height: 95vh;
+}
+
+.card--chan {
+	font-size: medium;
+	width: 85%;
+	padding: 0.5rem;
+}
+
+/*.modal {
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+	background-color: #51a30d;
+	padding: 1rem;
+	text-align: center;
+	width: 30rem;
+	z-index: 10;
+	position: fixed;
+	top: 10vh;
+	bottom: 10vh;
+	left: calc(50% - 15rem);
+	border: 8px double #00000080;
+	box-shadow: 0 0 0 4px #51a30d, 1em 1em 3px 0 rgb(0 0 0 / 50%);
+}*/
+
+.modal--profile {
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+	background-color: #51a30d;
+	padding: 1rem;
+	text-align: center;
+	width: 30rem;
+	z-index: 10;
+	position: fixed;
+	top: 10vh;
+	bottom: 10vh;
+	left: calc(50% - 15rem);
+	border: 8px double #00000080;
+	box-shadow: 0 0 0 4px #51a30d, 1em 1em 3px 0 rgb(0 0 0 / 50%);
+}
+
+.input--chat {
+	font-size: large;
+	background-color: rgb(255, 255, 255, 0.40);
+	color: white;
+	border-style: solid;
+	border-width: 4px;
+	border-top-color: rgba(0, 0, 0, 0.75);
+	border-left-color: rgba(0, 0, 0, 0.75);
+	border-right-color: rgba(255, 255, 255, 0.25);
+	border-bottom-color: rgba(255, 255, 255, 0.25);
+	width: 96%;
+	margin-left: 2%;
+	margin-bottom: 2%;
+}
+
+.input--search {
+	position: relative;
+	background-color: rgb(0, 0, 0, 0.40);
+	color: white;
+	padding: 0.5rem;
+	border-radius: 5rem;
+	border-style: solid;
+	border-width: 4px;
+	border-color: #000;
+	box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.80);
+	width: 85%;
+	margin-left: 5%;
+}
+
+.input--search::placeholder {
+	text-align: end;
+	color: rgba(255, 255, 255, 0.75)
+}
+
+.backdrop {
+	position: fixed;
+	z-index: 1;
+	background-color: rgba(0, 0, 0, 0.33);
+	width: 100%;
+	height: 100vh;
+	top: 0;
+	left: 0;
+}
+
+.img {
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+}
+
+.img--card--user {
+	position: absolute;
+	margin-left: 0;
+	top: 5%;
+	left: 2%;
+	width: 3rem;
+	height: 3rem;
+}
+
+.chan--title {
+	background-color: #ffffff80;
+	border: 8px double #ffffff80;
+	box-shadow: 0 0 0 4px #ffffff80;
+	color: #fff;
+	font-family: inherit;
+	font-weight: bolder;
+	margin: unset;
+	width: 100%;
+}
