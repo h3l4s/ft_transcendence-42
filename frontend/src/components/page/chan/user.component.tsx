@@ -1,9 +1,9 @@
 import { useState } from "react";
 
-import i_user from "../../interface/user.interface";
+import i_user from "../../../interface/user.interface";
 
-import Backdrop from "../backdrop";
-import ProfileModal from "./profile.modal";
+import Backdrop from "../../modal/backdrop";
+import ProfileModal from "../../modal/profile.modal";
 
 function Users(props: { connected_user: i_user, users: i_user[] })
 {

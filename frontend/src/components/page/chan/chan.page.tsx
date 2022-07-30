@@ -1,9 +1,9 @@
 import Chans from './chan.component';
 
-import '../../style/chan.css';
+import '../../../style/chan.css';
 
-import i_user from '../../interface/user.interface';
-import i_chan from '../../interface/chan.interface';
+import i_user from '../../../interface/user.interface';
+import i_chan from '../../../interface/chan.interface';
 
 function ChanPage(props: { connected_user: i_user })
 {

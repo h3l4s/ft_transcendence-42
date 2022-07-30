@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-import i_user from "../../interface/user.interface";
-import i_chan from "../../interface/chan.interface";
+import i_user from "../../../interface/user.interface";
+import i_chan from "../../../interface/chan.interface";
 
 function Chat(props: { obj: i_chan })
 {

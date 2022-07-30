@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 
-import SearchByName from "../../utils/search_by_name";
+import SearchByName from "../../../utils/search_by_name";
 
 import Chat from "./chat.component";
 import Users from "./user.component";
 
-import i_chan from "../../interface/chan.interface";
-import i_user from "../../interface/user.interface";
+import i_chan from "../../../interface/chan.interface";
+import i_user from "../../../interface/user.interface";
 
 function Chans(props: { connected_user: i_user, chans: i_chan[], users: i_user[] })
 {
