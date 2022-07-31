@@ -1,8 +1,15 @@
+import { useContext } from "react";
+
 import "../../style/chan.css"
+
+import { AuthContext } from "../../context/auth.context";
+
 import i_user from "../../interface/user.interface";
 
-function ProfileModal(props: { connected_user: i_user, user: i_user, onClose: () => void })
+function ProfileModal(props: { user: i_user, onClose: () => void })
 {
+	const { username } = useContext(AuthContext);
+
 	const w = (props.user.win ? props.user.win : 0)
 	const l = (props.user.lose ? props.user.lose : 0)
 	const rate = ((w / (w + l) * 100).toFixed(2));
@@ -26,7 +33,7 @@ function ProfileModal(props: { connected_user: i_user, user: i_user, onClose: ()
 				</p>
 			</div>
 			<div>
-				{props.connected_user.name !== props.user.name && <input className='card card--input' type='text' placeholder=' 💬' />}
+				{username !== props.user.name && <input className='card card--input' type='text' placeholder=' 💬' />}
 			</div>
 		</div >
 	);

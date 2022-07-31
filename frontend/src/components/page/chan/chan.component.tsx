@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 
+import i_chan from "../../../interface/chan.interface";
+import i_user from "../../../interface/user.interface";
+
 import SearchByName from "../../../utils/search_by_name";
 
 import Chat from "./chat.component";
 import Users from "./user.component";
 
-import i_chan from "../../../interface/chan.interface";
-import i_user from "../../../interface/user.interface";
-
-function Chans(props: { connected_user: i_user, chans: i_chan[], users: i_user[] })
+function Chans(props: { chans: i_chan[], users: i_user[] })	// need to get this element from db
 {
 	const [search, setSearch] = useState("");
 	const [selectedChan, setSelectedChan] = useState("global");
@@ -38,7 +38,7 @@ function Chans(props: { connected_user: i_user, chans: i_chan[], users: i_user[]
 
 			<div className='split split--chan split--right'>
 				<div className='split--center--div' /*this style doesn't exist*/>
-					<Users connected_user={props.connected_user} users={props.users} />
+					<Users users={props.users} />
 				</div>
 			</div >
 		</div >

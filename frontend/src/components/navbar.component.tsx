@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 import '../style/navbar.css';
 
 import { ReactComponent as Home } from '../icon/home-icon-silhouette-svgrepo-com.svg'
@@ -9,14 +11,14 @@ function NavBar()
 {
 	return (
 		<nav className='nav'>
-			<a href='/'><Home /></a>
-			<a href='/play' className='nav--middle'><Play /></a>
+			<Link to='/'><Home /></Link>
+			<Link to='/play' className='nav--middle'><Play /></Link>
 			<ul>
 				<li>
-					<a href='/chan'><Chat /></a>
+					<Link to='/chan'><Chat /></Link>
 				</li>
 				<li>
-					<a href={'/user'}><Profile /></a>
+					<Link to='/user'><Profile /></Link>
 				</li>
 			</ul>
 		</nav>

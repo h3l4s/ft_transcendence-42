@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,6 +14,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import axios from 'axios'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+import { AuthContext } from '../../../context/auth.context';
 
 function Copyright(props: any)
 {
@@ -31,6 +35,9 @@ const theme = createTheme();
 
 export default function SignIn()
 {
+	const { username, setUsername } = React.useContext(AuthContext);
+	const navigate = useNavigate();
+
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>
 	{
 		event.preventDefault();
@@ -69,6 +76,17 @@ export default function SignIn()
 					>
 						Get code
 					</Button>
+				</Box>
+				<Box>
+					{username ? (
+						<Button onClick={() => setUsername(null)}>test logout</Button>
+					) : (
+						<Button onClick={() =>
+						{
+							setUsername("adelille");
+							navigate("/");
+						}}>test login</Button>
+					)}
 				</Box>
 				<Copyright sx={{ mt: 8, mb: 4 }} />
 			</Container>
