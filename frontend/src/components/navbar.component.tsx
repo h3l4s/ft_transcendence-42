@@ -16,7 +16,7 @@ function NavBar()
 					<a href='/chan'><Chat /></a>
 				</li>
 				<li>
-					<a href='/profile'><Profile /></a>
+					<a href={'/user'}><Profile /></a>
 				</li>
 			</ul>
 		</nav>
