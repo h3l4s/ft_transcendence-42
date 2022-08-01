@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
+import './style/root.css'
 import './style/App.css';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 

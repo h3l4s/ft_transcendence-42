@@ -4,7 +4,6 @@
 
 body {
 	font-family: System, monospace;
-	background-color: #96c471;
 }
 
 ::placeholder {
@@ -61,10 +60,11 @@ input {
 .split--chan {
 	position: fixed;
 	z-index: 1;
-	top: 3rem;
-	height: 100%;
+	top: var(--nav-h);
+	height: calc(100% - var(--nav-h));
 	overflow-x: hidden;
-	padding-top: 2rem;
+	padding-top: 1.5rem;
+	padding-bottom: 16px;
 }
 
 .split--left {
@@ -127,19 +127,10 @@ input {
 	box-sizing: border-box;
 }
 
-.btn--alt {
-	background-color: transparent;
-	color: #800040;
-}
-
-.btn--alt:hover {
-	background-color: #f8dae9;
-}
-
 .btn--cross {
 	background-color: #00000080;
 	border: 0px;
-	color: #51a30d;
+	color: var(--main-color);
 	margin-right: -90%;
 	border-radius: 10%;
 	width: 1.75rem;
@@ -151,7 +142,7 @@ input {
 	cursor: default;
 	margin-left: 5%;
 	width: 90%;
-	background-color: #51a30d;
+	background-color: var(--main-color);
 	color: #fff;
 	padding: 0.85rem;
 }
@@ -164,7 +155,7 @@ input {
 
 .card--border {
 	border: 8px double #00000080;
-	box-shadow: 0 0 0 4px #51a30d, 1em 1em 3px 0 rgb(0 0 0 / 50%);
+	box-shadow: 0 0 0 4px var(--main-color), 1em 1em 3px 0 rgb(0 0 0 / 50%);
 }
 
 .card--input {
@@ -193,7 +184,7 @@ input {
 	color: #d8d8d8;
 	font-size: large;
 	cursor: pointer;
-	background: #51a30d;
+	background: var(--main-color);
 	margin-top: 0.75rem;
 }
 
@@ -217,7 +208,7 @@ input {
 
 /*.modal {
 	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-	background-color: #51a30d;
+	background-color: var(--main-color);
 	padding: 1rem;
 	text-align: center;
 	width: 30rem;
@@ -227,12 +218,12 @@ input {
 	bottom: 10vh;
 	left: calc(50% - 15rem);
 	border: 8px double #00000080;
-	box-shadow: 0 0 0 4px #51a30d, 1em 1em 3px 0 rgb(0 0 0 / 50%);
+	box-shadow: 0 0 0 4px var(--main-color), 1em 1em 3px 0 rgb(0 0 0 / 50%);
 }*/
 
 .modal--profile {
 	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-	background-color: #51a30d;
+	background-color: var(--main-color);
 	padding: 1rem;
 	text-align: center;
 	width: 30rem;
@@ -242,7 +233,7 @@ input {
 	bottom: 10vh;
 	left: calc(50% - 15rem);
 	border: 8px double #00000080;
-	box-shadow: 0 0 0 4px #51a30d, 1em 1em 3px 0 rgb(0 0 0 / 50%);
+	box-shadow: 0 0 0 4px var(--main-color), 1em 1em 3px 0 rgb(0 0 0 / 50%);
 }
 
 .input--chat {
