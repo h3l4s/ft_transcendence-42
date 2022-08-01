@@ -1,4 +1,11 @@
+@font-face {
+	src: url(font/Minitel.ttf);
+	font-family: minitel;
+}
+
 :root {
+	--main-font: System, monospace;
+	--alt-font: minitel;
 	--main-color: #51a30d;
 	--main-color-hover: greenyellow;
 	--alt-color: green;
@@ -15,7 +22,7 @@
 }
 
 body {
-	font-family: System, monospace;
+	font-family: var(--main-font);
 	background-color: var(--background-color);
 }
 

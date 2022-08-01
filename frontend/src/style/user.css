@@ -1,0 +1,64 @@
+.user--page {
+	background-color: var(--background-color);
+	color: #fff;
+	width: 100vw;
+	height: calc(100vh - var(--nav-h));
+	display: flex;
+	padding: 1rem 0 2rem 0;
+}
+
+.user--page--pic--title {
+	text-align: center;
+}
+
+.user--page-title {
+	font-weight: bolder;
+	font-size: 2rem;
+}
+
+.userstats {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.parstats {
+	font: inherit;
+	color: white;
+	font-family: inherit;
+	font-size: large;
+	text-align: left;
+	margin-left: 1rem;
+	margin-right: 1rem;
+}
+
+.typewriter {
+	width: 0;
+	overflow: hidden;
+	/* Ensures the content is not revealed until the animation */
+	border-right: .15em solid transparent;
+	/* The typwriter cursor */
+	white-space: nowrap;
+	/* Keeps the content on a single line */
+	/*margin: 0 auto;*/
+	/* Gives that scrolling effect as the typing happens */
+	animation: typing 0.75s steps(40, end);
+	animation-fill-mode: forwards;
+}
+
+/* The typing effect */
+@keyframes typing {
+	from {
+		border-color: var(--main-color-hover);
+		width: 0;
+	}
+
+	99% {
+		border-color: var(--main-color-hover);
+	}
+
+	to {
+		border-color: transparent;
+		width: 100%;
+	}
+}

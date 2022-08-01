@@ -12,7 +12,7 @@ function ChanPage()
 
 	users.push({ name: "glaverdu" });
 	users.push({ name: "idhiba" });
-	users.push({ name: "adelille", win: 42, lose: 21, profilePicPath: "profile_picture/adelille.png" });
+	users.push({ name: "adelille", elo: 1200, win: 42, lose: 21, xp: 312, profilePicPath: "profile_picture/adelille.png" });
 	users.push({ name: "very_long_text_very_long_text_very_long_text_very_long_text", profilePicPath: "profile_picture/default.png" });
 
 	users[0].profilePicPath = "profile_picture/default.png";

@@ -26,6 +26,7 @@ p {
 	font-size: large;
 	text-align: left;
 	margin-left: 1rem;
+	margin-right: 1rem;
 }
 
 input {
@@ -141,6 +142,7 @@ input {
 	position: relative;
 	cursor: default;
 	margin-left: 5%;
+	margin-right: 5%;
 	width: 90%;
 	background-color: var(--main-color);
 	color: #fff;
@@ -148,6 +150,8 @@ input {
 }
 
 .card--alt {
+	font-family: minitel;
+	font-size: small;
 	background-color: #000000;
 	border: 8px double #ffffff80;
 	box-shadow: 0 0 0 4px #000000, 1em 1em 3px 0 rgb(0 0 0 / 50%);
