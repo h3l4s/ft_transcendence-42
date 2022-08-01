@@ -16,6 +16,7 @@ import axios from 'axios'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import { AuthContext } from '../../../context/auth.context';
+import { textAlign } from '@mui/system';
 
 function Copyright(props: any)
 {
@@ -54,42 +55,62 @@ export default function SignIn()
 	};
 
 	return (
-		<ThemeProvider theme={theme}>
-			<Container component="main" maxWidth="xs">
-				<CssBaseline />
-				<Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-					<Button
-						type="submit"
-						fullWidth
-						variant="contained"
-						sx={{ mt: 3, mb: 2 }}
-					>
-						Sign in
-					</Button>
-				</Box>
-				<Box component="form" onSubmit={getCode} noValidate sx={{ mt: 1 }}>
-					<Button
-						type="submit"
-						fullWidth
-						variant="contained"
-						sx={{ mt: 3, mb: 2 }}
-					>
-						Get code
-					</Button>
-				</Box>
-				<Box>
-					{username ? (
-						<Button onClick={() => setUsername(null)}>test logout</Button>
-					) : (
-						<Button onClick={() =>
-						{
-							setUsername("adelille");
-							navigate("/");
-						}}>test login</Button>
-					)}
-				</Box>
-				<Copyright sx={{ mt: 8, mb: 4 }} />
-			</Container>
-		</ThemeProvider>
+		<div style={{ backgroundColor: "var(--background-color)", height: "calc(100vh - var(--nav-h))" }}>
+			<ThemeProvider theme={theme}>
+				<Container component="main" maxWidth="xs">
+					<CssBaseline />
+					<div style={{ paddingTop: "5rem", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+						<Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+							<Button
+								type="submit"
+								fullWidth
+								variant="contained"
+								sx={{ mt: 3, mb: 2 }}
+							>
+								Sign in
+							</Button>
+						</Box>
+						<Box component="form" onSubmit={getCode} noValidate sx={{ mt: 1 }}>
+							<Button
+								type="submit"
+								fullWidth
+								variant="contained"
+								sx={{ mt: 3, mb: 2 }}
+							>
+								Get code
+							</Button>
+						</Box>
+						<Box>
+							{username ? (
+								<Button
+									type="submit"
+									fullWidth
+									variant="contained"
+									sx={{ mt: 3, mb: 2 }}
+									onClick={() => setUsername(null)}
+								>
+									🚧 test logout 🚧
+								</Button>
+							) : (
+								<Button
+									type="submit"
+									fullWidth
+									variant="contained"
+									sx={{ mt: 3, mb: 2 }}
+									onClick={() =>
+									{
+										setUsername("adelille");
+										navigate("/");
+									}}
+								>
+									🚧 test login 🚧
+								</Button>
+							)}
+						</Box>
+					</div>
+					<Copyright style={{ position: "absolute", bottom: "0", right: "3rem" }} sx={{ mt: 8, mb: 4 }} />
+				</Container>
+			</ThemeProvider>
+		</div>
 	);
 }
