@@ -22,8 +22,7 @@ function UserPage()
 	user = (user.name === "adelille" ?
 		{ name: user.name, profilePicPath: "profile_picture/adelille.png", win: 42, lose: 21, elo: 1200, xp: 312 } :
 		{ name: user.name, profilePicPath: "profile_picture/default.png", win: 0, lose: 0, elo: 1000, xp: 0 });
-	if (!user.profilePicPath)
-		user.profilePicPath = "";
+	user.profilePicPath = "http://localhost:3000/" + user.profilePicPath;	// will get from db later
 
 	// need to check if user exist in db
 
