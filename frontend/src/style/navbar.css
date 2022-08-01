@@ -19,11 +19,11 @@ body {
 .nav svg {
 	width: 2.5rem;
 	height: 2.5rem;
-	fill: #32CD32;
+	fill: var(--icon-color);
 }
 
 .nav svg:hover {
-	fill: greenyellow;
+	fill: var(--icon-color-hover);
 }
 
 .nav ul {

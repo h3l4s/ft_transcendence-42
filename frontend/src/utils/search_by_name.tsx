@@ -20,4 +20,21 @@ function SearchByName(props: { objs: i_user[] | i_chan[], query: string, Constru
 	);
 }
 
-export default SearchByName;
+function SearchByExactName(props: { objs: i_user[] | i_chan[], query: string, Constructor: (props: { obj: i_user | i_chan }) => JSX.Element })
+{
+	let ret: JSX.Element[] = [];
+
+	for (let i = 0; i < Object.keys(props.objs).length; i++)
+	{
+		if (props.objs[i].name === props.query)
+			ret.push(<props.Constructor obj={props.objs[i]} />);
+	}
+
+	return (
+		<div>
+			{ret}
+		</div>
+	);
+}
+
+export { SearchByName, SearchByExactName };

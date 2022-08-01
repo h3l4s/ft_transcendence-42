@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import i_chan from "../../../interface/chan.interface";
 import i_user from "../../../interface/user.interface";
 
-import SearchByName from "../../../utils/search_by_name";
+import { SearchByName, SearchByExactName } from "../../../utils/search_by_name";
 
 import Chat from "./chat.component";
 import Users from "./user.component";
@@ -32,7 +32,7 @@ function Chans(props: { chans: i_chan[], users: i_user[] })	// need to get this 
 
 			<div className='split split--chan split--center'>
 				<div className='split--center--div' /*this style doesn't exist*/>
-					<SearchByName objs={props.chans} query={selectedChan} Constructor={Chat} />
+					<SearchByExactName objs={props.chans} query={selectedChan} Constructor={Chat} />
 				</div>
 			</div>
 
