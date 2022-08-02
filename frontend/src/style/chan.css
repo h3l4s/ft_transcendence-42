@@ -157,6 +157,10 @@ input {
 	box-shadow: 0 0 0 4px #000000, 1em 1em 3px 0 rgb(0 0 0 / 50%);
 }
 
+.card--alt--glow {
+	filter: drop-shadow(0 0 1rem #fff) drop-shadow(0 0 1rem #ffffff80) saturate(4);
+}
+
 .card--border {
 	border: 8px double #00000080;
 	box-shadow: 0 0 0 4px var(--main-color), 1em 1em 3px 0 rgb(0 0 0 / 50%);

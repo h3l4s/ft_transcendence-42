@@ -14,26 +14,16 @@ function UserStats(props: { user: i_user })
 	const xp_next_level = Math.ceil(Math.pow((level + 1), 2) * 4.2);
 	const xp_needed = xp_next_level - xp;
 
+	let animation_delay = 0;
+	const increment = 0.5;
+
 	return (
 		<div className='parstats' style={{ fontSize: "small", marginTop: "0.5rem" }}>
-			<div className='typewriter userstats'>
-				<span>winrate:</span>
-				<span>
-					<span style={{ color: "#67c61a" }}>{w}</span>
-					<span>|</span>
-					<span style={{ color: "red" }}>{l}</span>
-				</span>
-				<span style={{ color: "#8888ff" }}>{rate_to_print}</span>
-			</div>
-			<div className='typewriter userstats' style={{ animationDelay: "0.75s" }}>
-				<span>elo:</span>
-				<span style={{ color: "var(--main-color-hover)" }}>{elo}</span>
-			</div>
-			<div className='typewriter userstats' style={{ animationDelay: "1.5s" }}>
+			<div className='typewriter userstats card--alt--glow' style={{ animationDelay: animation_delay + "s" }}>
 				<span>level:</span>
 				<span style={{ color: "var(--main-color-hover)" }}>{level}</span>
 			</div>
-			<div className='typewriter userstats' style={{ animationDelay: "2.25s" }}>
+			<div className='typewriter userstats card--alt--glow' style={{ animationDelay: animation_delay + increment * 1 + "s" }}>
 				<span>xp:</span>
 				<span>
 					<span style={{ color: "var(--main-color-hover)" }}>{xp}</span>
@@ -41,7 +31,7 @@ function UserStats(props: { user: i_user })
 					<span style={{ color: "#8888ff" }}>{xp_next_level}</span>
 				</span>
 			</div>
-			<div className='typewriter userstats' style={{ animationDelay: "3s" }}>
+			<div className='typewriter userstats card--alt--glow' style={{ animationDelay: animation_delay + increment * 2 + "s" }}>
 				<span>↳</span>
 				<span>
 					<span>(</span>
@@ -49,6 +39,19 @@ function UserStats(props: { user: i_user })
 					<span style={{ color: "#8888ff" }}>{xp_needed}</span>
 					<span>)</span>
 				</span>
+			</div>
+			<div className='typewriter userstats card--alt--glow' style={{ animationDelay: animation_delay + increment * 3 + "s" }}>
+				<span>elo:</span>
+				<span style={{ color: "var(--main-color-hover)" }}>{elo}</span>
+			</div>
+			<div className='typewriter userstats card--alt--glow' style={{ animationDelay: animation_delay + increment * 4 + "s" }}>
+				<span>winrate:</span>
+				<span>
+					<span style={{ color: "#67c61a" }}>{w}</span>
+					<span>|</span>
+					<span style={{ color: "red" }}>{l}</span>
+				</span>
+				<span style={{ color: "#8888ff" }}>{rate_to_print}</span>
 			</div>
 		</div>
 	);

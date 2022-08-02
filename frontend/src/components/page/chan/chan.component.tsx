@@ -6,7 +6,7 @@ import i_user from "../../../interface/user.interface";
 import { SearchByName, SearchByExactName } from "../../../utils/search_by_name";
 
 import Chat from "./chat.component";
-import Users from "./user.component";
+import { Users } from "./user.component";
 
 function Chans(props: { chans: i_chan[], users: i_user[] })	// need to get this element from db
 {

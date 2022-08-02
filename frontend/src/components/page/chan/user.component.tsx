@@ -10,7 +10,7 @@ function Users(props: { users: i_user[] })
 	let ret: JSX.Element[] = [];
 
 	for (let i = 0; i < Object.keys(props.users).length; i++)
-	{ ret.push(<User user={props.users[i]} />); }
+	{ ret.push(<UserBtn user={props.users[i]} />); }
 
 	return (
 		<div>
@@ -19,7 +19,7 @@ function Users(props: { users: i_user[] })
 	);
 }
 
-function User(props: { user: i_user })
+function UserBtn(props: { user: i_user })
 {
 	const [showProfile, setShowProfile] = useState(false);
 
@@ -40,4 +40,4 @@ function User(props: { user: i_user })
 	);
 }
 
-export default Users;
+export { Users, UserBtn };
