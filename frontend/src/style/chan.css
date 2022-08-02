@@ -89,10 +89,9 @@ input {
 
 .btn {
 	display: inline-block;
-	font: inherit;
-	font-weight: bolder;
+	font-family: var(--alt-font);
 	cursor: pointer;
-	position: relative;
+	position: fixed;
 	padding: 0 1em;
 	background-origin: padding-box;
 	transition: all .2s ease-in;
@@ -103,9 +102,10 @@ input {
 	border-right: 2px outset #032800;
 	border-bottom: 2px outset #032800;
 	box-shadow: .5em .5em 3px rgba(0, 0, 0, .5);
-	height: 1.4rem;
+	height: 1.7rem;
 	text-align: center;
 	margin: 0;
+	border-radius: unset;
 }
 
 .btn:hover {
