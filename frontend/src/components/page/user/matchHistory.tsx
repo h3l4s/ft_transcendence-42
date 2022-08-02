@@ -34,13 +34,13 @@ function Match(props: { match: i_matchHistory })
 				style={{ border: border }}
 				onClick={() => { setShowProfile(true) }}
 			>
-				<div className='card--alt--glow'>
-					<span>{props.match.won_round}</span>
+				<div className='card--alt--glow' style={{ marginLeft: "1.5rem", fontSize: "2rem" }}>
+					<span style={{ color: "#67c61a" }}>{props.match.won_round}</span>
 					<span>|</span>
-					<span>{props.match.lost_round}</span>
+					<span style={{ color: "red" }}>{props.match.lost_round}</span>
 				</div>
-				<div>
-					<span className='truncate card--alt--glow' style={{ marginRight: "1rem" }}>{props.match.opponent.name}</span>
+				<div className='truncate' style={{ padding: "1rem 1rem 1rem 2rem" }}>
+					<span className='card--alt--glow' style={{ marginRight: "1rem" }}>{props.match.opponent.name}</span>
 					<img className='img'
 						style={{ width: "3rem", height: "3rem" }}
 						src={props.match.opponent.profilePicPath} alt="profile" />

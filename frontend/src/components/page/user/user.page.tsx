@@ -31,10 +31,14 @@ function UserPage()
 
 	tmp_users.push({ name: "idhiba", profilePicPath: "profile_picture/default.png" });
 	tmp_users.push({ name: "glaverdu", profilePicPath: "profile_picture/default.png" });
+	tmp_users.push({ name: "very_long_text_very_long_text_very_long_text_very_long_text_very_long_text", profilePicPath: "profile_picture/default.png" });
 
 	matches.push({ opponent: tmp_users[0], won_round: 5, lost_round: 4 });
 	matches.push({ opponent: tmp_users[1], won_round: 5, lost_round: 2 });
 	matches.push({ opponent: tmp_users[0], won_round: 3, lost_round: 5 });
+
+	for (let i = 0; i < 20; i++)
+		matches.push({ opponent: tmp_users[2], won_round: 5, lost_round: 0 });
 
 	// need to check if user exist in db
 
@@ -50,7 +54,7 @@ function UserPage()
 					<UserStats user={user} />
 				</div>
 			</div>
-			<div className='card card--alt' style={{ width: "40vw", height: "100%", margin: "0 2rem 0 -0.3rem" }}>
+			<div className='card card--alt' style={{ width: "40vw", height: "100%", margin: "0 2rem 0 -0.3rem", overflowY: "scroll" }}>
 				<MatchHistoty matches={matches} />
 			</div>
 			<div className='card card--border' style={{ width: "30vw", margin: "0 2rem 0 0" }}>
