@@ -1,0 +1,3 @@
+add and remove friend button
+change profile picture
+direct link to user profile page in modal
