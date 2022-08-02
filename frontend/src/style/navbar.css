@@ -37,5 +37,5 @@ body {
 .nav--middle {
 	display: absolute;
 	left: 50%;
-	transform: translate(calc(4rem + -50%));
+	transform: translate(calc(3.5rem + -50%));
 }
