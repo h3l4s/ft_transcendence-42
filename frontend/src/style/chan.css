@@ -15,6 +15,7 @@ h1 {
 }
 
 h2 {
+	font-family: System, monospace;
 	color: white;
 	text-align: center;
 }

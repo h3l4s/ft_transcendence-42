@@ -9,8 +9,11 @@ import i_matchHistory from '../../../interface/matchHistory.interface';
 
 import { AuthContext } from '../../../context/auth.context';
 
+import { ReactComponent as Friend } from '../../../icon/friend-svgrepo-com.svg'
+
 import UserStats from './userstats.component';
 import MatchHistoty from './matchHistory';
+import { Users } from '../chan/user.component';
 
 function UserPage()
 {
@@ -33,6 +36,9 @@ function UserPage()
 	tmp_users.push({ name: "glaverdu", profilePicPath: "profile_picture/default.png" });
 	tmp_users.push({ name: "very_long_text_very_long_text_very_long_text_very_long_text_very_long_text", profilePicPath: "profile_picture/default.png" });
 
+	for (let i = 0; i < 20; i++)
+		tmp_users.push({ name: i.toString(), profilePicPath: "profile_picture/default.png" });
+
 	matches.push({ opponent: tmp_users[0], won_round: 5, lost_round: 4 });
 	matches.push({ opponent: tmp_users[1], won_round: 5, lost_round: 2 });
 	matches.push({ opponent: tmp_users[0], won_round: 3, lost_round: 5 });
@@ -44,9 +50,9 @@ function UserPage()
 
 	return (
 		<div className='user--page' >
-			<div style={{ width: "30vw", height: "100%", display: "flex", flexDirection: "column", margin: "0 1rem 0 0" }}>
+			<div style={{ width: "34vw", height: "100%", display: "flex", flexDirection: "column", margin: "0 1rem 0 0" }}>
 				<div className='card card--border user--page--pic--title' style={{ marginBottom: "2rem" }} >
-					<div style={{ margin: "0.5rem 0 0.5rem 0" }}><img className='img' style={{ height: "22vw", width: "22vw" }}
+					<div style={{ margin: "0.5rem 0 0.5rem 0" }}><img className='img' style={{ height: "23vw", width: "23vw" }}
 						src={user.profilePicPath} alt="profile" /></div>
 					<div className='user--page-title truncate'>{user.name}</div>
 				</div>
@@ -54,11 +60,16 @@ function UserPage()
 					<UserStats user={user} />
 				</div>
 			</div>
-			<div className='card card--alt' style={{ width: "40vw", height: "100%", margin: "0 2rem 0 -0.3rem", overflowY: "scroll" }}>
+			<div className='card card--alt' style={{ width: "33vw", height: "100%", margin: "0 2rem 0 -0.3rem", overflowY: "scroll" }}>
 				<MatchHistoty matches={matches} />
 			</div>
-			<div className='card card--border' style={{ width: "30vw", margin: "0 2rem 0 0" }}>
-				friend
+			<div style={{ width: "33vw", margin: "-1rem 0 -2rem 0", padding: "0.3rem 0 2rem 0", overflowX: "hidden" }}>
+				<div style={{ display: "flex", alignItems: "center", justifyContent: "center", margin: "0.7rem 1rem 0 0" }}>
+					<Friend style={{ width: "3rem", height: "3rem" }} />
+					<div style={{ margin: "0 1rem 0 1rem" }} />
+					<span style={{ color: "#000", fontFamily: "var(--alt-font)", fontSize: "2rem" }}>({tmp_users.length})</span>
+				</div>
+				<Users users={tmp_users} />
 			</div>
 		</div >
 	);
