@@ -2,10 +2,10 @@ import { Link } from 'react-router-dom';
 
 import '../style/navbar.css';
 
-import { ReactComponent as Home } from '../icon/home-icon-silhouette-svgrepo-com.svg'
+import { ReactComponent as Home } from '../icon/home-seo-and-web-svgrepo-com.svg'
 import { ReactComponent as Play } from '../icon/ping-pong-svgrepo-com.svg'
-import { ReactComponent as Chat } from '../icon/chat-svgrepo-com.svg'
-import { ReactComponent as Profile } from '../icon/profile-user-svgrepo-com.svg'
+import { ReactComponent as Chat } from '../icon/happy-smile-svgrepo-com.svg'
+import { ReactComponent as Profile } from '../icon/contact-svgrepo-com.svg'
 
 function NavBar()
 {

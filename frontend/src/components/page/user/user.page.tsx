@@ -67,7 +67,9 @@ function UserPage()
 				<div style={{ display: "flex", alignItems: "center", justifyContent: "center", margin: "0.7rem 1rem 0 0" }}>
 					<Friend style={{ width: "3rem", height: "3rem" }} />
 					<div style={{ margin: "0 1rem 0 1rem" }} />
-					<span style={{ color: "#000", fontFamily: "var(--alt-font)", fontSize: "2rem" }}>({tmp_users.length})</span>
+					<span style={{ color: "#000", fontFamily: "var(--alt-font)", fontSize: "2rem" }}>
+						(<span style={{ color: "var(--color-number)" }}>{tmp_users.length}</span>)
+					</span>
 				</div>
 				<Users users={tmp_users} />
 			</div>
