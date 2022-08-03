@@ -27,19 +27,24 @@ function ProfileModal(props: { user: i_user, onClose: () => void })
 				<Link to={link_to_profile}>
 					<ProfilePage />
 				</Link>
-				{!friend ? (
-					<button onClick={() => setFriend(true)}>
-						<AddFriend />
-					</button>
-				) : (
-					<button onClick={() => setFriend(false)}>
-						<RemoveFriend />
-					</button>
-				)}
+				{username !== props.user.name &&
+					<div>
+						{!friend ? (
+							<button onClick={() => setFriend(true)}>
+								<AddFriend />
+							</button>
+						) : (
+							<button onClick={() => setFriend(false)}>
+								<RemoveFriend />
+							</button>
+						)}
+					</div>
+				}
 			</div>
 			<div>
 				<img className='img' style={{ marginTop: "-3rem", height: "30vh", width: "30vh" }} src={props.user.profilePicPath} alt="profile" />
-				{friend && <Heart className='heart' onClick={() => setFriend(false)} />}
+				{username !== props.user.name && friend
+					&& <Heart className='heart' onClick={() => setFriend(false)} />}
 			</div>
 			<div>
 				<h2 className='truncate' style={{ paddingTop: "1rem", paddingBottom: "1rem" }}>{props.user.name}</h2>
