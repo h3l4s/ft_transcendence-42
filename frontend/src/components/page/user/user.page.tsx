@@ -10,6 +10,7 @@ import i_matchHistory from '../../../interface/matchHistory.interface';
 import { AuthContext } from '../../../context/auth.context';
 
 import { ReactComponent as Friend } from '../../../icon/friend-svgrepo-com.svg'
+import { ReactComponent as Edit } from '../../../icon/write-pencil-svgrepo-com.svg'
 
 import UserStats from './userstats.component';
 import MatchHistoty from './matchHistory';
@@ -52,8 +53,16 @@ function UserPage()
 		<div className='user--page' >
 			<div style={{ width: "34vw", height: "100%", display: "flex", flexDirection: "column", margin: "0 1rem 0 0" }}>
 				<div className='card card--border user--page--pic--title' style={{ marginBottom: "2rem" }} >
-					<div style={{ margin: "0.5rem 0 0.5rem 0" }}><img className='img' style={{ height: "23vw", width: "23vw" }}
-						src={user.profilePicPath} alt="profile" /></div>
+					<div style={{ margin: "0.5rem 0 0.5rem 0" }}>
+						<img className='img' style={{ height: "23vw", width: "23vw" }}
+							src={user.profilePicPath} alt="profile" />
+						{(!params.username || params.username === username)
+							&& <div className='input--file'>
+								<input type='file' style={{ zIndex: "99" }} />
+								<Edit className='input--file--icon' />
+							</div>
+						}
+					</div>
 					<div className='user--page-title truncate'>{user.name}</div>
 				</div>
 				<div className='card card--alt' style={{ height: "100%" }}>

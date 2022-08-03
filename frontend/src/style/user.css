@@ -32,6 +32,49 @@
 	margin-right: 1rem;
 }
 
+.input--file {
+	position: absolute;
+	cursor: pointer !important;
+	overflow: hidden;
+	background-color: #222;
+	border: 4px solid var(--main-color);
+	top: 20vw;
+	left: 20vw;
+	width: 3vw;
+	height: 3vw;
+	line-height: 3vw;
+	text-align: center;
+	border-radius: 50%;
+}
+
+.input--file:hover {
+	background-color: #777;
+}
+
+.input--file:hover svg {
+	fill: var(--main-color-hover);
+}
+
+.input--file input[type='file'] {
+	position: absolute;
+	cursor: pointer;
+	transform: scale(2);
+	opacity: 0;
+}
+
+.input--file input[type='file']::-webkit-file-upload-button {
+	visibility: hidden;
+}
+
+.input--file--icon {
+	position: absolute;
+	top: 0.4vw;
+	left: 0.4vw;
+	width: 1.6vw;
+	height: 1.6vw;
+	fill: var(--main-color);
+}
+
 .typewriter {
 	width: 0;
 	overflow: hidden;
