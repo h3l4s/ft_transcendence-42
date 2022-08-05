@@ -19,7 +19,7 @@ export class UserService
 
 	public getUserByName(name: string): Promise<User>
 	{
-		return this.repository.findOne({ username: name });
+		return this.repository.findOne({ name: name });
 	}
 
 	public getUsers(): Promise<User[]>
@@ -42,7 +42,7 @@ export class UserService
 
 		new_user.access_token = "tmp_null";
 
-		new_user.username = user.name;
+		new_user.name = user.name;
 
 		// profile pic
 		if (user.elo)

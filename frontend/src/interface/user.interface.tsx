@@ -2,7 +2,7 @@ interface i_user
 {
 	id?: number;
 	access_token?: string;
-	username: string;
+	name: string;
 	profilePicPath?: string;
 	xp?: number;
 	win?: number;

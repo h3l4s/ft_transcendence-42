@@ -12,7 +12,7 @@ export class User
 	public access_token: string;
 
 	@Column({ type: 'varchar', length: 255 })
-	public username: string;
+	public name: string;
 
 	@Column({ type: 'int', default: 0 })
 	public xp: number;

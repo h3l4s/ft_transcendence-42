@@ -1,6 +1,6 @@
 interface i_user
 {
-	username: string;
+	name: string;
 	profilePicPath?: string;
 	xp?: number;
 	win?: number;
