@@ -34,7 +34,23 @@ async function requestUser(id: number): Promise<i_user | null>
 		console.log(err);
 	});
 
-	return await (user);
+	return (user);
 }
 
-export { userBacktoFront, requestUser };
+async function requestUserByName(name: string): Promise<i_user | null>
+{
+	let user: i_user | null = null;
+
+	await axios.get("http://localhost:3000/user/name/" + name).then(res =>
+	{
+		console.log(res);
+		user = userBacktoFront(res.data);
+	}).catch(err =>
+	{
+		console.log(err);
+	});
+
+	return (user);
+}
+
+export { userBacktoFront, requestUser, requestUserByName };

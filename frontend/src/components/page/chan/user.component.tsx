@@ -9,9 +9,10 @@ function Users(props: { users: i_user[] })
 {
 	let ret: JSX.Element[] = [];
 
-	for (let i = 0; i < Object.keys(props.users).length; i++)
+	for (let i = 0; i < props.users.length; i++)
 	{ ret.push(<UserBtn user={props.users[i]} />); }
 
+	console.log("ret of Users:", ret);
 	return (
 		<div>
 			{ret}

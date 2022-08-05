@@ -124,7 +124,7 @@ export default function SignIn()
 									onClick={async () =>
 									{
 										const tmp: i_user | null = await requestUser(1);
-										await setUser(tmp);
+										setUser(tmp);
 										if (tmp)
 											navigate("/");
 									}}

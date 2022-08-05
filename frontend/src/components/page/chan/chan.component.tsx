@@ -20,7 +20,7 @@ function Chans(props: { chans: i_chan[], users: i_user[] })	// need to get this 
 	{
 		return (
 			<div>
-				<div className='card card--border card--btn card--chan' onClick={() => { setSelectedChan(props.obj.name) }}>{props.obj.name}</div>
+				<div className='card card--border card--btn card--chan' onClick={() => { setSelectedChan(props.obj.name!) }}>{props.obj.name}</div>
 			</div>
 		);
 	}

@@ -4,7 +4,7 @@ interface i_user
 {
 	id?: number;
 	access_token?: string;
-	name: string;
+	name?: string;
 	profilePicPath?: string;
 	xp?: number;
 	elo?: number;
