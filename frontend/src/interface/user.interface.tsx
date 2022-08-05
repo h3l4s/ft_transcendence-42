@@ -1,6 +1,8 @@
 interface i_user
 {
-	name: string;
+	id?: number;
+	access_token?: string;
+	username: string;
 	profilePicPath?: string;
 	xp?: number;
 	win?: number;

@@ -14,11 +14,16 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import axios from 'axios'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
-import { AuthContext } from '../../../context/auth.context';
 import { textAlign } from '@mui/system';
 
-function Copyright(props: any) {
+import { AuthContext } from '../../../context/auth.context';
+
+import i_user from '../../../interface/user.interface';
+
+import { Users } from '../chan/user.component';
+
+function Copyright(props: any)
+{
 	return (
 		<Typography variant="body2" color="text.secondary" align="center" {...props}>
 			{'Copyright © '}
@@ -33,16 +38,19 @@ function Copyright(props: any) {
 
 const theme = createTheme();
 
-export default function SignIn() {
+export default function SignIn()
+{
 	const { username, setUsername } = React.useContext(AuthContext);
 	const navigate = useNavigate();
 
-	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>
+	{
 		event.preventDefault();
 		window.location.replace("https://api.intra.42.fr/oauth/authorize?client_id=cbd1064bd58ef5065a103fbd35e3b251f506b89d0f101660714907581d0c9bd9&redirect_uri=http%3A%2F%2Flocalhost%3A3001&response_type=code");
 		//window.location.replace("https://api.intra.42.fr/oauth/authorize?client_id=d99b55c8716eb674d3a78116832e8a2bb2085c6706e5195a4f91f66a3739939b&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Flogin&response_type=code");
 	};
-	const getCode = async (event: React.FormEvent<HTMLFormElement>) => {
+	const getCode = async (event: React.FormEvent<HTMLFormElement>) =>
+	{
 		event.preventDefault();
 		var url = window.location;
 		var access_token = new URLSearchParams(url.search).get('code');
@@ -50,6 +58,20 @@ export default function SignIn() {
 		const b = await axios.post("http://localhost:3000/user", { token: access_token });
 		console.log(b);
 	};
+
+	const tmpCreateUser = async (username: string) =>
+	{
+		const post_answer = await axios.post("http://localhost:3000/user/name/" + username);
+		console.log(post_answer);
+	}
+
+	const [users_data, setUsersData] = React.useState<i_user[]>([]);
+	const getUsers = async () =>
+	{
+		const get_answer = await axios.get("http://localhost:3000/user");
+		console.log(get_answer);
+		setUsersData(get_answer.data);
+	}
 
 	return (
 		<div style={{ backgroundColor: "var(--background-color)", height: "calc(100vh - var(--nav-h))" }}>
@@ -94,7 +116,8 @@ export default function SignIn() {
 									fullWidth
 									variant="contained"
 									sx={{ mt: 3, mb: 2 }}
-									onClick={() => {
+									onClick={() =>
+									{
 										setUsername("adelille");
 										navigate("/");
 									}}
@@ -103,10 +126,34 @@ export default function SignIn() {
 								</Button>
 							)}
 						</Box>
+						<div>
+							<input className='input--chat' placeholder="🚧 create user 🚧" onKeyPress={(event) =>
+							{
+								if (event.key === 'Enter')
+								{
+									event.preventDefault();
+									tmpCreateUser(event.target.value);
+								}
+							}} />
+						</div>
+						<Box>
+							<Button
+								type="submit"
+								fullWidth
+								variant="contained"
+								sx={{ mt: 3, mb: 2 }}
+								onClick={() => getUsers()}
+							>
+								🚧 get all users 🚧
+							</Button>
+						</Box>
+						<div>
+							<Users users={users_data} />
+						</div>
 					</div>
 					<Copyright style={{ position: "absolute", bottom: "0", right: "3rem" }} sx={{ mt: 8, mb: 4 }} />
 				</Container>
 			</ThemeProvider>
-		</div>
+		</div >
 	);
 }
