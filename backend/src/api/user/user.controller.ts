@@ -1,10 +1,8 @@
-import { Body, Controller, Get, Inject, Param, ParseIntPipe, Post } from '@nestjs/common';
-import { CreateUserDto } from './user.dto';
+import { Body, Controller, Get, Inject, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
+import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 import axios from 'axios';
-import { userToken } from './userToken.dto';
-import { response } from 'express';
 
 @Controller('user')
 export class UserController
@@ -57,5 +55,11 @@ export class UserController
 	public tmpGetUser(@Param('name') name: string)
 	{
 		return this.service.getUserByName(name);
+	}
+
+	@Put(':id')
+	public updateUser(@Param('id') id: number, @Body() data: any)
+	{
+		return this.service.updateUser(id, data.updateUserDto);
 	}
 }

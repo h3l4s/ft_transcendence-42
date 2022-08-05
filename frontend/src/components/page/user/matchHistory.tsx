@@ -10,7 +10,7 @@ function MatchHistoty(props: { matches: i_matchHistory[] })
 {
 	let ret: JSX.Element[] = [];
 
-	for (let i = 0; i < Object.keys(props.matches).length; i++)
+	for (let i = 0; i < props.matches.length; i++)
 	{ ret.push(<Match match={props.matches[i]} />); }
 
 	return (

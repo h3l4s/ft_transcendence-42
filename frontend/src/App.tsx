@@ -5,6 +5,8 @@ import './style/root.css'
 import './style/App.css';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
+import i_user from './interface/user.interface';
+
 import { AuthContext } from './context/auth.context';
 
 import NavBar from './components/navbar.component';
@@ -18,9 +20,9 @@ import UserPage from './components/page/user/user.page';
 
 function App()
 {
-	const [username, setUsername] = useState<string | null>(null);
+	const [user, setUser] = useState<i_user | null>(null);
 
-	const value = useMemo(() => ({ username, setUsername }), [username, setUsername]);
+	const value = useMemo(() => ({ user, setUser }), [user, setUser]);
 
 	return (
 		<Router>

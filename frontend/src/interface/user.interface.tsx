@@ -1,4 +1,7 @@
-interface i_user {
+import i_matchHistory from "./matchHistory.interface";
+
+interface i_user
+{
 	id?: number;
 	access_token?: string;
 	name: string;
@@ -7,6 +10,8 @@ interface i_user {
 	elo?: number;
 	win?: number;
 	lose?: number;
+	matchHistory?: i_matchHistory[];
+	friendsId?: number[];
 }
 
 export default i_user;

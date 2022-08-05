@@ -1,6 +1,9 @@
+import axios from "axios";
+
 import i_user from "../interface/user.interface"
 
-function userBacktoFront(user: any) {
+function userBacktoFront(user: any)
+{
 	const ret_user: i_user = {
 		id: user.id,
 		access_token: user.access_token,
@@ -10,10 +13,28 @@ function userBacktoFront(user: any) {
 		xp: user.xp,
 		elo: user.elo,
 		win: user.win,
-		lose: user.lose
+		lose: user.lose,
+		matchHistory: user.matchHistory,
+		friendsId: user.friendsId
 	};
 
 	return (ret_user);
 }
 
-export default userBacktoFront;
+async function requestUser(id: number): Promise<i_user | null>
+{
+	let user: i_user | null = null;
+
+	await axios.get("http://localhost:3000/user/" + id).then(res =>
+	{
+		console.log(res);
+		user = userBacktoFront(res.data);
+	}).catch(err =>
+	{
+		console.log(err);
+	});
+
+	return await (user);
+}
+
+export { userBacktoFront, requestUser };

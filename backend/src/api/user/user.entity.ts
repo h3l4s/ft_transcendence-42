@@ -26,10 +26,12 @@ export class User
 	@Column({ type: 'int', default: 0 })
 	public lose: number;
 
+	// possibly bugged because of array
 	@Column({ type: 'jsonb', nullable: true })
 	public matchHistory?: i_matchHistory[];
+	//
 
-	@Column({ type: 'int', nullable: true })
+	@Column({ type: 'int', array: true, nullable: true })
 	public friendsId?: number[];
 
 	@Column({ type: 'boolean', default: false })

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './user.dto';
+import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { User } from './user.entity';
 
 import i_user from 'src/interface/user.interface';
@@ -57,5 +57,47 @@ export class UserService
 			new_user.elo = user.elo;
 
 		return this.repository.save(new_user);
+	}
+
+	public async updateUser(id: number, updateUserDto: UpdateUserDto)
+	{
+		const user = await this.repository.findOne(id);
+
+		console.log
+
+		if (updateUserDto.name)
+			user.name = updateUserDto.name;
+		if (updateUserDto.xp)
+			user.xp += updateUserDto.xp;
+		user.xp++;
+		if (updateUserDto.elo)
+			user.elo += updateUserDto.elo;
+		if (updateUserDto.win)
+			user.win += 1;
+		if (updateUserDto.lose)
+			user.lose += 1;
+		if (updateUserDto.matchHistory)
+		{
+			if (!user.matchHistory)
+				user.matchHistory = [];
+			user.matchHistory.push(updateUserDto.matchHistory);
+		}
+		if (updateUserDto.friendId)
+		{
+			if (!user.friendsId)
+				user.friendsId = [];
+			const i = user.friendsId.indexOf(updateUserDto.friendId);
+			if (i > -1)
+				user.friendsId.splice(i, 1);
+			else
+				user.friendsId.push(updateUserDto.friendId);
+		}
+
+		return await this.repository.save(user);
+	}
+
+	public deleteUser(id: number)
+	{
+		return this.repository.delete(id)
 	}
 }

@@ -1,9 +1,11 @@
 import { createContext, Dispatch, SetStateAction } from 'react'
 
+import i_user from '../interface/user.interface';
+
 export const AuthContext = createContext<{
-	username: string | null;
-	setUsername: Dispatch<SetStateAction<string | null>>;
+	user: i_user | null;
+	setUser: Dispatch<SetStateAction<i_user | null>>;
 }>({
-	username: null,
-	setUsername: () => { }
+	user: null,
+	setUser: () => { }
 });

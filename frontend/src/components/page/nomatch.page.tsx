@@ -1,7 +1,7 @@
 function NoMatch()
 {
 	return (
-		<div style={{ backgroundColor: "#505050", display: "absolute", height: "calc(100vh - 3.5rem)", color: "white", textAlign: "center", fontSize: "3rem", fontWeight: "bolder" }}>
+		<div style={{ backgroundColor: "#505050", display: "absolute", height: "calc(100vh - var(--nav-h))", color: "white", textAlign: "center", fontSize: "3rem", fontWeight: "bolder" }}>
 			<div style={{ color: "greenyellow", fontSize: "10rem" }}>
 				404
 			</div>
