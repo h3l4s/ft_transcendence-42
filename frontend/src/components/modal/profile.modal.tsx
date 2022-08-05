@@ -20,7 +20,7 @@ import UserStats from "../page/user/userstats.component";
 function ProfileModal(props: { user: i_user, onClose: () => void })
 {
 	const { user, setUser } = useContext(AuthContext);
-	const [friend, setFriend] = useState((user ? user.friendsId!.includes(props.user.id!) : false));
+	const [friend, setFriend] = useState((user && user.friendsId ? user.friendsId.includes(props.user.id!) : false));
 
 	const link_to_profile = "/user/" + props.user.name;
 
@@ -32,7 +32,7 @@ function ProfileModal(props: { user: i_user, onClose: () => void })
 		{
 			setFriend(state);
 			const tmp: i_user | null = await requestUser(user.id!);
-			await setUser(tmp);
+			setUser(tmp);
 			console.log(res);
 		}).catch(err =>
 		{

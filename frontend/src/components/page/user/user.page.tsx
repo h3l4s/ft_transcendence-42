@@ -12,23 +12,61 @@ import { AuthContext } from '../../../context/auth.context';
 import { ReactComponent as Friend } from '../../../icon/friend-svgrepo-com.svg'
 import { ReactComponent as Edit } from '../../../icon/write-pencil-svgrepo-com.svg'
 
-import { requestUserByName } from '../../../utils/BackToFront';
+import { useReqUser } from '../../../utils/BackToFront';
 import UserStats from './userstats.component';
 import MatchHistoty from './matchHistory.component';
 import UserListById from './UserListById.component';
 import NoMatch from '../nomatch.page';
+import Loading from '../../loading.component';
+import Error from '../../error.component';
+
+function RequestByParam(username: string)
+{
+	const { reqUser, loading, error } = useReqUser(username);
+
+	return ({ reqUser, loading, error });
+}
+
+function useFindUser(p_username: string | undefined, userAuth: i_user | null)
+{
+	let userToLoad: i_user;
+	let loading: boolean;
+	let error: { message: string } | null;
+
+	if (p_username)
+	{
+		let tmp = RequestByParam(p_username);
+		userToLoad = tmp.reqUser;
+		loading = tmp.loading;
+		error = tmp.error;
+	}
+	else if (userAuth)
+	{
+		userToLoad = userAuth;
+		loading = false;
+		error = null;
+	}
+	else
+	{
+		userToLoad = {};
+		loading = false;
+		error = { message: "failed to load" };
+	}
+
+	return ({ userToLoad, loading, error });
+}
 
 function UserPage()
 {
 	const { user } = useContext(AuthContext);
-	let userToLoad: i_user | null = null;
-
 	const p_username = useParams().username;
-	if (p_username)
-		requestUserByName(p_username).then(value => { userToLoad = value });
-	else
-		userToLoad = user;
-	if (!userToLoad)
+	const { userToLoad, loading, error } = useFindUser(p_username, user);
+
+	if (loading)
+		return (<Loading />);
+	else if (error && error.message === "failed to load")
+		return (<Error msg={error.message} />);
+	else if (error || !userToLoad.id)
 		return (<NoMatch />);
 	else
 		console.log("user to load:", userToLoad);
@@ -50,8 +88,6 @@ function UserPage()
 	for (let i = 0; i < 20; i++)
 		matches.push({ opponent: tmp_users[2], won_round: 5, lost_round: 0 });
 
-	// need to check if user exist in db
-
 	return (
 		<div className='user--page' >
 			<div style={{ width: "34vw", height: "100%", display: "flex", flexDirection: "column", margin: "0 1rem 0 0" }}>
@@ -59,7 +95,7 @@ function UserPage()
 					<div style={{ margin: "0.5rem 0 0.5rem 0" }}>
 						<img className='img' style={{ height: "23vw", width: "23vw" }}
 							src={userToLoad.profilePicPath} alt="profile" />
-						{(!p_username || p_username === (user && user.name))
+						{(!p_username || p_username === userToLoad.name)
 							&& <div className='input--file'>
 								<input type='file' style={{ zIndex: "99" }} />
 								<Edit className='input--file--icon' />
@@ -80,7 +116,7 @@ function UserPage()
 					<Friend style={{ width: "3rem", height: "3rem" }} />
 					<div style={{ margin: "0 1rem 0 1rem" }} />
 					<span style={{ color: "#000", fontFamily: "var(--alt-font)", fontSize: "2rem" }}>
-						(<span style={{ color: "var(--color-number)" }}>{userToLoad.friendsId!.length}</span>)
+						(<span style={{ color: "var(--color-number)" }}>{(userToLoad.friendsId ? userToLoad.friendsId.length : 0)}</span>)
 					</span>
 				</div>
 				<UserListById users_id={userToLoad.friendsId!} />

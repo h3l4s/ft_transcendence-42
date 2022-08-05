@@ -12,7 +12,6 @@ function Users(props: { users: i_user[] })
 	for (let i = 0; i < props.users.length; i++)
 	{ ret.push(<UserBtn user={props.users[i]} />); }
 
-	console.log("ret of Users:", ret);
 	return (
 		<div>
 			{ret}

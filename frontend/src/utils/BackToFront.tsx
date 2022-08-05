@@ -1,10 +1,43 @@
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 import i_user from "../interface/user.interface"
 
+function useFetch(url: string, type: ('get' | 'post' | 'put' | 'delete'), payload?: any)
+{
+	const [error, setError] = useState<{ message: string } | null>(null);
+	const [loading, setLoading] = useState(true);
+	const [data, setData] = useState(null);
+
+	useEffect(() =>
+	{
+		const answer = (type === 'get' ? axios.get(url, payload)
+			: (type === 'post' ? axios.post(url, payload)
+				: (type === 'put' ? axios.put(url, payload)
+					: (axios.delete(url, payload)))));
+		answer.then(
+			(res) =>
+			{
+				setLoading(false);
+				setData(res.data);
+			},
+			// Note: it's important to handle errors here
+			// instead of a catch() block so that we don't swallow
+			// exceptions from actual bugs in components.
+			(error) =>
+			{
+				setLoading(false);
+				setError(error);
+			}
+		)
+	})
+
+	return ({ data, loading, error });
+}
+
 function userBacktoFront(user: any)
 {
-	const ret_user: i_user = {
+	const ret_user: i_user = (user ? {
 		id: user.id,
 		access_token: user.access_token,
 		name: user.name,
@@ -16,7 +49,7 @@ function userBacktoFront(user: any)
 		lose: user.lose,
 		matchHistory: user.matchHistory,
 		friendsId: user.friendsId
-	};
+	} : {});
 
 	return (ret_user);
 }
@@ -53,4 +86,13 @@ async function requestUserByName(name: string): Promise<i_user | null>
 	return (user);
 }
 
-export { userBacktoFront, requestUser, requestUserByName };
+function useReqUser(query: number | string)
+{
+	const { data, loading, error } = useFetch(
+		"http://localhost:3000/user/" + (typeof query === 'number' ? query : "name/" + query), 'get');
+
+	const reqUser: i_user = userBacktoFront(data);
+	return ({ reqUser, loading, error });
+}
+
+export { useFetch, userBacktoFront, requestUser, requestUserByName, useReqUser };

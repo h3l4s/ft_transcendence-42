@@ -1,29 +1,35 @@
 import i_user from "../../../interface/user.interface";
 
-import { requestUser } from "../../../utils/BackToFront";
-import { Users } from "../chan/user.component";
+import { useReqUser } from "../../../utils/BackToFront";
+import Error from "../../error.component";
+import Loading from "../../loading.component";
+import { UserBtn } from "../chan/user.component";
 
-function UserListById(props: { users_id: number[] | null })
+function ReqOne(id: number): JSX.Element
 {
-	console.log("friend:", props.users_id);
-	if (!props.users_id)
-		return (<div></div>);
+	const { reqUser, loading, error } = useReqUser(id);
 
-	let users: i_user[] = [];
+	if (loading)
+		return (<Loading />);
+	else if (error)
+		return (<Error msg={error.message} />);
+	else
+		return (<UserBtn user={reqUser} />);
+}
+
+function UserListById(props: { users_id: number[] | null }): JSX.Element
+{
+	if (!props.users_id)
+		return (<div />);
+
+	let ret: JSX.Element[] = [];
 
 	for (let i = 0; i < props.users_id!.length; i++)
-	{
-		requestUser(props.users_id![i]).then(value =>
-		{
-			if (value)
-				users.push(value)
-		});
-	}
+	{ ret.push(ReqOne(props.users_id[i])); }
 
-	console.log("users:", users);
 	return (
 		<div>
-			<Users users={users} />
+			{ret}
 		</div>
 	);
 }
