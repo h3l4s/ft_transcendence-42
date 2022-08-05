@@ -7,12 +7,20 @@ import { userToken } from './userToken.dto';
 import { response } from 'express';
 
 @Controller('user')
-export class UserController {
+export class UserController
+{
 	@Inject(UserService)
 	private readonly service: UserService;
 
+	@Get()
+	public getUsers(): Promise<User[]>
+	{
+		return this.service.getUsers();
+	}
+
 	@Get(':id')
-	public getUser(@Param('id', ParseIntPipe) id: number): Promise<User> {
+	public getUser(@Param('id', ParseIntPipe) id: number): Promise<User>
+	{
 		return this.service.getUser(id);
 	}
 
@@ -22,7 +30,8 @@ export class UserController {
 	//}
 
 	@Post()
-	public async getToken(@Body() data: any) {
+	public async getToken(@Body() data: any)
+	{
 		console.log(data.token);
 		const response: any = await axios.post("https://api.intra.42.fr/oauth/token", {
 			client_id: "cbd1064bd58ef5065a103fbd35e3b251f506b89d0f101660714907581d0c9bd9",
@@ -35,5 +44,18 @@ export class UserController {
 			.catch(error => console.log(error))
 		console.log(response.data.access_token);
 		return this.service.createUser(response.data);
+	}
+
+	// tmp add user
+	@Post('name/:name')
+	public tmpCreateUser(@Param('name') name: string)
+	{
+		return this.service.tmpCreateUser({ name: name });
+	}
+
+	@Get('name/:name')
+	public tmpGetUser(@Param('name') name: string)
+	{
+		return this.service.getUserByName(name);
 	}
 }
