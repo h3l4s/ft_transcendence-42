@@ -63,8 +63,6 @@ export class UserService
 	{
 		const user = await this.repository.findOne(id);
 
-		console.log
-
 		if (updateUserDto.name)
 			user.name = updateUserDto.name;
 		if (updateUserDto.xp)

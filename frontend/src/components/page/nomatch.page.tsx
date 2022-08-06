@@ -8,7 +8,7 @@ function NoMatch()
 			<div style={{ marginTop: "-1rem" }}>Page not found</div>
 
 			<svg style={{ marginTop: "1rem" }} version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-				width="900px" height="50%" viewBox="0 0 900 615" enable-background="new 0 0 900 615" xmlSpace="preserve">
+				width="900px" height="50%" viewBox="0 0 900 615" enableBackground="new 0 0 900 615" xmlSpace="preserve">
 				<path fill="#EDEDED" d="M887.739,52.918c0,6.446-5.227,11.674-11.673,11.674H23.934c-6.447,0-11.673-5.228-11.673-11.674v-5.836
 	c0-6.446,5.226-11.673,11.673-11.673h852.132c6.446,0,11.673,5.227,11.673,11.673V52.918z"/>
 				<path fill="yellowgreen" d="M498.64,554.918c0,6.447-5.228,11.674-11.674,11.674h-73.932c-6.447,0-11.673-5.227-11.673-11.674v-5.836

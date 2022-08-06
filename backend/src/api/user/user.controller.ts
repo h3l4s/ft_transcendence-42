@@ -58,7 +58,7 @@ export class UserController
 	}
 
 	@Put(':id')
-	public updateUser(@Param('id') id: number, @Body() data: any)
+	public updateUser(@Param('id', ParseIntPipe) id: number, @Body() data: any)
 	{
 		return this.service.updateUser(id, data.updateUserDto);
 	}

@@ -3,6 +3,9 @@
 # nvim
 *~
 
+#vscode
+.vscode
+
 # compiled
 dist
 # *.js
