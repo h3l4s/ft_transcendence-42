@@ -1,6 +1,6 @@
 interface i_chan
 {
-	name: string;
+	name?: string;
 }
 
 export default i_chan;

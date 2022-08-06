@@ -3,12 +3,15 @@
 # nvim
 *~
 
+#vscode
+.vscode
+
 # compiled
 dist
 # *.js
 
 # dependencies
-/node_modules
+node_modules
 /.pnp
 .pnp.js
 

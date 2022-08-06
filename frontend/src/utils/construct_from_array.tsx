@@ -2,7 +2,7 @@ function ConstructFromArray(props: { objs: any, av?: any, Constructor: (props: {
 {
 	let ret: JSX.Element[] = [];
 
-	for (let i = 0; i < Object.keys(props.objs).length; i++)
+	for (let i = 0; i < props.objs.length; i++)
 	{ ret.push(<props.Constructor av={props.av} obj={props.objs[i]} />); }
 
 	return (

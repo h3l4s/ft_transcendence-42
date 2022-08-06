@@ -7,9 +7,9 @@ function SearchByName(props: { objs: i_user[] | i_chan[], query: string, Constru
 {
 	let ret: JSX.Element[] = [];
 
-	for (let i = 0; i < Object.keys(props.objs).length; i++)
+	for (let i = 0; i < props.objs.length; i++)
 	{
-		if (props.query.length === 0 || strncmp(props.query, props.objs[i].name, props.query.length))
+		if (props.query.length === 0 || strncmp(props.query, props.objs[i].name!, props.query.length))
 			ret.push(<props.Constructor obj={props.objs[i]} />);
 	}
 

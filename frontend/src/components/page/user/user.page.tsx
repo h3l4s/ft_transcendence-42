@@ -12,23 +12,64 @@ import { AuthContext } from '../../../context/auth.context';
 import { ReactComponent as Friend } from '../../../icon/friend-svgrepo-com.svg'
 import { ReactComponent as Edit } from '../../../icon/write-pencil-svgrepo-com.svg'
 
+import { useReqUser } from '../../../utils/BackToFront';
 import UserStats from './userstats.component';
-import MatchHistoty from './matchHistory';
-import { Users } from '../chan/user.component';
+import MatchHistoty from './matchHistory.component';
+import UserListById from './UserListById.component';
+import NoMatch from '../nomatch.page';
+import Loading from '../../loading.component';
+import Error from '../../error.component';
+
+function RequestByParam(username: string)
+{
+	const { reqUser, loading, error } = useReqUser(username);
+
+	return ({ reqUser, loading, error });
+}
+
+function useFindUser(p_username: string | undefined, userAuth: i_user | null)
+{
+	let userToLoad: i_user;
+	let loading: boolean;
+	let error: { message: string } | null;
+
+	if (p_username)
+	{
+		let tmp = RequestByParam(p_username);
+		userToLoad = tmp.reqUser;
+		loading = tmp.loading;
+		error = tmp.error;
+	}
+	else if (userAuth)
+	{
+		userToLoad = userAuth;
+		loading = false;
+		error = null;
+	}
+	else
+	{
+		userToLoad = {};
+		loading = false;
+		error = { message: "failed to load" };
+	}
+
+	return ({ userToLoad, loading, error });
+}
 
 function UserPage()
 {
-	const { username } = useContext(AuthContext);
+	const { user } = useContext(AuthContext);
+	const p_username = useParams().username;
+	const { userToLoad, loading, error } = useFindUser(p_username, user);
 
-	/* tmp until fetch from db */
-	let user: i_user = { name: "" }
-
-	const params = useParams();
-	user.name = (!params.username ? (typeof username === 'string' ? username : "") : params.username);
-	user = (user.name === "adelille" ?
-		{ name: user.name, profilePicPath: "profile_picture/adelille.png", win: 42, lose: 21, elo: 1200, xp: 312 } :
-		{ name: user.name, profilePicPath: "profile_picture/default.png", win: 0, lose: 0, elo: 1000, xp: 0 });
-	user.profilePicPath = "http://localhost:3000/" + user.profilePicPath;	// will get from db later
+	if (loading)
+		return (<Loading />);
+	else if (error && error.message === "failed to load")
+		return (<Error msg={error.message} />);
+	else if (error || !userToLoad.id)
+		return (<NoMatch />);
+	else
+		console.log("user to load:", userToLoad);
 
 	let matches: i_matchHistory[] = [];
 	let tmp_users: i_user[] = [];
@@ -47,26 +88,24 @@ function UserPage()
 	for (let i = 0; i < 20; i++)
 		matches.push({ opponent: tmp_users[2], won_round: 5, lost_round: 0 });
 
-	// need to check if user exist in db
-
 	return (
 		<div className='user--page' >
 			<div style={{ width: "34vw", height: "100%", display: "flex", flexDirection: "column", margin: "0 1rem 0 0" }}>
 				<div className='card card--border user--page--pic--title' style={{ marginBottom: "2rem" }} >
 					<div style={{ margin: "0.5rem 0 0.5rem 0" }}>
 						<img className='img' style={{ height: "23vw", width: "23vw" }}
-							src={user.profilePicPath} alt="profile" />
-						{(!params.username || params.username === username)
+							src={userToLoad.profilePicPath} alt="profile" />
+						{(!p_username || p_username === userToLoad.name)
 							&& <div className='input--file'>
 								<input type='file' style={{ zIndex: "99" }} />
 								<Edit className='input--file--icon' />
 							</div>
 						}
 					</div>
-					<div className='user--page-title truncate'>{user.name}</div>
+					<div className='user--page-title truncate'>{userToLoad.name}</div>
 				</div>
 				<div className='card card--alt' style={{ height: "100%" }}>
-					<UserStats user={user} />
+					<UserStats user={userToLoad} />
 				</div>
 			</div>
 			<div className='card card--alt' style={{ width: "33vw", height: "100%", margin: "0 2rem 0 -0.3rem", overflowY: "scroll" }}>
@@ -77,10 +116,10 @@ function UserPage()
 					<Friend style={{ width: "3rem", height: "3rem" }} />
 					<div style={{ margin: "0 1rem 0 1rem" }} />
 					<span style={{ color: "#000", fontFamily: "var(--alt-font)", fontSize: "2rem" }}>
-						(<span style={{ color: "var(--color-number)" }}>{tmp_users.length}</span>)
+						(<span style={{ color: "var(--color-number)" }}>{(userToLoad.friendsId ? userToLoad.friendsId.length : 0)}</span>)
 					</span>
 				</div>
-				<Users users={tmp_users} />
+				<UserListById users_id={userToLoad.friendsId!} />
 			</div>
 		</div >
 	);
