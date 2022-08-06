@@ -1,11 +1,11 @@
-import { useReqChans } from '../../../request/chan.request';
+import { CreateChan, useReqChans } from '../../../request/chan.request';
 import { useReqUsers } from '../../../request/user.request';
 
 import '../../../style/chan.css';
 
 import Chans from './chan.component';
-import Loading from '../../loading.component';
-import Error from '../../error.component';
+import Loading from '../../request_answer_component/loading.component';
+import Error from '../../request_answer_component/error.component';
 
 function ChanPage()
 {
@@ -17,7 +17,16 @@ function ChanPage()
 	else if (reqChans.error)
 		return (<Error msg={reqChans.error.message} />);
 	else if (reqUsers.error)
-		return (<Error msg={reqUsers.error?.message} />);
+		return (<Error msg={reqUsers.error.message} />);
+	else if (reqChans.reqChans.length === 0)
+	{
+		return (<CreateChan chan={{
+			name: "global",
+			ownerId: -1,
+			usersId: [-1],
+			type: 'public'
+		}} />);
+	}
 
 	return (
 		<div>

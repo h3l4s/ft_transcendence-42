@@ -17,8 +17,8 @@ import UserStats from './userstats.component';
 import MatchHistoty from './matchHistory.component';
 import UserListById from './UserListById.component';
 import NoMatch from '../nomatch.page';
-import Loading from '../../loading.component';
-import Error from '../../error.component';
+import Loading from '../../request_answer_component/loading.component';
+import Error from '../../request_answer_component/error.component';
 
 function RequestByParam(username: string)
 {

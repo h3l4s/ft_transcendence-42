@@ -6,7 +6,7 @@
 #    By: adelille <adelille@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/10 14:54:46 by adelille          #+#    #+#              #
-#    Updated: 2022/08/06 17:50:04 by adelille         ###   ########.fr        #
+#    Updated: 2022/08/06 18:02:55 by adelille         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,6 +42,7 @@ fclean:
 	@docker rm -f $(shell docker ps -aq) 2>/dev/null || true
 	@docker rmi -f $(shell docker images -q) 2>/dev/null || true
 	@docker builder prune -f
+	@docker volume prune -f
 
 re:	clean all
 

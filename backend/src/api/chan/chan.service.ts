@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateChanDto } from './chan.dto';
@@ -26,11 +26,15 @@ export class ChanService
 		return this.repository.find();
 	}
 
-	public createChan(body: CreateChanDto): Promise<Chan>
+	public async createChan(body: CreateChanDto): Promise<Chan>
 	{
+		const chans = await this.repository.find();
 		const chan: Chan = new Chan();
 
-		chan.name = body.name; // no check if chan name already exist
+		for (let i = 0; i < chans.length; i++)
+			if (chans[i].name == body.name)
+				throw new HttpException('channel name conflict', HttpStatus.CONFLICT);
+		chan.name = body.name;
 		chan.ownerId = body.ownerId;
 		chan.adminsId = [];
 		chan.adminsId.push(body.ownerId);
@@ -55,7 +59,7 @@ export class ChanService
 		if (body.hash)
 			chan.hash = hashing(body.hash);
 
-		return this.repository.save(chan);
+		return await this.repository.save(chan);
 	}
 
 	/*public async updateChan(id: number, updateChanDto: UpdateChanDto)

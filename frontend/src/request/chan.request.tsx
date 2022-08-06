@@ -1,3 +1,6 @@
+import Error from "../components/request_answer_component/error.component";
+import Loading from "../components/request_answer_component/loading.component";
+import Success from "../components/request_answer_component/success.component";
 import i_chan from "../interface/chan.interface";
 
 import useFetch from "./useFetch";
@@ -37,4 +40,19 @@ function useReqChans()
 	return ({ reqChans, loading, error });
 }
 
-export { chanBacktoFront, useReqChan, useReqChans }
+function CreateChan(props: { chan: i_chan })
+{
+	const { data, loading, error } = useFetch("http://localhost:3000/chan/", 'post', props.chan);
+
+	if (loading)
+		return (<Loading />);
+	else if (error)
+		return (<Error msg={error.message} />);
+	else
+	{
+		console.log(data);
+		return (<Success code={data.status} />);
+	}
+}
+
+export { chanBacktoFront, useReqChan, useReqChans, CreateChan }

@@ -6,7 +6,7 @@ interface i_chan
 	ownerId?: number;
 	adminsId?: number;
 	type?: 'public' | 'private' | 'protected' | 'direct';
-	// do not get nor send hash
+	hash?: string;
 	// msg
 }
 

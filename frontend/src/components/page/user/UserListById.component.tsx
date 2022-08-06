@@ -1,8 +1,8 @@
 import i_user from "../../../interface/user.interface";
 
 import { useReqUser } from "../../../request/user.request";
-import Error from "../../error.component";
-import Loading from "../../loading.component";
+import Error from "../../request_answer_component/error.component";
+import Loading from "../../request_answer_component/loading.component";
 import { UserBtn } from "../chan/user.component";
 
 function ReqOne(id: number): JSX.Element
