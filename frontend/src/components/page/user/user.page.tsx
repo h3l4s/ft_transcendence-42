@@ -12,7 +12,7 @@ import { AuthContext } from '../../../context/auth.context';
 import { ReactComponent as Friend } from '../../../icon/friend-svgrepo-com.svg'
 import { ReactComponent as Edit } from '../../../icon/write-pencil-svgrepo-com.svg'
 
-import { useReqUser } from '../../../utils/BackToFront';
+import { useReqUser } from '../../../request/useFetch';
 import UserStats from './userstats.component';
 import MatchHistoty from './matchHistory.component';
 import UserListById from './UserListById.component';

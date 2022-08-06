@@ -21,7 +21,7 @@ import { AuthContext } from '../../../context/auth.context';
 import i_user from '../../../interface/user.interface';
 
 import { Users } from '../chan/user.component';
-import { requestUser, userBacktoFront } from '../../../utils/BackToFront';
+import { requestUser, userBacktoFront } from '../../../request/useFetch';
 
 function Copyright(props: any)
 {

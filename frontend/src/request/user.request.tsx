@@ -1,39 +1,8 @@
-import { useEffect, useState } from "react";
 import axios from "axios";
 
+import useFetch from "./useFetch";
+
 import i_user from "../interface/user.interface"
-
-function useFetch(url: string, type: ('get' | 'post' | 'put' | 'delete'), payload?: any)
-{
-	const [error, setError] = useState<{ message: string } | null>(null);
-	const [loading, setLoading] = useState(true);
-	const [data, setData] = useState(null);
-
-	useEffect(() =>
-	{
-		const answer = (type === 'get' ? axios.get(url, payload)
-			: (type === 'post' ? axios.post(url, payload)
-				: (type === 'put' ? axios.put(url, payload)
-					: (axios.delete(url, payload)))));
-		answer.then(
-			(res) =>
-			{
-				setLoading(false);
-				setData(res.data);
-			},
-			// Note: it's important to handle errors here
-			// instead of a catch() block so that we don't swallow
-			// exceptions from actual bugs in components.
-			(error) =>
-			{
-				setLoading(false);
-				setError(error);
-			}
-		)
-	})
-
-	return ({ data, loading, error });
-}
 
 function userBacktoFront(user: any)
 {
@@ -95,4 +64,15 @@ function useReqUser(query: number | string)
 	return ({ reqUser, loading, error });
 }
 
-export { useFetch, userBacktoFront, requestUser, requestUserByName, useReqUser };
+function useReqUsers()
+{
+	const { data, loading, error } = useFetch("http://localhost:3000/user/", 'get');
+	let reqUsers: i_user[] = [];
+
+	if (!loading && !error && data)
+		for (let i = 0; i < data.length; i++)
+			reqUsers.push(userBacktoFront(data[i]));
+	return ({ reqUsers, loading, error });
+}
+
+export { userBacktoFront, requestUser, requestUserByName, useReqUser, useReqUsers }

@@ -1,6 +1,6 @@
 import i_user from "../../../interface/user.interface";
 
-import { useReqUser } from "../../../utils/BackToFront";
+import { useReqUser } from "../../../request/useFetch";
 import Error from "../../error.component";
 import Loading from "../../loading.component";
 import { UserBtn } from "../chan/user.component";
