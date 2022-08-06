@@ -14,7 +14,7 @@ import { ReactComponent as AddFriend } from '../../icon/add-friend-svgrepo-com.s
 import { ReactComponent as RemoveFriend } from '../../icon/delete-unfriend-svgrepo-com.svg';
 import { ReactComponent as Heart } from '../../icon/heart-friend.svg';
 
-import { requestUser } from '../../request/useFetch';
+import { requestUser } from '../../request/user.request';
 import UserStats from "../page/user/userstats.component";
 
 function ProfileModal(props: { user: i_user, onClose: () => void })
