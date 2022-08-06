@@ -16,6 +16,7 @@ import { ReactComponent as Heart } from '../../icon/heart-friend.svg';
 
 import { requestUser } from '../../request/user.request';
 import UserStats from "../page/user/userstats.component";
+import useFetch from '../../request/useFetch';
 
 function ProfileModal(props: { user: i_user, onClose: () => void })
 {

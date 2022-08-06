@@ -27,16 +27,18 @@ function ChanPage()
 			type: 'public'
 		}} />);
 	}
-
-	return (
-		<div>
-			<div className='split split--chan split--left'>
-				<div className='split--left--div' /*this style doesn't exist*/>
-					<Chans chans={reqChans.reqChans} users={reqUsers.reqUsers} />
-				</div>
-			</div >
-		</div>
-	);
+	else
+	{
+		return (
+			<div>
+				<div className='split split--chan split--left'>
+					<div className='split--left--div' /*this style doesn't exist*/>
+						<Chans chans={reqChans.reqChans} users={reqUsers.reqUsers} />
+					</div>
+				</div >
+			</div>
+		);
+	}
 }
 
 export default ChanPage;

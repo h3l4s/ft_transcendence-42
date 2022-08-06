@@ -20,6 +20,7 @@ import NoMatch from '../nomatch.page';
 import Loading from '../../request_answer_component/loading.component';
 import Error from '../../request_answer_component/error.component';
 
+// probably bugged
 function RequestByParam(username: string)
 {
 	const { reqUser, loading, error } = useReqUser(username);

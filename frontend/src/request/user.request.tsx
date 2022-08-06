@@ -23,38 +23,6 @@ function userBacktoFront(user: any)
 	return (ret_user);
 }
 
-async function requestUser(id: number): Promise<i_user | null>
-{
-	let user: i_user | null = null;
-
-	await axios.get("http://localhost:3000/user/" + id).then(res =>
-	{
-		console.log(res);
-		user = userBacktoFront(res.data);
-	}).catch(err =>
-	{
-		console.log(err);
-	});
-
-	return (user);
-}
-
-async function requestUserByName(name: string): Promise<i_user | null>
-{
-	let user: i_user | null = null;
-
-	await axios.get("http://localhost:3000/user/name/" + name).then(res =>
-	{
-		console.log(res);
-		user = userBacktoFront(res.data);
-	}).catch(err =>
-	{
-		console.log(err);
-	});
-
-	return (user);
-}
-
 function useReqUser(query: number | string)
 {
 	const { data, loading, error } = useFetch(
@@ -75,4 +43,4 @@ function useReqUsers()
 	return ({ reqUsers, loading, error });
 }
 
-export { userBacktoFront, requestUser, requestUserByName, useReqUser, useReqUsers }
+export { userBacktoFront, useReqUser, useReqUsers }
