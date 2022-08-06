@@ -9,13 +9,13 @@ export class Chan
 	@Column({ type: 'varchar', length: 255 })
 	public name: string;
 
-	@Column({ type: 'int', array: true, default: () => [] })
+	@Column({ type: 'int', array: true, nullable: null })
 	public usersId: number[];
 
 	@Column({ type: 'int' })
 	public ownerId: number;
 
-	@Column({ type: 'int', array: true, default: () => [] })
+	@Column({ type: 'int', array: true, nullable: null })
 	public adminsId: number[];
 
 	@Column({ type: 'varchar', length: 16 })

@@ -20,19 +20,8 @@ export class CreateChanDto
 	@IsNotEmpty()
 	public type: 'public' | 'private' | 'protected' | 'direct';
 
+	@IsString()
 	@IsNotEmpty()
 	@IsOptional()
-	@Transform((hash) =>
-	{
-		const str: any = hash;
-		let ret = 0;
-		for (let i = 0; i < str.length; i++)
-		{
-			const char = str.charCodeAt(i);
-			ret = ((ret << 5) - ret) + char;
-			ret = ret & ret; // Convert to 32bit integer
-		}
-		return (ret);
-	})
-	public hash: number;
+	public hash: string;
 }

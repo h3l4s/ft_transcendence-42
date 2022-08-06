@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateChanDto, UpdateChanDto } from './chan.dto';
+import { CreateChanDto } from './chan.dto';
 import { Chan } from './chan.entity';
+import { ChanModule } from './chan.module';
 
 @Injectable()
 export class ChanService
@@ -31,14 +32,28 @@ export class ChanService
 
 		chan.name = body.name; // no check if chan name already exist
 		chan.ownerId = body.ownerId;
+		chan.adminsId = [];
 		chan.adminsId.push(body.ownerId);
+		chan.usersId = [];
 		if (body.usersId)
 			chan.usersId = body.usersId;
 		else
 			chan.usersId.push(body.ownerId);
 		chan.type = body.type;
+
+		function hashing(pwd: string)
+		{
+			let hash = 0;
+			for (let i = 0; i < pwd.length; i++)
+			{
+				const char = pwd.charCodeAt(i);
+				hash = ((hash << 5) - hash) + char;
+				hash = hash & hash; // Convert to 32bit integer
+			}
+			return (hash);
+		}
 		if (body.hash)
-			chan.hash = body.hash;
+			chan.hash = hashing(body.hash);
 
 		return this.repository.save(chan);
 	}

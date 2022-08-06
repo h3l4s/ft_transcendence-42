@@ -27,7 +27,6 @@ export class ChanController
 		return this.service.getChanByName(name);
 	}
 
-	@UsePipes(new ValidationPipe({ transform: true }))
 	@Post()
 	public createChan(@Body() data: CreateChanDto)
 	{
