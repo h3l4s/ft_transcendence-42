@@ -9,6 +9,12 @@ export class ChanController
 	@Inject(ChanService)
 	private readonly service: ChanService;
 
+	@Get('init')
+	public initChan(): Promise<Chan>
+	{
+		return this.service.initChan();
+	}
+
 	@Get()
 	public getChans(): Promise<Chan[]>
 	{

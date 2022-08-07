@@ -1,9 +1,11 @@
-import Error from "../components/request_answer_component/error.component";
-import Loading from "../components/request_answer_component/loading.component";
-import Success from "../components/request_answer_component/success.component";
+import useFetch from "./useFetch";
+
 import i_chan from "../interface/chan.interface";
 
-import useFetch from "./useFetch";
+import Error from "../components/request_answer_component/error.component";
+import Loading from "../components/request_answer_component/loading.component";
+
+import ChanPage from "../components/page/chan/chan.page";
 
 function chanBacktoFront(chan: any)
 {
@@ -13,7 +15,7 @@ function chanBacktoFront(chan: any)
 		usersId: chan.usersId,
 		ownerId: chan.ownerId,
 		adminsId: chan.adminsId,
-		type: chan.type,
+		type: chan.type
 		// msg
 	} : {});
 
@@ -40,9 +42,9 @@ function useReqChans()
 	return ({ reqChans, loading, error });
 }
 
-function CreateChan(props: { chan: i_chan })
+function InitChan()
 {
-	const { data, loading, error } = useFetch("http://localhost:3000/chan/", 'post', props.chan);
+	const { data, loading, error } = useFetch("http://localhost:3000/chan/init", 'get');
 
 	if (loading)
 		return (<Loading />);
@@ -51,8 +53,8 @@ function CreateChan(props: { chan: i_chan })
 	else
 	{
 		console.log(data);
-		return (<Success code={data.status} />);
+		return (<ChanPage />);
 	}
 }
 
-export { chanBacktoFront, useReqChan, useReqChans, CreateChan }
+export { chanBacktoFront, useReqChan, useReqChans, InitChan }

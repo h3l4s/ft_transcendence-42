@@ -1,4 +1,4 @@
-import { CreateChan, useReqChans } from '../../../request/chan.request';
+import { InitChan, useReqChans } from '../../../request/chan.request';
 import { useReqUsers } from '../../../request/user.request';
 
 import '../../../style/chan.css';
@@ -22,12 +22,7 @@ function ChanPage()
 	{
 		return (
 			<div>
-				{reqChans.reqChans.length === 0 && <CreateChan chan={{
-					name: "global",
-					ownerId: -1,
-					usersId: [-1],
-					type: 'public'
-				}} />}
+				{reqChans.reqChans.length === 0 && <InitChan />}
 				<div className='split split--chan split--left'>
 					<div className='split--left--div' /*this style doesn't exist*/>
 						<Chans chans={reqChans.reqChans} users={reqUsers.reqUsers} />

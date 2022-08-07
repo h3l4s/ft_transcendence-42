@@ -11,6 +11,18 @@ export class ChanService
 	@InjectRepository(Chan)
 	private readonly repository: Repository<Chan>;
 
+	public initChan(): Promise<Chan>
+	{
+		return this.repository.save({
+			id: 1,
+			name: "global",
+			ownerId: -1,
+			adminsId: [-1],
+			usersId: [-1],
+			type: 'public'
+		});
+	}
+
 	public getChan(id: number): Promise<Chan>
 	{
 		return this.repository.findOne(id);
@@ -28,12 +40,11 @@ export class ChanService
 
 	public async createChan(body: CreateChanDto): Promise<Chan>
 	{
-		const chans = await this.repository.find();
+		if (await this.repository.count({ where: { name: body.name } }))
+			throw new HttpException('channel name conflict', HttpStatus.CONFLICT);
+
 		const chan: Chan = new Chan();
 
-		for (let i = 0; i < chans.length; i++)
-			if (chans[i].name == body.name)
-				throw new HttpException('channel name conflict', HttpStatus.CONFLICT);
 		chan.name = body.name;
 		chan.ownerId = body.ownerId;
 		chan.adminsId = [];
