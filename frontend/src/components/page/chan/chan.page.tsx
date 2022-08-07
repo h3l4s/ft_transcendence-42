@@ -18,19 +18,16 @@ function ChanPage()
 		return (<Error msg={reqChans.error.message} />);
 	else if (reqUsers.error)
 		return (<Error msg={reqUsers.error.message} />);
-	else if (reqChans.reqChans.length === 0)
-	{
-		return (<CreateChan chan={{
-			name: "global",
-			ownerId: -1,
-			usersId: [-1],
-			type: 'public'
-		}} />);
-	}
 	else
 	{
 		return (
 			<div>
+				{reqChans.reqChans.length === 0 && <CreateChan chan={{
+					name: "global",
+					ownerId: -1,
+					usersId: [-1],
+					type: 'public'
+				}} />}
 				<div className='split split--chan split--left'>
 					<div className='split--left--div' /*this style doesn't exist*/>
 						<Chans chans={reqChans.reqChans} users={reqUsers.reqUsers} />
