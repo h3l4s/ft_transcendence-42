@@ -27,6 +27,13 @@ body {
 	background-color: var(--background-color);
 }
 
+.back {
+	height: calc(100vh - var(--nav-h));
+	width: 100%;
+	text-align: center;
+	background-color: var(--background-color);
+}
+
 /*div {
 	background-color: var(--background-color);
 }*/

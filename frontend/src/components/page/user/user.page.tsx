@@ -37,9 +37,9 @@ function UserPage()
 	let matches: i_matchHistory[] = [];	// tmp until match history in db
 
 	if (loading)
-		return (<Loading />);
+		return (<div className='back'><Loading /></div>);
 	else if (error)
-		return (<Error msg={error.message} />);
+		return (<div className='back'><Error msg={error.message} /></div>);
 	else if (p_username)
 		userToLoad = isUserInDb(p_username, reqUsers);
 	else

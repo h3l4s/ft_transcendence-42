@@ -13,11 +13,11 @@ function ChanPage()
 	const reqUsers = useReqUsers();
 
 	if (reqChans.loading || reqUsers.loading)
-		return (<Loading />);
+		return (<div className='back'><Loading /></div>);
 	else if (reqChans.error)
-		return (<Error msg={reqChans.error.message} />);
+		return (<div className='back'><Error msg={reqChans.error.message} /></div>);
 	else if (reqUsers.error)
-		return (<Error msg={reqUsers.error.message} />);
+		return (<div className='back'><Error msg={reqUsers.error.message} /></div>);
 	else
 	{
 		return (
