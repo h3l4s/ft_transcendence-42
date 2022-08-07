@@ -3,15 +3,36 @@ import React, { useState } from "react";
 import i_chan from "../../../interface/chan.interface";
 import i_user from "../../../interface/user.interface";
 
-import { SearchByName, SearchByExactName } from "../../../utils/search_by_name";
+import { SearchByName } from "../../../utils/search_by_name";
+import get_id from "../../../utils/get_id";
 
 import Chat from "./chat.component";
-import { Users } from "./user.component";
+import { UserBtn } from "./user.component";
 
-function Chans(props: { chans: i_chan[], users: i_user[] })	// need to get this element from db
+function ChanUsers(props: { users_id: number[] | undefined, users: i_user[] }): JSX.Element
+{
+	let ret: JSX.Element[] = [];
+
+	if (!props.users_id)
+		return (<div />);
+
+	for (let i = 0; i < props.users.length; i++)
+	{
+		if (props.users_id[0] === -1 || (props.users[i].id && props.users_id.includes(props.users[i].id!)))
+			ret.push(<UserBtn user={props.users[i]} />);
+	}
+
+	return (
+		<div>
+			{ret}
+		</div>
+	);
+}
+
+function Chans(props: { chans: i_chan[], users: i_user[], to_chan: number })
 {
 	const [search, setSearch] = useState("");
-	const [selectedChan, setSelectedChan] = useState("global");
+	const [selectedChan, setSelectedChan] = useState<i_chan>(get_id(props.chans, props.to_chan));
 
 	const searchHandle = (event: React.KeyboardEvent<HTMLInputElement>) =>
 	{ setSearch(event.target.value); };
@@ -20,7 +41,7 @@ function Chans(props: { chans: i_chan[], users: i_user[] })	// need to get this 
 	{
 		return (
 			<div>
-				<div className='card card--border card--btn card--chan' onClick={() => { setSelectedChan(props.obj.name!) }}>{props.obj.name}</div>
+				<div className='card card--border card--btn card--chan' onClick={() => { setSelectedChan(props.obj) }}>{props.obj.name}</div>
 			</div>
 		);
 	}
@@ -32,13 +53,13 @@ function Chans(props: { chans: i_chan[], users: i_user[] })	// need to get this 
 
 			<div className='split split--chan split--center'>
 				<div className='split--center--div' /*this style doesn't exist*/>
-					<SearchByExactName objs={props.chans} query={selectedChan} Constructor={Chat} />
+					<Chat obj={selectedChan} />
 				</div>
 			</div>
 
 			<div className='split split--chan split--right'>
 				<div className='split--center--div' /*this style doesn't exist*/>
-					<Users users={props.users} />
+					<ChanUsers users_id={selectedChan.usersId} users={props.users} />
 				</div>
 			</div >
 		</div >

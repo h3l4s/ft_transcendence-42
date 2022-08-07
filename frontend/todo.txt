@@ -1,0 +1,2 @@
+front to add channel
+back to send msg and connect to front

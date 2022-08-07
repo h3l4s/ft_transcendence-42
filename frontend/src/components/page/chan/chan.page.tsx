@@ -25,7 +25,7 @@ function ChanPage()
 				{reqChans.reqChans.length === 0 && <InitChan />}
 				<div className='split split--chan split--left'>
 					<div className='split--left--div' /*this style doesn't exist*/>
-						<Chans chans={reqChans.reqChans} users={reqUsers.reqUsers} />
+						<Chans chans={reqChans.reqChans} users={reqUsers.reqUsers} to_chan={1} />
 					</div>
 				</div >
 			</div>
