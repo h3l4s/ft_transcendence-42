@@ -26,6 +26,12 @@ export class Chan
 
 	// msg
 
+	@Column({ type: 'int', array: true, nullable: null })
+	public bannedId?: number[];
+
+	@Column({ type: 'int', array: true, nullable: null })
+	public mutedId?: number[];
+
 	/*
 	 * Create and Update Date Columns
 	 */

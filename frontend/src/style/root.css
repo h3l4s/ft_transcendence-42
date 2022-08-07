@@ -3,9 +3,21 @@
 	font-family: minitel;
 }
 
+@font-face {
+	src: url(font/Nunito/Nunito-VariableFont_wght.ttf);
+	/*font-variation-settings: 'wght' 375, 'GRAD' 88;*/
+	font-family: nunito;
+}
+
+@font-face {
+	src: url(font/Ubuntu/Ubuntu-Regular.ttf);
+	font-family: ubuntu;
+}
+
 :root {
-	--main-font: System, monospace;
+	--main-font: nunito;
 	--alt-font: minitel;
+	--🔥-font: ubuntu;
 	--main-color: #51a30d;
 	--main-color-hover: greenyellow;
 	--alt-color: green;

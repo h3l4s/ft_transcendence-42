@@ -4,10 +4,12 @@ interface i_chan
 	name?: string;
 	usersId?: number[];
 	ownerId?: number;
-	adminsId?: number;
+	adminsId?: number[];
 	type?: 'public' | 'private' | 'protected' | 'direct';
 	hash?: string;
 	// msg
+	mutedId?: number[];
+	bannedId?: number[];
 }
 
 export default i_chan;

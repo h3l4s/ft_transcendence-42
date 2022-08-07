@@ -1,7 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
-import { i_matchHistory } from 'src/interface/matchHistory.interface';
-
 @Entity()
 export class User
 {
@@ -28,11 +26,15 @@ export class User
 
 	// possibly bugged because of array
 	@Column({ type: 'jsonb', nullable: true })
-	public matchHistory?: i_matchHistory[];
+	//public matchHistory?: matchHistoryDto[];
+	public matchHistory?: { tmp: number }[]
 	//
 
 	@Column({ type: 'int', array: true, nullable: true })
 	public friendsId?: number[];
+
+	@Column({ type: 'int', array: true, nullable: true })
+	public mutedId?: number[];
 
 	@Column({ type: 'boolean', default: false })
 	public isDeleted: boolean;

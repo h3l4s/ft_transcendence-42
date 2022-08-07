@@ -1,38 +1,40 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 import i_chan from "../../../interface/chan.interface";
 import i_user from "../../../interface/user.interface";
+
+import { AuthContext } from "../../../context/auth.context";
 
 import { SearchByName } from "../../../utils/search_by_name";
 import get_id from "../../../utils/get_id";
 
 import Chat from "./chat.component";
-import { UserBtn } from "./user.component";
+import { Users } from "./user.component";
 
-function ChanUsers(props: { users_id: number[] | undefined, users: i_user[] }): JSX.Element
+function get_user_in_chan(users_id: number[] | undefined, users: i_user[]): i_user[]
 {
-	let ret: JSX.Element[] = [];
+	let ret: i_user[] = [];
 
-	if (!props.users_id)
-		return (<div />);
+	if (!users_id)
+		return ([]);
 
-	for (let i = 0; i < props.users.length; i++)
+	for (let i = 0; i < users.length; i++)
 	{
-		if (props.users_id[0] === -1 || (props.users[i].id && props.users_id.includes(props.users[i].id!)))
-			ret.push(<UserBtn user={props.users[i]} />);
+		if (users_id[0] === -1 || (users[i].id && users_id.includes(users[i].id!)))
+			ret.push(users[i]);
 	}
 
-	return (
-		<div>
-			{ret}
-		</div>
-	);
+	return (ret);
 }
 
 function Chans(props: { chans: i_chan[], users: i_user[], to_chan: number })
 {
+	const { user } = useContext(AuthContext);
 	const [search, setSearch] = useState("");
 	const [selectedChan, setSelectedChan] = useState<i_chan>(get_id(props.chans, props.to_chan));
+	const users_in_chan: i_user[] = get_user_in_chan(selectedChan.usersId, props.users);
+	const is_user_admin: boolean = (selectedChan.adminsId && user && user.id && selectedChan.adminsId.includes(user.id) ? true : false)
+	const is_user_owner: boolean = (selectedChan.ownerId && user && user.id && selectedChan.ownerId === user.id ? true : false)
 
 	const searchHandle = (event: React.KeyboardEvent<HTMLInputElement>) =>
 	{ setSearch(event.target.value); };
@@ -53,13 +55,13 @@ function Chans(props: { chans: i_chan[], users: i_user[], to_chan: number })
 
 			<div className='split split--chan split--center'>
 				<div className='split--center--div' /*this style doesn't exist*/>
-					<Chat obj={selectedChan} />
+					<Chat chan={selectedChan} users={users_in_chan} is_admin={is_user_admin} is_owner={is_user_owner} />
 				</div>
 			</div>
 
 			<div className='split split--chan split--right'>
 				<div className='split--center--div' /*this style doesn't exist*/>
-					<ChanUsers users_id={selectedChan.usersId} users={props.users} />
+					<Users users={users_in_chan} />
 				</div>
 			</div >
 		</div >

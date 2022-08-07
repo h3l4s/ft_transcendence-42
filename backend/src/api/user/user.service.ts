@@ -90,6 +90,16 @@ export class UserService
 			else
 				user.friendsId.push(updateUserDto.friendId);
 		}
+		if (updateUserDto.mutedId)
+		{
+			if (!user.mutedId)
+				user.mutedId = [];
+			const i = user.mutedId.indexOf(updateUserDto.mutedId);
+			if (i > -1)
+				user.mutedId.splice(i, 1);
+			else
+				user.mutedId.push(updateUserDto.mutedId);
+		}
 
 		return await this.repository.save(user);
 	}

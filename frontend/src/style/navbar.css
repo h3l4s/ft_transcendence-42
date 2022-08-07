@@ -9,6 +9,7 @@ body {
 .nav {
 	background-color: #000;
 	color: #fff;
+	height: var(--nav-h);
 	display: flex;
 	justify-content: space-between;
 	align-items: center;

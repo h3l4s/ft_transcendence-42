@@ -1,12 +1,13 @@
 import { IsNotEmpty, IsOptional, IsString, IsNumber, IsNotEmptyObject } from 'class-validator';
-import { i_matchHistory } from 'src/interface/matchHistory.interface';
 
-export class CreateUserDto {
+export class CreateUserDto
+{
 	@IsString()
 	public access_token: string;
 }
 
-export class UpdateUserDto {
+export class UpdateUserDto
+{
 	@IsString()
 	@IsNotEmpty()
 	@IsOptional()
@@ -34,10 +35,16 @@ export class UpdateUserDto {
 
 	@IsNotEmptyObject()
 	@IsOptional()
-	public matchHistory: i_matchHistory;
+	//public matchHistory: matchHistoryDto;
+	public matchHistory: { tmp: number };
 
 	@IsNumber()
 	@IsNotEmpty()
 	@IsOptional()
 	public friendId: number;
+
+	@IsNumber()
+	@IsNotEmpty()
+	@IsOptional()
+	public mutedId: number;
 }
