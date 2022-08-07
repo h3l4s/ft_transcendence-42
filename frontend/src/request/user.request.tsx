@@ -1,5 +1,3 @@
-import axios from "axios";
-
 import useFetch from "./useFetch";
 
 import i_user from "../interface/user.interface"

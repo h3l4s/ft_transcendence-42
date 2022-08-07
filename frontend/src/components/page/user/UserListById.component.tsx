@@ -1,37 +1,19 @@
 import i_user from "../../../interface/user.interface";
 
-import { useReqUser } from "../../../request/user.request";
-import Error from "../../request_answer_component/error.component";
-import Loading from "../../request_answer_component/loading.component";
-import { UserBtn } from "../chan/user.component";
+import { Users } from "../chan/user.component";
 
-function ReqOne(id: number): JSX.Element
+function UserListById(props: { friendsId: number[] | undefined, reqUsers: i_user[] }): JSX.Element
 {
-	const { reqUser, loading, error } = useReqUser(id);
+	if (!props.friendsId)
+		return (<div></div>);
 
-	if (loading)
-		return (<Loading />);
-	else if (error)
-		return (<Error msg={error.message} />);
-	else
-		return (<UserBtn user={reqUser} />);
-}
+	let friends: i_user[] = [];
 
-function UserListById(props: { users_id: number[] | null }): JSX.Element
-{
-	if (!props.users_id)
-		return (<div />);
+	for (let i = 0; i < props.reqUsers.length; i++)
+		if (props.reqUsers[i].id && props.friendsId.includes(props.reqUsers[i].id!))
+			friends.push(props.reqUsers[i]);
 
-	let ret: JSX.Element[] = [];
-
-	for (let i = 0; i < props.users_id!.length; i++)
-	{ ret.push(ReqOne(props.users_id[i])); }
-
-	return (
-		<div>
-			{ret}
-		</div>
-	);
+	return (<Users users={friends} />);
 }
 
 export default UserListById;

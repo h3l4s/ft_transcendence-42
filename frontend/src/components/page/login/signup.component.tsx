@@ -21,7 +21,23 @@ import { AuthContext } from '../../../context/auth.context';
 import i_user from '../../../interface/user.interface';
 
 import { Users } from '../chan/user.component';
-import { requestUser, userBacktoFront } from '../../../request/user.request';
+import { userBacktoFront } from '../../../request/user.request';
+
+async function requestUser(id: number): Promise<i_user | null>
+{
+	let user: i_user | null = null;
+
+	await axios.get("http://localhost:3000/user/" + id).then(res =>
+	{
+		console.log(res);
+		user = userBacktoFront(res.data);
+	}).catch(err =>
+	{
+		console.log(err);
+	});
+
+	return (user);
+}
 
 function Copyright(props: any)
 {

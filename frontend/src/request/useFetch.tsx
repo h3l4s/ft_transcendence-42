@@ -28,7 +28,8 @@ function useFetch(url: string, type: ('get' | 'post' | 'put' | 'delete'), payloa
 				setError(error);
 			}
 		)
-	})
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
 
 	return ({ data, loading, error });
 }

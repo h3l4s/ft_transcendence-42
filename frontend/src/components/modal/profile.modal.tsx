@@ -14,9 +14,8 @@ import { ReactComponent as AddFriend } from '../../icon/add-friend-svgrepo-com.s
 import { ReactComponent as RemoveFriend } from '../../icon/delete-unfriend-svgrepo-com.svg';
 import { ReactComponent as Heart } from '../../icon/heart-friend.svg';
 
-import { requestUser } from '../../request/user.request';
-import UserStats from "../page/user/userstats.component";
-import useFetch from '../../request/useFetch';
+import UserStats from '../page/user/userstats.component';
+import { asyncReqUpdateUser } from '../../request/user.update.request';
 
 function ProfileModal(props: { user: i_user, onClose: () => void })
 {
@@ -27,18 +26,18 @@ function ProfileModal(props: { user: i_user, onClose: () => void })
 
 	function updateFriend(state: boolean)
 	{
-		if (!user)
+		if (!user || !user.id)
 			return;
-		axios.put("http://localhost:3000/user/" + user.id, { updateUserDto: { friendId: props.user.id! } }).then(async res =>
-		{
-			setFriend(state);
-			const tmp: i_user | null = await requestUser(user.id!);
-			setUser(tmp);
-			console.log(res);
-		}).catch(err =>
-		{
-			console.log(err);
-		});
+		asyncReqUpdateUser("http://localhost:3000/user/" + user.id, 'put',
+			{ updateUserDto: { friendId: props.user.id! } }).then((res) =>
+			{
+				setFriend(state);
+				setUser(res);
+				console.log(res);
+			}).catch(err =>
+			{
+				console.log(err);
+			});
 	}
 
 	return (

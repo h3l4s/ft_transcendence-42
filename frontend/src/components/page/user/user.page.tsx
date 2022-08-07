@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import '../../../style/chan.css';
@@ -12,7 +12,7 @@ import { AuthContext } from '../../../context/auth.context';
 import { ReactComponent as Friend } from '../../../icon/friend-svgrepo-com.svg'
 import { ReactComponent as Edit } from '../../../icon/write-pencil-svgrepo-com.svg'
 
-import { useReqUser } from '../../../request/user.request';
+import { useReqUsers } from '../../../request/user.request';
 import UserStats from './userstats.component';
 import MatchHistoty from './matchHistory.component';
 import UserListById from './UserListById.component';
@@ -20,74 +20,34 @@ import NoMatch from '../nomatch.page';
 import Loading from '../../request_answer_component/loading.component';
 import Error from '../../request_answer_component/error.component';
 
-// probably bugged
-function RequestByParam(username: string)
+function isUserInDb(username: string, users: i_user[]): i_user | null
 {
-	const { reqUser, loading, error } = useReqUser(username);
-
-	return ({ reqUser, loading, error });
-}
-
-function useFindUser(p_username: string | undefined, userAuth: i_user | null)
-{
-	let userToLoad: i_user;
-	let loading: boolean;
-	let error: { message: string } | null;
-
-	if (p_username)
-	{
-		let tmp = RequestByParam(p_username);
-		userToLoad = tmp.reqUser;
-		loading = tmp.loading;
-		error = tmp.error;
-	}
-	else if (userAuth)
-	{
-		userToLoad = userAuth;
-		loading = false;
-		error = null;
-	}
-	else
-	{
-		userToLoad = {};
-		loading = false;
-		error = { message: "failed to load" };
-	}
-
-	return ({ userToLoad, loading, error });
+	for (let i = 0; i < users.length; i++)
+		if (users[i].name === username)
+			return (users[i]);
+	return (null);
 }
 
 function UserPage()
 {
+	const { reqUsers, loading, error } = useReqUsers();
 	const { user } = useContext(AuthContext);
 	const p_username = useParams().username;
-	const { userToLoad, loading, error } = useFindUser(p_username, user);
+	let userToLoad: i_user | null;
+	let matches: i_matchHistory[] = [];	// tmp until match history in db
 
 	if (loading)
 		return (<Loading />);
-	else if (error && error.message === "failed to load")
+	else if (error)
 		return (<Error msg={error.message} />);
-	else if (error || !userToLoad.id)
-		return (<NoMatch />);
+	else if (p_username)
+		userToLoad = isUserInDb(p_username, reqUsers);
 	else
-		console.log("user to load:", userToLoad);
+		userToLoad = user;
+	if (!userToLoad)
+		return (<NoMatch />);
 
-	let matches: i_matchHistory[] = [];
-	let tmp_users: i_user[] = [];
-
-	tmp_users.push({ name: "idhiba", profilePicPath: "profile_picture/default.png" });
-	tmp_users.push({ name: "glaverdu", profilePicPath: "profile_picture/default.png" });
-	tmp_users.push({ name: "very_long_text_very_long_text_very_long_text_very_long_text_very_long_text", profilePicPath: "profile_picture/default.png" });
-
-	for (let i = 0; i < 20; i++)
-		tmp_users.push({ name: i.toString(), profilePicPath: "profile_picture/default.png" });
-
-	matches.push({ opponent: tmp_users[0], won_round: 5, lost_round: 4 });
-	matches.push({ opponent: tmp_users[1], won_round: 5, lost_round: 2 });
-	matches.push({ opponent: tmp_users[0], won_round: 3, lost_round: 5 });
-
-	for (let i = 0; i < 20; i++)
-		matches.push({ opponent: tmp_users[2], won_round: 5, lost_round: 0 });
+	console.log("user to load:", userToLoad);
 
 	return (
 		<div className='user--page' >
@@ -120,7 +80,7 @@ function UserPage()
 						(<span style={{ color: "var(--color-number)" }}>{(userToLoad.friendsId ? userToLoad.friendsId.length : 0)}</span>)
 					</span>
 				</div>
-				<UserListById users_id={userToLoad.friendsId!} />
+				<UserListById friendsId={userToLoad.friendsId} reqUsers={reqUsers} />
 			</div>
 		</div >
 	);
