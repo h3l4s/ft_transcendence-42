@@ -31,7 +31,7 @@ function Chat(props: { chan: i_chan, users: i_user[], is_admin: boolean, is_owne
 			<div className='card card--alt card--chat' >
 				<div className='card chan--title'>
 					<div className='truncate'>- {props.chan.name} -</div>
-					<button>
+					<button onClick={() => { setShowOption(true) }}>
 						<Option />
 					</button>
 				</div>
@@ -40,6 +40,7 @@ function Chat(props: { chan: i_chan, users: i_user[], is_admin: boolean, is_owne
 
 			{showOption && <Backdrop onClick={resetAllStateHandle} />}
 			{showOption && <OptionModal
+				// also an option to quit the channel
 				setChallenge={setShowChallenge}
 				setMute={setShowMute}
 				setAdminBan={setShowAdminBan}
