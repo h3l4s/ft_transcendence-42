@@ -1,6 +1,8 @@
 import i_user from "../../interface/user.interface";
 
 import { ReactComponent as Back } from '../../icon/left-svgrepo-com.svg'
+import { useContext } from "react";
+import { AuthContext } from "../../context/auth.context";
 
 function PickUser(props: { user: i_user })
 {
@@ -15,12 +17,18 @@ function PickUser(props: { user: i_user })
 	);
 }
 
-function PickUsers(props: { users: i_user[] })
+function PickUsers(props: { users: i_user[] }): JSX.Element
 {
+	const { user } = useContext(AuthContext);
+
+	if (!user)
+		return (<div />);
+
 	let ret: JSX.Element[] = [];
 
 	for (let i = 0; i < props.users.length; i++)
-		ret.push(<PickUser user={props.users[i]} />);
+		if (props.users[i].id !== user.id)
+			ret.push(<PickUser user={props.users[i]} />);
 
 	return (<div>{ret}</div>);
 }

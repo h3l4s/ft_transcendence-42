@@ -6,7 +6,7 @@
 #    By: adelille <adelille@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/10 14:54:46 by adelille          #+#    #+#              #
-#    Updated: 2022/08/06 18:02:55 by adelille         ###   ########.fr        #
+#    Updated: 2022/08/08 20:14:31 by adelille         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,6 +46,8 @@ fclean:
 
 re:	clean all
 
+fre: fclean all
+
 list:
 	@printf "\n\t$(B)$(GRE)container$(D)\n"
 	docker ps -a
@@ -57,6 +59,6 @@ list:
 	docker volume ls
 	@echo ;
 
-.PHONY: all clean fclean re list
+.PHONY: all clean fclean re fre list
 
 # **************************************************************************** #

@@ -17,9 +17,11 @@ function userNotInChan(users_id: number[] | undefined, users: i_user[]): i_user[
 
 	let ret: i_user[] = [];
 
-	for (let i = 0; i < users[i]; i++)
+	for (let i = 0; i < users.length; i++)
+	{
 		if (users[i].id && !users_id.includes(users[i].id!))
 			ret.push(users[i]);
+	}
 
 	return (ret);
 }
@@ -31,7 +33,7 @@ function userNotAdmin(admins_id: number[] | undefined, users: i_user[]): i_user[
 
 	let ret: i_user[] = [];
 
-	for (let i = 0; i < users[i]; i++)
+	for (let i = 0; i < users.length; i++)
 		if (users[i].id && !admins_id.includes(users[i].id!))
 			ret.push(users[i]);
 

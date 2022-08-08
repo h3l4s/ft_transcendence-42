@@ -19,20 +19,14 @@ function get_user_in_chan(users_id: number[] | undefined, users: i_user[]): i_us
 {
 	let ret: i_user[] = [];
 
-	console.log("get_user_in_chan: ");
-
 	if (!users_id)
 		return ([]);
-
-	console.log(users_id);
 
 	for (let i = 0; i < users.length; i++)
 	{
 		if (users_id[0] === -1 || (users[i].id && users_id.includes(users[i].id!)))
 			ret.push(users[i]);
 	}
-
-	console.log("get_user_in_chan res: ", ret);
 
 	return (ret);
 }

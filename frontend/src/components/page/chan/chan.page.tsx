@@ -35,7 +35,7 @@ function ChanPage(props: { id: number })
 				) : (
 					<div>
 						<Chans chans={reqChans.reqChans} users={reqUsers.reqUsers} to_chan={props.id} />
-					</div >
+					</div>
 				)}
 			</div>
 		);

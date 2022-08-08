@@ -74,7 +74,7 @@ function AddChanModal(props: { user_id: number, onClose: () => void })
 					</div>
 				}
 			</div>
-			<div>
+			<div style={{ position: "absolute", top: "-4rem" }}>
 				{sumbit && <SumbitAddChan user_id={props.user_id} name={title} type={type} pwd={pwd} onClose={props.onClose} />}
 			</div>
 			<div style={{ width: "calc(100% - 6rem)" }}>
