@@ -55,22 +55,31 @@ function AddChanModal(props: { user_id: number, onClose: () => void })
 
 	return (
 		<form className='modal--add--chan' onSubmit={handleSubmit}>
-			<label>title</label>
-			<input type='text' required value={title} onChange={(e) => { setTitle(e.target.value) }} />
-			< div >
-				<button type='button' onClick={() => setType('public')}>public</button>
-				<button type='button' onClick={() => setType('private')}>private</button>
-				<button type='button' onClick={() => setType('protected')}>protected</button>
+			<div>
+				<label>title</label>
+				<input className='form--input' type='text' required value={title} onChange={(e) => { setTitle(e.target.value) }} />
 			</div>
-			{
-				type === 'protected'
-				&& <div>
-					<label>password</label>
-					<input required type='text' value={pwd} onChange={(e) => { setPwd(e.target.value) }} />
-				</div>
-			}
-			<input type='submit' value='sumbit' />
-			{sumbit && <SumbitAddChan user_id={props.user_id} name={title} type={type} pwd={pwd} onClose={props.onClose} />}
+			<div>
+				<button style={{ backgroundColor: type === 'public' ? "var(--alt-color-hover)" : "var(--alt-color)" }}
+					type='button' onClick={() => setType('public')}>public</button>
+				<button style={{ backgroundColor: type === 'private' ? "var(--alt-color-hover)" : "var(--alt-color)" }}
+					type='button' onClick={() => setType('private')}>private</button>
+				<button style={{ backgroundColor: type === 'protected' ? "var(--alt-color-hover)" : "var(--alt-color)" }}
+					type='button' onClick={() => setType('protected')}>protected</button>
+				{
+					type === 'protected'
+					&& <div>
+						<label>password</label>
+						<input className='form--input' type='text' required value={pwd} onChange={(e) => { setPwd(e.target.value) }} />
+					</div>
+				}
+			</div>
+			<div>
+				{sumbit && <SumbitAddChan user_id={props.user_id} name={title} type={type} pwd={pwd} onClose={props.onClose} />}
+			</div>
+			<div style={{ width: "calc(100% - 6rem)" }}>
+				<input className='form--submit' type='submit' value='✔' />
+			</div>
 		</form >
 	);
 }

@@ -465,7 +465,8 @@ input {
 .modal--add--chan {
 	background-color: #333;
 	color: #fff;
-	padding: 1rem;
+	font-size: large;
+	padding: 3rem;
 	width: 70vh;
 	height: 70vh;
 	z-index: 10;
@@ -475,4 +476,62 @@ input {
 	left: calc(50% - 35vh);
 	border: 8px double #fff8;
 	box-shadow: 0 0 0 4px #333, 1em 1em 3px 0 rgb(0 0 0 / 50%);
+	text-align: center;
+}
+
+.modal--add--chan div {
+	margin-top: 3rem;
+}
+
+.modal--add--chan label {
+	text-align: start;
+	width: 80%;
+}
+
+.modal--add--chan button {
+	background-color: unset;
+	border: unset;
+	color: #fff;
+	padding: 0.5rem 1rem;
+	border-radius: 1rem;
+	margin: 0 0.5rem;
+	transition: 200ms;
+}
+
+.modal--add--chan button:hover {
+	filter: brightness(150%);
+}
+
+.form--input {
+	cursor: text;
+	font-size: large;
+	background-color: rgb(0, 0, 0, 0.40);
+	color: white;
+	padding: 0.2rem;
+	border-style: solid;
+	border-width: 4px;
+	border-top-color: rgba(0, 0, 0, 0.75);
+	border-left-color: rgba(0, 0, 0, 0.75);
+	border-right-color: rgba(255, 255, 255, 0.25);
+	border-bottom-color: rgba(255, 255, 255, 0.25);
+	width: 100%;
+}
+
+.form--submit {
+	position: absolute;
+	left: 10%;
+	bottom: 1rem;
+	text-align: center;
+	background-color: unset;
+	border: unset;
+	color: #fff;
+	font-size: 3rem;
+	width: 80%;
+	border-radius: 1rem;
+	transition: 500ms;
+}
+
+.form--submit:hover {
+	background-color: #fff8;
+	color: var(--main-color-hover);
 }
