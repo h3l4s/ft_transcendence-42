@@ -45,7 +45,8 @@ function Chat(props: { chan: i_chan, users: i_user[], user: i_user, is_admin: bo
 				<input className='card--input input--chat' type='text' placeholder=' 💬' />
 			</div>
 
-			{showOption && <Backdrop onClick={resetAllStateHandle} />}
+			{(showOption || showAdd || showChallenge || showMute || showAdminAdd || showAdminBan || showAdminMute || showOwnerPwd)
+				&& <Backdrop onClick={resetAllStateHandle} />}
 			{showOption && <OptionModal
 				user={props.user}
 				chan={props.chan}

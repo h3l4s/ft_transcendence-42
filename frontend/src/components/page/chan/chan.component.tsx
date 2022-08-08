@@ -61,7 +61,7 @@ function Chans(props: { chans: i_chan[], users: i_user[], to_chan: number })
 
 	return (
 		<div>
-			<div style={{ maxHeight: "calc(100vh - calc(var(--nav-h) - 0.75rem)", overflow: "scroll", marginTop: "-1.5rem", padding: "1.5rem 0 1.5rem 0" }}>
+			<div className='split split--chan split--left' style={{ height: "100vh", overflow: "scroll", padding: "1.5rem 0 calc(1.5rem + var(--nav-h)) 0" }}>
 				<div style={{ display: "flex", flexDirection: "row" }}>
 					<input className='card--input input--search' type='text' placeholder='🔍 ' onChange={searchHandle} value={search} />
 					<button className='btn--plus' onClick={() => setShowAddChan(true)}>
@@ -72,15 +72,11 @@ function Chans(props: { chans: i_chan[], users: i_user[], to_chan: number })
 			</div>
 
 			<div className='split split--chan split--center'>
-				<div className='split--center--div' /*this style doesn't exist*/>
-					{selectedChan && user && <Chat chan={selectedChan} users={users_in_chan} user={user} is_admin={is_user_admin} is_owner={is_user_owner} />}
-				</div>
+				{selectedChan && user && <Chat chan={selectedChan} users={users_in_chan} user={user} is_admin={is_user_admin} is_owner={is_user_owner} />}
 			</div>
 
 			<div className='split split--chan split--right'>
-				<div className='split--center--div' /*this style doesn't exist*/>
-					<Users users={users_in_chan} />
-				</div>
+				<Users users={users_in_chan} />
 			</div >
 
 			{showAddChan && <Backdrop onClick={() => { setShowAddChan(false) }} />}

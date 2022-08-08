@@ -30,12 +30,13 @@ function ChanPage(props: { id: number })
 	{
 		return (
 			<div>
-				{reqChans.reqChans.length === 0 && <InitChan />}
-				<div className='split split--chan split--left'>
-					<div className='split--left--div' /*this style doesn't exist*/>
+				{reqChans.reqChans.length === 0 ? (
+					<InitChan />
+				) : (
+					<div>
 						<Chans chans={reqChans.reqChans} users={reqUsers.reqUsers} to_chan={props.id} />
-					</div>
-				</div >
+					</div >
+				)}
 			</div>
 		);
 	}

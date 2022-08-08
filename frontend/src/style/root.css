@@ -51,7 +51,7 @@ body {
 }*/
 
 
-/* scrool bar */
+/* scroll bar */
 /* width */
 ::-webkit-scrollbar {
 	width: 12px;
@@ -59,7 +59,7 @@ body {
 
 /* track */
 ::-webkit-scrollbar-track {
-	background: unset;
+	background: #fff0;
 }
 
 /* handle */

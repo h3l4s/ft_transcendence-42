@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Navigate } from "react-router-dom";
 
 import useFetch from "../../request/useFetch";
+import sleep from "../../utils/sleep";
 import Error from "../request_answer_component/error.component";
 
 import Loading from "../request_answer_component/loading.component";
@@ -30,6 +31,7 @@ function SumbitAddChan(props: {
 	{
 		console.log(data);
 		props.onClose();
+		//sleep(500);
 		return (<Navigate to={"/chan/" + data.id} />);
 	}
 }

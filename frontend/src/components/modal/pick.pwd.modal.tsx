@@ -1,7 +1,7 @@
 function PickPwdModal(props: { onClose: () => void })
 {
 	return (
-		<div className='card card--alt modal--option'>
+		<div onMouseLeave={props.onClose} className='modal--option'>
 			options
 		</div>
 	);

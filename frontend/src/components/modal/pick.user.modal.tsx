@@ -7,7 +7,7 @@ function PickUserModal(props: {
 })
 {
 	return (
-		<div className='modal--profile modal--option'>
+		<div onMouseLeave={props.onClose} className='modal--option'>
 			options
 		</div>
 	);

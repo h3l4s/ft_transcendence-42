@@ -144,8 +144,8 @@ input {
 	border-radius: 30%;
 	height: 3rem;
 	width: 3rem;
-	margin: 0 0.2rem 0 0.5rem;
-	box-shadow: .5em .5em 3px rgba(0, 0, 0, .5);
+	margin: 0 0.3rem 0 0.5rem;
+	box-shadow: .2em .2em 3px rgba(0, 0, 0, .5);
 	transition: 300ms;
 }
 
@@ -402,10 +402,14 @@ input {
 	background-color: #d8d8d8;
 	border: unset;
 	color: #f00;
-	text-align: center;
-	width: 3rem;
-	height: 3rem;
+	width: 4.2rem;
+	height: 4.2rem;
 	border-radius: 50%;
+}
+
+.modal--option svg {
+	height: 2.4rem;
+	width: 2.4rem;
 }
 
 .modal--add--chan {
@@ -421,5 +425,4 @@ input {
 	left: calc(50% - 35vh);
 	border: 8px double #fff8;
 	box-shadow: 0 0 0 4px #333, 1em 1em 3px 0 rgb(0 0 0 / 50%);
-	text-align: center;
 }
