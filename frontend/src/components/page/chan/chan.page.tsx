@@ -6,8 +6,16 @@ import '../../../style/chan.css';
 import Chans from './chan.component';
 import Loading from '../../request_answer_component/loading.component';
 import Error from '../../request_answer_component/error.component';
+import { useParams } from 'react-router-dom';
 
-function ChanPage()
+function ToChan()
+{
+	const p_id = useParams().id;
+
+	return (<ChanPage id={(p_id ? +p_id : 1)} />);
+}
+
+function ChanPage(props: { id: number })
 {
 	const reqChans = useReqChans();
 	const reqUsers = useReqUsers();
@@ -25,7 +33,7 @@ function ChanPage()
 				{reqChans.reqChans.length === 0 && <InitChan />}
 				<div className='split split--chan split--left'>
 					<div className='split--left--div' /*this style doesn't exist*/>
-						<Chans chans={reqChans.reqChans} users={reqUsers.reqUsers} to_chan={1} />
+						<Chans chans={reqChans.reqChans} users={reqUsers.reqUsers} to_chan={props.id} />
 					</div>
 				</div >
 			</div>
@@ -33,4 +41,4 @@ function ChanPage()
 	}
 }
 
-export default ChanPage;
+export { ChanPage, ToChan };

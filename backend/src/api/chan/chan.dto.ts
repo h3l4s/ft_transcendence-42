@@ -1,4 +1,3 @@
-import { Transform } from 'class-transformer';
 import { IsNotEmpty, IsOptional, IsString, IsNumber, IsNotEmptyObject, IsArray } from 'class-validator';
 
 export class CreateChanDto
@@ -21,7 +20,6 @@ export class CreateChanDto
 	public type: 'public' | 'private' | 'protected' | 'direct';
 
 	@IsString()
-	@IsNotEmpty()
 	@IsOptional()
 	public hash: string;
 }

@@ -4,8 +4,6 @@ import { Repository } from 'typeorm';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { User } from './user.entity';
 
-import i_user from 'src/interface/user.interface';
-
 @Injectable()
 export class UserService
 {
@@ -36,7 +34,13 @@ export class UserService
 		return this.repository.save(user);
 	}
 
-	public tmpCreateUser(user: i_user): Promise<User>
+	public tmpCreateUser(user: {
+		name: string;
+		elo?: number;
+		xp?: number;
+		win?: number;
+		lose?: number;
+	}): Promise<User>
 	{
 		const new_user: User = new User();
 
@@ -53,8 +57,6 @@ export class UserService
 			new_user.win = user.win;
 		if (user.lose)
 			new_user.lose = user.lose;
-		if (user.elo)
-			new_user.elo = user.elo;
 
 		return this.repository.save(new_user);
 	}

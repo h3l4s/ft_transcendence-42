@@ -5,7 +5,7 @@ import i_chan from "../interface/chan.interface";
 import Error from "../components/request_answer_component/error.component";
 import Loading from "../components/request_answer_component/loading.component";
 
-import ChanPage from "../components/page/chan/chan.page";
+import { ChanPage } from "../components/page/chan/chan.page";
 
 function chanBacktoFront(chan: any)
 {
@@ -15,8 +15,10 @@ function chanBacktoFront(chan: any)
 		usersId: chan.usersId,
 		ownerId: chan.ownerId,
 		adminsId: chan.adminsId,
-		type: chan.type
+		type: chan.type,
 		// msg
+		bannedId: chan.bannedId,
+		mutedId: chan.mutedId
 	} : {});
 
 	return (ret_chan);
@@ -47,13 +49,13 @@ function InitChan()
 	const { data, loading, error } = useFetch("http://localhost:3000/chan/init", 'get');
 
 	if (loading)
-		return (<Loading />);
+		return (<div className='back'><Loading /></div>);
 	else if (error)
-		return (<Error msg={error.message} />);
+		return (<div className='back'><Error msg={error.message} /></div>);
 	else
 	{
 		console.log(data);
-		return (<ChanPage />);
+		return (<ChanPage id={1} />);
 	}
 }
 

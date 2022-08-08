@@ -6,8 +6,11 @@ import i_chan from "../../../interface/chan.interface";
 import { ReactComponent as Option } from '../../../icon/single-select-svgrepo-com.svg'
 
 import Backdrop from "../../modal/backdrop";
+import OptionModal from "../../modal/option.modal";
+import PickUserModal from "../../modal/pick.user.modal";
+import PickPwdModal from "../../modal/pick.pwd.modal";
 
-function Chat(props: { chan: i_chan, users: i_user[], is_admin: boolean, is_owner: boolean })
+function Chat(props: { chan: i_chan, users: i_user[], user: i_user, is_admin: boolean, is_owner: boolean })
 {
 	const [showOption, setShowOption] = useState(false);
 	const [showAdd, setShowAdd] = useState(false);
@@ -44,14 +47,20 @@ function Chat(props: { chan: i_chan, users: i_user[], is_admin: boolean, is_owne
 
 			{showOption && <Backdrop onClick={resetAllStateHandle} />}
 			{showOption && <OptionModal
-				// also an option to quit the channel
-				setAdd={setShowAdd}
-				setChallenge={setShowChallenge}
-				setMute={setShowMute}
-				setAdminAdd={setShowAdminAdd}
-				setAdminBan={setShowAdminBan}
-				setAdminMute={setShowAdminMute}
-				setOwnerPwd={setShowOwnerPwd}
+				user={props.user}
+				chan={props.chan}
+				is_admin={props.is_admin}
+				is_owner={props.is_owner}
+				options={
+					{
+						setShowAdd,
+						setShowChallenge,
+						setShowMute,
+						setShowAdminAdd,
+						setShowAdminBan,
+						setShowAdminMute,
+						setShowOwnerPwd,
+					}}
 				onClose={() => { setShowOption(false) }}
 			/>}
 			{showAdd && <PickUserModal users={props.users} type='add' onClose={() => { setShowAdd(false); setShowOption(false); }} />}
@@ -60,7 +69,7 @@ function Chat(props: { chan: i_chan, users: i_user[], is_admin: boolean, is_owne
 			{props.is_admin && showAdminAdd && <PickUserModal users={props.users} type='admin add' onClose={() => { setShowAdminAdd(false); setShowOption(false); }} />}
 			{props.is_admin && showAdminBan && <PickUserModal users={props.users} type='admin ban' onClose={() => { setShowAdminBan(false); setShowOption(false); }} />}
 			{props.is_admin && showAdminMute && <PickUserModal users={props.users} type='admin mute' onClose={() => { setShowAdminMute(false); setShowOption(false); }} />}
-			{props.is_owner && showOwnerPwd && <PickPwd users={props.users} type='owner pwd' onClose={() => { setShowOwnerPwd(false); setShowOption(false); }} />}
+			{props.is_owner && showOwnerPwd && <PickPwdModal onClose={() => { setShowOwnerPwd(false); setShowOption(false); }} />}
 		</div>
 	);
 }

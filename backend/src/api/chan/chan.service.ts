@@ -19,7 +19,10 @@ export class ChanService
 			ownerId: -1,
 			adminsId: [-1],
 			usersId: [-1],
-			type: 'public'
+			type: 'public',
+			// msg init
+			bannedId: [],
+			mutedId: []
 		});
 	}
 
@@ -67,8 +70,11 @@ export class ChanService
 			}
 			return (hash);
 		}
-		if (body.hash)
+		if (body.type === 'protected' && body.hash)
 			chan.hash = hashing(body.hash);
+		// init msg
+		chan.bannedId = [];
+		chan.mutedId = [];
 
 		return await this.repository.save(chan);
 	}

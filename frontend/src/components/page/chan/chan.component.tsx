@@ -5,24 +5,34 @@ import i_user from "../../../interface/user.interface";
 
 import { AuthContext } from "../../../context/auth.context";
 
+import { ReactComponent as Plus } from '../../../icon/plus-svgrepo-com.svg'
+
 import { SearchByName } from "../../../utils/search_by_name";
 import get_id from "../../../utils/get_id";
 
 import Chat from "./chat.component";
 import { Users } from "./user.component";
+import Backdrop from "../../modal/backdrop";
+import AddChanModal from "../../modal/add.chan.modal";
 
 function get_user_in_chan(users_id: number[] | undefined, users: i_user[]): i_user[]
 {
 	let ret: i_user[] = [];
 
+	console.log("get_user_in_chan: ");
+
 	if (!users_id)
 		return ([]);
+
+	console.log(users_id);
 
 	for (let i = 0; i < users.length; i++)
 	{
 		if (users_id[0] === -1 || (users[i].id && users_id.includes(users[i].id!)))
 			ret.push(users[i]);
 	}
+
+	console.log("get_user_in_chan res: ", ret);
 
 	return (ret);
 }
@@ -32,9 +42,10 @@ function Chans(props: { chans: i_chan[], users: i_user[], to_chan: number })
 	const { user } = useContext(AuthContext);
 	const [search, setSearch] = useState("");
 	const [selectedChan, setSelectedChan] = useState<i_chan>(get_id(props.chans, props.to_chan));
-	const users_in_chan: i_user[] = get_user_in_chan(selectedChan.usersId, props.users);
-	const is_user_admin: boolean = (selectedChan.adminsId && user && user.id && selectedChan.adminsId.includes(user.id) ? true : false)
-	const is_user_owner: boolean = (selectedChan.ownerId && user && user.id && selectedChan.ownerId === user.id ? true : false)
+	const [showAddChan, setShowAddChan] = useState(false);
+	const users_in_chan: i_user[] = get_user_in_chan((selectedChan ? selectedChan.usersId : [-1]), props.users);
+	const is_user_admin: boolean = (selectedChan && selectedChan.adminsId && user && user.id && selectedChan.adminsId.includes(user.id) ? true : false)
+	const is_user_owner: boolean = (selectedChan && selectedChan.ownerId && user && user.id && selectedChan.ownerId === user.id ? true : false)
 
 	const searchHandle = (event: React.KeyboardEvent<HTMLInputElement>) =>
 	{ setSearch(event.target.value); };
@@ -50,12 +61,19 @@ function Chans(props: { chans: i_chan[], users: i_user[], to_chan: number })
 
 	return (
 		<div>
-			<input className='card--input input--search' type='text' placeholder='🔍 ' onChange={searchHandle} value={search} />
-			<SearchByName objs={props.chans} query={search} Constructor={Chan} />
+			<div style={{ maxHeight: "calc(100vh - calc(var(--nav-h) - 0.75rem)", overflow: "scroll", marginTop: "-1.5rem", padding: "1.5rem 0 1.5rem 0" }}>
+				<div style={{ display: "flex", flexDirection: "row" }}>
+					<input className='card--input input--search' type='text' placeholder='🔍 ' onChange={searchHandle} value={search} />
+					<button className='btn--plus' onClick={() => setShowAddChan(true)}>
+						<Plus />
+					</button>
+				</div>
+				<SearchByName objs={props.chans} query={search} Constructor={Chan} />
+			</div>
 
 			<div className='split split--chan split--center'>
 				<div className='split--center--div' /*this style doesn't exist*/>
-					<Chat chan={selectedChan} users={users_in_chan} is_admin={is_user_admin} is_owner={is_user_owner} />
+					{selectedChan && user && <Chat chan={selectedChan} users={users_in_chan} user={user} is_admin={is_user_admin} is_owner={is_user_owner} />}
 				</div>
 			</div>
 
@@ -64,6 +82,9 @@ function Chans(props: { chans: i_chan[], users: i_user[], to_chan: number })
 					<Users users={users_in_chan} />
 				</div>
 			</div >
+
+			{showAddChan && <Backdrop onClick={() => { setShowAddChan(false) }} />}
+			{showAddChan && user && user.id && <AddChanModal user_id={user.id} onClose={() => { setShowAddChan(false) }} />}
 		</div >
 	);
 }
