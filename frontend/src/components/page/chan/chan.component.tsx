@@ -72,7 +72,7 @@ function Chans(props: { chans: i_chan[], users: i_user[], to_chan: number })
 			</div>
 
 			<div className='split split--chan split--center'>
-				{selectedChan && user && <Chat chan={selectedChan} users={users_in_chan} user={user} is_admin={is_user_admin} is_owner={is_user_owner} />}
+				{selectedChan && user && <Chat chan={selectedChan} all_users={props.users} users={users_in_chan} user={user} is_admin={is_user_admin} is_owner={is_user_owner} />}
 			</div>
 
 			<div className='split split--chan split--right'>

@@ -376,13 +376,13 @@ input {
 	background-color: #3338;
 	color: #fff;
 	padding: 1rem;
-	width: 50vw;
-	height: 50vw;
+	width: 50vh;
+	height: 50vh;
 	z-index: 10;
 	position: fixed;
 	top: 20vh;
 	bottom: 10vh;
-	left: calc(50% - 25vw);
+	left: calc(50% - 25vh);
 	border: 8px double #fff8;
 	box-shadow: 0 0 0 4px #3338, 1em 1em 3px 0 rgb(0 0 0 / 50%);
 	display: flex;
@@ -405,11 +405,61 @@ input {
 	width: 4.2rem;
 	height: 4.2rem;
 	border-radius: 50%;
+	transition: 300ms;
+}
+
+.modal--option button:hover {
+	filter: brightness(150%);
 }
 
 .modal--option svg {
 	height: 2.4rem;
 	width: 2.4rem;
+}
+
+.modal--pick {
+	background-color: #3338;
+	color: #fff;
+	padding: 1rem;
+	width: 50vh;
+	height: 50vh;
+	z-index: 10;
+	position: fixed;
+	top: 20vh;
+	bottom: 10vh;
+	left: calc(50% - 25vh);
+	border: 8px double #fff8;
+	box-shadow: 0 0 0 4px #3338, 1em 1em 3px 0 rgb(0 0 0 / 50%);
+	text-align: center;
+}
+
+.modal--pick button {
+	background-color: unset;
+	border: unset;
+	color: #f00;
+}
+
+.modal--pick svg {
+	fill: #fff;
+	filter: brightness(10000%);
+}
+
+.pick--user {
+	cursor: pointer;
+	background-color: #fff4;
+	border-radius: 1rem;
+	margin: 0.25rem 1rem 0 1rem;
+	padding: 0.4rem 2rem 0.4rem 0.4rem;
+	display: flex;
+	justify-content: space-between;
+	justify-Items: center;
+	text-Align: center;
+	vertical-Align: center;
+	transition: 200ms;
+}
+
+.pick--user:hover {
+	background-color: #fff6;
 }
 
 .modal--add--chan {

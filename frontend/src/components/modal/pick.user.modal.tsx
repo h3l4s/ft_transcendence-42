@@ -1,14 +1,46 @@
 import i_user from "../../interface/user.interface";
 
+import { ReactComponent as Back } from '../../icon/left-svgrepo-com.svg'
+
+function PickUser(props: { user: i_user })
+{
+	return (
+		<div className='pick--user'>
+			<img className='img' style={{ height: "3rem", width: "3rem" }}
+				src={props.user.profilePicPath} alt="profile" />
+			<div className='truncate' style={{ marginTop: "0.8rem" }}>
+				{props.user.name}
+			</div>
+		</div >
+	);
+}
+
+function PickUsers(props: { users: i_user[] })
+{
+	let ret: JSX.Element[] = [];
+
+	for (let i = 0; i < props.users.length; i++)
+		ret.push(<PickUser user={props.users[i]} />);
+
+	return (<div>{ret}</div>);
+}
+
 function PickUserModal(props: {
 	users: i_user[],
-	type: 'add' | 'challenge' | 'mute' | 'admin add' | 'admin ban' | 'admin mute',
+	text: string,
+	goBack: () => void
 	onClose: () => void
 })
 {
 	return (
-		<div onMouseLeave={props.onClose} className='modal--option'>
-			options
+		<div onMouseLeave={props.onClose} className='modal--pick'>
+			<div>
+				<button style={{ position: "absolute", top: "1rem", left: "1rem" }} onClick={() => props.goBack()}><Back /></button>
+				<span style={{ fontSize: "1.5rem", fontWeight: "bolder" }}>{props.text}</span>
+			</div>
+			<div style={{ marginTop: "1rem" }}>
+				<PickUsers users={props.users} />
+			</div>
 		</div>
 	);
 }
