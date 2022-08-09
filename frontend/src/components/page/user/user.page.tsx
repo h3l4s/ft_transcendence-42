@@ -1,0 +1,89 @@
+import { useContext, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+
+import '../../../style/chan.css';
+import '../../../style/user.css';
+
+import i_user from '../../../interface/user.interface';
+import i_matchHistory from '../../../interface/matchHistory.interface';
+
+import { AuthContext } from '../../../context/auth.context';
+
+import { ReactComponent as Friend } from '../../../icon/friend-svgrepo-com.svg'
+import { ReactComponent as Edit } from '../../../icon/write-pencil-svgrepo-com.svg'
+
+import { useReqUsers } from '../../../request/user.request';
+import UserStats from './userstats.component';
+import MatchHistoty from './matchHistory.component';
+import UserListById from './UserListById.component';
+import NoMatch from '../nomatch.page';
+import Loading from '../../request_answer_component/loading.component';
+import Error from '../../request_answer_component/error.component';
+
+function isUserInDb(username: string, users: i_user[]): i_user | null
+{
+	for (let i = 0; i < users.length; i++)
+		if (users[i].name === username)
+			return (users[i]);
+	return (null);
+}
+
+function UserPage()
+{
+	const { reqUsers, loading, error } = useReqUsers();
+	const { user } = useContext(AuthContext);
+	const p_username = useParams().username;
+	let userToLoad: i_user | null;
+	let matches: i_matchHistory[] = [];	// tmp until match history in db
+
+	if (loading)
+		return (<div className='back'><Loading /></div>);
+	else if (error)
+		return (<div className='back'><Error msg={error.message} /></div>);
+	else if (p_username)
+		userToLoad = isUserInDb(p_username, reqUsers);
+	else
+		userToLoad = user;
+	if (!userToLoad)
+		return (<NoMatch />);
+
+	console.log("user to load:", userToLoad);
+
+	return (
+		<div className='user--page' >
+			<div style={{ width: "34vw", height: "100%", display: "flex", flexDirection: "column", margin: "0 1rem 0 0" }}>
+				<div className='card card--border user--page--pic--title' style={{ marginBottom: "2rem" }} >
+					<div style={{ margin: "0.5rem 0 0.5rem 0" }}>
+						<img className='img' style={{ height: "23vw", width: "23vw" }}
+							src={userToLoad.profilePicPath} alt="profile" />
+						{(!p_username || p_username === userToLoad.name)
+							&& <div className='input--file'>
+								<input type='file' style={{ zIndex: "99" }} />
+								<Edit className='input--file--icon' />
+							</div>
+						}
+					</div>
+					<div className='user--page-title truncate'>{userToLoad.name}</div>
+				</div>
+				<div className='card card--alt' style={{ height: "100%" }}>
+					<UserStats user={userToLoad} />
+				</div>
+			</div>
+			<div className='card card--alt' style={{ width: "33vw", height: "100%", margin: "0 2rem 0 -0.3rem", overflowY: "scroll" }}>
+				<MatchHistoty matches={matches} />
+			</div>
+			<div style={{ width: "33vw", margin: "-1rem 0 -2rem 0", padding: "0.3rem 0 2rem 0", overflowX: "hidden" }}>
+				<div style={{ display: "flex", alignItems: "center", justifyContent: "center", margin: "0.7rem 1rem 0 0" }}>
+					<Friend style={{ width: "3rem", height: "3rem" }} />
+					<div style={{ margin: "0 1rem 0 1rem" }} />
+					<span style={{ color: "#000", fontFamily: "var(--alt-font)", fontSize: "2rem" }}>
+						(<span style={{ color: "var(--color-number)" }}>{(userToLoad.friendsId ? userToLoad.friendsId.length : 0)}</span>)
+					</span>
+				</div>
+				<UserListById friendsId={userToLoad.friendsId} reqUsers={reqUsers} />
+			</div>
+		</div >
+	);
+}
+
+export default UserPage;

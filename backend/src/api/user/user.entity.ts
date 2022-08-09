@@ -1,23 +1,51 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
-export class User {
-  @PrimaryGeneratedColumn()
-  public id!: number;
+export class User
+{
+	@PrimaryGeneratedColumn()
+	public id!: number;
 
-  @Column({ type: 'varchar', length: 120 })
-  public access_token: string;
+	@Column({ type: 'varchar', length: 120 })
+	public access_token: string;
 
-  @Column({ type: 'boolean', default: false })
-  public isDeleted: boolean;
+	@Column({ type: 'varchar', length: 255 })
+	public name: string;
 
-  /*
-   * Create and Update Date Columns
-   */
+	@Column({ type: 'int', default: 0 })
+	public xp: number;
 
-  @CreateDateColumn({ type: 'timestamp' })
-  public createdAt!: Date;
+	@Column({ type: 'int', default: 1000 })
+	public elo: number;
 
-  @UpdateDateColumn({ type: 'timestamp' })
-  public updatedAt!: Date;
+	@Column({ type: 'int', default: 0 })
+	public win: number;
+
+	@Column({ type: 'int', default: 0 })
+	public lose: number;
+
+	// possibly bugged because of array
+	@Column({ type: 'jsonb', nullable: true })
+	//public matchHistory?: matchHistoryDto[];
+	public matchHistory?: { tmp: number }[]
+	//
+
+	@Column({ type: 'int', array: true, nullable: true })
+	public friendsId?: number[];
+
+	@Column({ type: 'int', array: true, nullable: true })
+	public mutedId?: number[];
+
+	@Column({ type: 'boolean', default: false })
+	public isDeleted: boolean;
+
+	/*
+	 * Create and Update Date Columns
+	 */
+
+	@CreateDateColumn({ type: 'timestamp' })
+	public createdAt!: Date;
+
+	@UpdateDateColumn({ type: 'timestamp' })
+	public updatedAt!: Date;
 }
