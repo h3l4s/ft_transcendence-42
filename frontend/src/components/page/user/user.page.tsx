@@ -66,8 +66,6 @@ function UserPage()
 	if (!userToLoad)
 		return (<NoMatch />);
 
-	aReqPP(user.id)
-
 	console.log("image: ", image);
 
 	return (

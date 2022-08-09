@@ -116,10 +116,7 @@ export class UserService
 	{
 		const user: User = await this.repository.findOne(id);
 
-		response.set({
-			'Content-Disposition': `inline; filename="${user.pp_name}"`,
-			'Content-Type': 'image/*',
-		});
+		// very unsure about this working
 
 		return new StreamableFile(Readable.from(user.pp));
 	}

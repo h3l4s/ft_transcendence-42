@@ -74,6 +74,6 @@ export class UserController
 		console.log(data);
 		console.log("finish");
 
-		return await this.service.uploadFile(id, file.originalname, file.buffer);
+		return await this.service.putPP(id, file.originalname, file.buffer);
 	}
 }

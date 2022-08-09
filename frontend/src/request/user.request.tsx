@@ -41,9 +41,4 @@ function useReqUsers()
 	return ({ reqUsers, loading, error });
 }
 
-function aReqPP()
-{
-
-}
-
-export { userBacktoFront, useReqUser, useReqUsers, aReqPP }
+export { userBacktoFront, useReqUser, useReqUsers }
