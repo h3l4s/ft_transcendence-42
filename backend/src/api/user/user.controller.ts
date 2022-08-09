@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Inject, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param, ParseIntPipe, Post, Put, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 import axios from 'axios';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('user')
 export class UserController
@@ -61,5 +62,18 @@ export class UserController
 	public updateUser(@Param('id', ParseIntPipe) id: number, @Body() data: any)
 	{
 		return this.service.updateUser(id, data.updateUserDto);
+	}
+
+	@Put('pp/:id')
+	@UseInterceptors(FileInterceptor('file'))
+	public async uploadFile(@Param('id', ParseIntPipe) id: number, @UploadedFile() file: Express.Multer.File, @Body() data: any)
+	{
+		console.log(id);
+		console.log(file);
+		console.log(file.originalname);
+		console.log(data);
+		console.log("finish");
+
+		return await this.service.uploadFile(id, file.originalname, file.buffer);
 	}
 }

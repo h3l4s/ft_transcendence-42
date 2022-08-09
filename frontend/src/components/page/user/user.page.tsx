@@ -29,20 +29,17 @@ function isUserInDb(username: string, users: i_user[]): i_user | null
 	return (null);
 }
 
-function uploadFile(user: i_user | null, image: any)
+function uploadFile(user_id: number | undefined, image: File | null)
 {
-	if (!user || !user.id)
+	if (!user_id || !image)
 		return;
 
 	const formData = new FormData();
-	formData.append("pp", image);
+	formData.append("pp", image, image.name);
 
-	axios({
-		method: 'put',
-		url: "http://localhost:3000/user/pp/" + user.id,
-		data: formData,
-		headers: { "Content-Type": "multipart/form-data" },
-	}).then(
+	console.log("formData: ", formData);
+
+	axios.put("http://localhost:3000/user/pp/" + user_id, formData).then(
 		(res) => { console.log(res); },
 		(error) => { console.log(error); }
 	);
@@ -69,6 +66,8 @@ function UserPage()
 	if (!userToLoad)
 		return (<NoMatch />);
 
+	aReqPP(user.id)
+
 	console.log("image: ", image);
 
 	return (
@@ -77,12 +76,12 @@ function UserPage()
 				<div className='card card--border user--page--pic--title' style={{ marginBottom: "2rem" }} >
 					<div style={{ margin: "0.5rem 0 0.5rem 0" }}>
 						<img className='img' style={{ height: "23vw", width: "23vw" }}
-							src={userToLoad.profilePicPath} alt="profile" />
+							src={(image ? URL.createObjectURL(image) : userToLoad.profilePicPath)} alt="profile" />
 						{(!p_username || p_username === userToLoad.name)
 							&& <div className='input--file'>
 								<input type='file' style={{ zIndex: "99" }} onChange={(e) =>
 								{
-									uploadFile(user, (e.target.files ? e.target.files[0] : null));
+									uploadFile((user ? user.id : undefined), (e.target.files ? e.target.files[0] : null));
 									setImage((e.target.files ? e.target.files[0] : null));
 								}} />
 								<Edit className='input--file--icon' />
