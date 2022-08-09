@@ -19,6 +19,7 @@ import UserListById from './UserListById.component';
 import NoMatch from '../nomatch.page';
 import Loading from '../../request_answer_component/loading.component';
 import Error from '../../request_answer_component/error.component';
+import axios from 'axios';
 
 function isUserInDb(username: string, users: i_user[]): i_user | null
 {
@@ -32,6 +33,7 @@ function UserPage()
 {
 	const { reqUsers, loading, error } = useReqUsers();
 	const { user } = useContext(AuthContext);
+	const [image, setImage] = useState<any | null>(null);
 	const p_username = useParams().username;
 	let userToLoad: i_user | null;
 	let matches: i_matchHistory[] = [];	// tmp until match history in db
@@ -47,7 +49,24 @@ function UserPage()
 	if (!userToLoad)
 		return (<NoMatch />);
 
-	console.log("user to load:", userToLoad);
+	function uploadFile()
+	{
+		if (!user || !user.id)
+			return;
+
+		const formData = new FormData();
+		formData.append("pp", image);
+
+		axios({
+			method: 'put',
+			url: "http://localhost:3000/user/pp/" + user.id,
+			data: formData,
+			headers: { "Content-Type": "multipart/form-data" },
+		}).then(
+			(res) => { console.log(res); },
+			(error) => { console.log(error); }
+		);
+	};
 
 	return (
 		<div className='user--page' >
@@ -58,7 +77,7 @@ function UserPage()
 							src={userToLoad.profilePicPath} alt="profile" />
 						{(!p_username || p_username === userToLoad.name)
 							&& <div className='input--file'>
-								<input type='file' style={{ zIndex: "99" }} />
+								<input type='file' style={{ zIndex: "99" }} onChange={(e) => setImage((e.target.files ? e.target.files[0] : null))} />
 								<Edit className='input--file--icon' />
 							</div>
 						}
