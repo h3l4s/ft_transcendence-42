@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, StreamableFile } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Readable } from 'stream';
 import { Repository } from 'typeorm';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { User } from './user.entity';
@@ -109,5 +110,24 @@ export class UserService
 	public deleteUser(id: number)
 	{
 		return this.repository.delete(id)
+	}
+
+	public async getPP(id: number)//: Promise<StreamableFile>
+	{
+		const user: User = await this.repository.findOne(id);
+
+		// very unsure about this working
+
+		return new StreamableFile(Readable.from(user.pp));
+	}
+
+	public async putPP(id: number, name: string, buffer: Buffer)
+	{
+		const user: User = await this.repository.findOne(id);
+
+		user.pp_name = name;
+		user.pp = buffer;
+
+		return await this.repository.save(user);
 	}
 }
