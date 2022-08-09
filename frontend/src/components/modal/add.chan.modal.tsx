@@ -57,7 +57,7 @@ function AddChanModal(props: { user_id: number, onClose: () => void })
 		<form className='modal--add--chan' onSubmit={handleSubmit}>
 			<div>
 				<label>title</label>
-				<input className='form--input' type='text' required value={title} onChange={(e) => { setTitle(e.target.value) }} />
+				<input className='form--input' type='text' required value={title} onChange={(e) => { setTitle(e.target.value); setSubmit(false); }} />
 			</div>
 			<div>
 				<button style={{ backgroundColor: type === 'public' ? "var(--alt-color-hover)" : "var(--alt-color)" }}
