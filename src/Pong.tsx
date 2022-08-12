@@ -23,7 +23,8 @@ window.addEventListener("load", function () {
     let score : any = this.document.querySelector("#score-pong");
     let score2 : any = this.document.querySelector("#score2-pong");
     let score1 : number = 0;
-    //let scorej2 : number = 0;
+    let scorej2 : number = 0;
+    let ball_start : number = 0;
     let PLAYER_HEIGHT: number = 100;
     let PLAYER_WIDTH: number = 5;
     let pong: any = document.querySelector("#pong-pong");
@@ -64,10 +65,12 @@ window.addEventListener("load", function () {
         // Rebounds on top and bottom
         if (game.ball.y > canvas.height || game.ball.y < 0) 
             game.ball.speed.y *= -1;
-        if (game.ball.x > canvas.width - PLAYER_WIDTH) 
-            collision(game.computer);
-        else if (game.ball.x < PLAYER_WIDTH) 
-            collision(game.player);
+        if (game.ball.x + 5 > canvas.width - PLAYER_WIDTH) {
+            collision(game.computer, game);
+        }
+        else if (game.ball.x - 5 < PLAYER_WIDTH) {
+            collision(game.player, game);
+        }
         game.ball.x += game.ball.speed.x;
         game.ball.y += game.ball.speed.y;
     }
@@ -85,25 +88,35 @@ window.addEventListener("load", function () {
         game.ball.speed.y = Math.round(impact * ratio / 10);
     }
     
-    function collision(player: any) {
+    function collision(player: any, game: any) {
         // The player does not hit the ball
         if (game.ball.y < player.y || game.ball.y > player.y + PLAYER_HEIGHT) {
             // Set ball and players to the center
+            if (game.ball.x > 400 ){
+                ball_start = 0;
+                score1++;
+                score.innerHTML = score1;    
+            }
+            else  {
+                ball_start = 1;
+                scorej2++;
+                score2.innerHTML = scorej2; 
+            }
             game.ball.x = canvas.width / 2;
             game.ball.y = canvas.height / 2;
             game.player.y = canvas.height / 2 - PLAYER_HEIGHT / 2;
             game.computer.y = canvas.height / 2 - PLAYER_HEIGHT / 2;
             
             // Reset speed
-            game.ball.speed.x = 2;
-            score1++;
-            score.innerHTML = score1; 
-            //score2.innerHTML = "score1"; 
+            
+            if (ball_start === 0)
+                game.ball.speed.x = -2;
+            else    
+                game.ball.speed.x = 2;
         } else {
             // Increase speed and change direction
             game.ball.speed.x *= -1.25;
-            Angle_Direction(player.y);
-            score2.innerHTML = score1; 
+            Angle_Direction(player.y ); 
         }
     }
 
