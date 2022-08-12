@@ -60,7 +60,7 @@ window.addEventListener("load", function () {
         context.fill();
     }
 
-    function ballMove() {
+    function Move_ball() {
         // Rebounds on top and bottom
         if (game.ball.y > canvas.height || game.ball.y < 0) 
             game.ball.speed.y *= -1;
@@ -74,11 +74,11 @@ window.addEventListener("load", function () {
         
     function play() {
         draw();
-        ballMove();
+        Move_ball();
         requestAnimationFrame(play);
     }
 
-    function changeDirection(playerPosition: any) {
+    function Angle_Direction(playerPosition: any) {
         var impact = game.ball.y - playerPosition - PLAYER_HEIGHT / 2;
         var ratio = 100 / (PLAYER_HEIGHT / 2);
         // Get a value between 0 and 10
@@ -102,7 +102,7 @@ window.addEventListener("load", function () {
         } else {
             // Increase speed and change direction
             game.ball.speed.x *= -1.25;
-            changeDirection(player.y);
+            Angle_Direction(player.y);
             score2.innerHTML = score1; 
         }
     }
@@ -128,8 +128,8 @@ window.addEventListener("load", function () {
                   }
             }
         };
-        canvas.addEventListener('mousemove', playerMove);
-        function playerMove(event: any) {
+        canvas.addEventListener('mousemove', Move_player);
+        function Move_player(event: any) {
             // Get the mouse location in the canvas
             var canvasLocation = canvas.getBoundingClientRect();
             var mouseLocation = event.clientY - canvasLocation.y;

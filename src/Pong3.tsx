@@ -45,16 +45,6 @@ window.addEventListener("load", function () {
         var context = canvas.getContext('2d');
         context.drawImage(image, 0, 0, canvas.width, canvas.height);
 
-        // Draw field
-        //context.fillStyle = 'red';
-        //context.fillRect(0, 0, canvas.width, canvas.height);
-        // Draw middle line
-        /* context.strokeStyle = '0';
-        context.beginPath();
-        context.moveTo(canvas.width / 2, 0);
-        context.lineTo(canvas.width / 2, canvas.height);
-        context.stroke(); */
-        // Draw players
         context.fillStyle = 'white';
         context.fillRect(5, game.player.y, PLAYER_WIDTH, PLAYER_HEIGHT);
         context.fillRect(canvas.width - 5 - PLAYER_WIDTH, game.computer.y, PLAYER_WIDTH, PLAYER_HEIGHT);
@@ -65,7 +55,7 @@ window.addEventListener("load", function () {
         context.fill();
     }
 
-    function ballMove() {
+    function Move_ball() {
         // Rebounds on top and bottom
         if (game.ball.y > canvas.height || game.ball.y < 0) 
             game.ball.speed.y *= -1;
@@ -79,11 +69,11 @@ window.addEventListener("load", function () {
         
     function play() {
         draw();
-        ballMove();
+        Move_ball();
         requestAnimationFrame(play);
     }
 
-    function changeDirection(playerPosition: any) {
+    function Angle_Direction(playerPosition: any) {
         var impact = game.ball.y - playerPosition - PLAYER_HEIGHT / 2;
         var ratio = 100 / (PLAYER_HEIGHT / 2);
         // Get a value between 0 and 10
@@ -107,7 +97,7 @@ window.addEventListener("load", function () {
         } else {
             // Increase speed and change direction
             game.ball.speed.x *= -1.25;
-            changeDirection(player.y);
+            Angle_Direction(player.y);
         }
     }
 
@@ -132,8 +122,8 @@ window.addEventListener("load", function () {
                   }
             }
         };
-        canvas.addEventListener('mousemove', playerMove);
-        function playerMove(event: any) {
+        canvas.addEventListener('mousemove', Move_player);
+        function Move_player(event: any) {
             // Get the mouse location in the canvas
             var canvasLocation = canvas.getBoundingClientRect();
             var mouseLocation = event.clientY - canvasLocation.y;
