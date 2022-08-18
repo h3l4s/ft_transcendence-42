@@ -1,34 +1,50 @@
-import React from 'react'
+import React, { useState } from 'react'
 //import { Link } from 'react-router-dom'
 
 import './../../../style/pong.css';
+import Pong from './pong.component';
+
+//<h1 id="bandeau">Welcome to our FT_Transcendance !</h1>
 
 function PongPage()
 {
-	return (
-		<body id="body">
-			<div id="all">
-				<h1 id="bandeau">Welcome to our FT_Transcendance !</h1>
-				<p id="to-play">If you want to play to a simple pong please use the map 1.</p>
-				<div id="choice">
-					<button id="pong1" className="bouton" type="button" onClick={(e) => { e.preventDefault(); window.location.href = '/pong'; }}> simple pong </button>
-					<button id="pong2" className="bouton" type="button" onClick={(e) => { e.preventDefault(); window.location.href = '/pong2'; }}> space pong </button>
-					<button id="pong3" className="bouton" type="button" onClick={(e) => { e.preventDefault(); window.location.href = '/pong3'; }}> tennis pong </button>
-				</div>
-			</div>
-		</body>
+	const [map, setMap] = useState<'basic' | 'interstellar' | 'tennis' | null>(null);
+	// might not store the type of map
 
+	return (
+		<div className='pong'>
+			{!map ? (
+				<div>
+					<p className='to-play'>If you want to play to a simple pong please use the map 1.</p>
+					<div className='choice' /* should probably be a card */>
+						<button onClick={() => { setMap('basic') }}>
+							simple pong
+						</button>
+						<button onClick={() => { setMap('interstellar') }}>
+							space pong
+						</button>
+						<button onClick={() => { setMap('tennis') }}>
+							tennis pong
+						</button>
+					</div >
+				</div >
+			) : (
+				<div>
+					map chosen: {map}
+					<br />
+					<Pong map={{}} />
+				</div>
+			)}
+		</div >
 	);
 }
 
-window.addEventListener("load", function ()
+/*window.addEventListener("load", function ()
 {
-	let all = this.document.querySelector("#all")! as HTMLElement;
 	let pong1 = this.document.querySelector("#pong1")! as HTMLElement;
 	let pong2 = this.document.querySelector("#pong2")! as HTMLElement;
 	let pong3 = this.document.querySelector("#pong3")! as HTMLElement;
 
-	all.style.textAlign = "center";
 	pong1.style.fontFamily = "OCR A Std";
 	pong2.style.fontFamily = "OCR A Std";
 	pong3.style.fontFamily = "OCR A Std";
@@ -42,8 +58,6 @@ window.addEventListener("load", function ()
 	pong2.style.marginRight = "2%";
 	pong2.style.marginBottom = "37%";
 	pong3.style.marginRight = "2%";
-
-	all.style.minHeight = this.window.innerHeight.toString();
-});
+});*/
 
 export default PongPage;

@@ -187,5 +187,4 @@ window.addEventListener("load", function ()
 	});
 });
 
-
 export default Pong;
