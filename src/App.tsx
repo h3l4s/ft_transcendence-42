@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import Pong from './Pong';
-import Home from './Home';
+import Home from '../frontend/src/components/page/pong/pong.page';
 import Pong2 from './Pong2';
 import Pong3 from './Pong3';
 import { Route, Routes } from "react-router-dom";

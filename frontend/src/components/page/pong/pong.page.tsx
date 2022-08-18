@@ -1,7 +1,9 @@
 import React from 'react'
 //import { Link } from 'react-router-dom'
 
-function Home()
+import './../../../style/pong.css';
+
+function PongPage()
 {
 	return (
 		<body id="body">
@@ -43,4 +45,5 @@ window.addEventListener("load", function ()
 
 	all.style.minHeight = this.window.innerHeight.toString();
 });
-export default Home;
+
+export default PongPage;
