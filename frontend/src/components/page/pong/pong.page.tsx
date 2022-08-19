@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Navigate } from 'react-router-dom';
 //import { Link } from 'react-router-dom'
 
 import './../../../style/pong.css';
@@ -33,12 +34,13 @@ function PongPage()
 				</div>
 			) : (
 				<div>
-					<Pong map={{ type: map }} goBack={() => { setMap(null) }} />
+					<Navigate to="/play/pong" />
 				</div>
 			)}
 		</div>
 	);
 }
+//<Pong map={{ type: map }} goBack={() => { setMap(null) }} />
 
 /*window.addEventListener("load", function ()
 {
