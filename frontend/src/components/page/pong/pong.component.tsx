@@ -144,8 +144,9 @@ function handleCanvas(init: boolean, type: 'simple' | 'hard' | 'tennis')
 			}
 			catch (e)
 			{
-				console.log(e);
-				window.location.href = '/youlose';
+				//console.log(e);
+				//window.location.href = '/youlose';
+				scoreP2 = 11;
 				return;
 			}
 		}
@@ -184,7 +185,7 @@ function handleCanvas(init: boolean, type: 'simple' | 'hard' | 'tennis')
 
 	function play()
 	{
-		if (scoreP1 === 2 || scoreP2 === 2)
+		if (scoreP1 >= 11 || scoreP2 >= 11)
 		{
 			canvas.style.display = "none";
 			return;
