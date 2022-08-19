@@ -63,12 +63,7 @@ function Pong(props: { map: i_map, goBack: () => void })
 
 function handleCanvas(init: boolean)
 {
-	console.log("loading");
-	if (window.location.href !== 'http://localhost:3001/play')
-		return;
-	//let canvas = document.getElementById('canvas')! as HTMLCanvasElement;
 	let canvas = document.querySelector("#canvas")! as HTMLCanvasElement;
-	console.log(canvas);
 	canvas.style.display = "block";
 	canvas.style.margin = "auto";
 	canvas.width = window.innerWidth / 2;
@@ -101,9 +96,6 @@ function handleCanvas(init: boolean)
 
 	scoreP1HTML.innerText = "0";
 	scoreP2HTML.innerText = "0";
-
-
-	console.log("in");	// doesn't seems to load the event
 
 	draw();
 	if (init)
