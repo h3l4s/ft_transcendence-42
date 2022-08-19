@@ -8,7 +8,7 @@ import Pong from './pong.component';
 
 function PongPage()
 {
-	const [map, setMap] = useState<'simple' | 'space' | 'tennis' | null>(null);
+	const [map, setMap] = useState<'simple' | 'hard' | 'tennis' | null>(null);
 	// might not store the type of map
 
 	return (
@@ -23,8 +23,8 @@ function PongPage()
 						<button onClick={() => { setMap('simple') }}>
 							simple pong
 						</button>
-						<button onClick={() => { setMap('space') }}>
-							space pong
+						<button onClick={() => { setMap('hard') }}>
+							hard pong
 						</button>
 						<button onClick={() => { setMap('tennis') }}>
 							tennis pong

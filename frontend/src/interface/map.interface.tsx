@@ -1,6 +1,6 @@
 interface i_map
 {
-	type: 'simple' | 'space' | 'tennis';
+	type: 'simple' | 'hard' | 'tennis';
 	p1?: string;
 	p2?: string;
 }

@@ -62,16 +62,16 @@ function Pong(props: { map: i_map, goBack: () => void })
 	);
 }
 
-function handleCanvas(init: boolean, type: 'simple' | 'space' | 'tennis')
+function handleCanvas(init: boolean, type: 'simple' | 'hard' | 'tennis')
 {
 	let canvas = document.querySelector("#canvas")! as HTMLCanvasElement;
 	canvas.style.display = "block";
 	canvas.style.margin = "auto";
 	canvas.width = window.innerWidth / 2;
 	canvas.height = window.innerHeight / 2.5;
-
-	const PLAYER_HEIGHT = 100;
+	const PLAYER_HEIGHT = (type === 'hard' ? 50 : 100);
 	const PLAYER_WIDTH = 5;
+
 	let game = {
 		player: {
 			y: canvas.height / 2 - PLAYER_HEIGHT / 2
@@ -111,7 +111,7 @@ function handleCanvas(init: boolean, type: 'simple' | 'space' | 'tennis')
 		let context = canvas.getContext('2d')!;
 		let img = new Image();
 
-		if (type === 'simple')
+		if (type === 'simple' || type === 'hard')
 		{
 			// Draw field
 			context.fillStyle = 'black';
@@ -123,22 +123,19 @@ function handleCanvas(init: boolean, type: 'simple' | 'space' | 'tennis')
 			context.lineTo(canvas.width / 2, canvas.height);
 			context.stroke();
 		}
-		else
+		else 
 		{
-			if (type === 'space')
-				img.src = 'https://cdn-7.nikon-cdn.com/Images/Learn-Explore/Photography-Techniques/2019/Milky-Way-Photography-Robinson-Krup/Media/Diana-Robinson-Milky-Way-Sitting-Hen-Butte.jpg'
-			else
-				img.src = 'https://us.123rf.com/450wm/sermax55/sermax551811/sermax55181100034/127713212-court-de-tennis-champ-de-couverture-d-herbe-illustration-vectorielle-vue-de-dessus-avec-grille-et-om.jpg?ver=6'
+			img.src = 'https://us.123rf.com/450wm/sermax55/sermax551811/sermax55181100034/127713212-court-de-tennis-champ-de-couverture-d-herbe-illustration-vectorielle-vue-de-dessus-avec-grille-et-om.jpg?ver=6'
 			context.drawImage(img, 0, 0, canvas.width, canvas.height);
 		}
 
 		// Draw players
-		context.fillStyle = 'white';
+		context.fillStyle = (type === 'hard' ? 'red' : 'white');
 		context.fillRect(5, game.player.y, PLAYER_WIDTH, PLAYER_HEIGHT);
 		context.fillRect(canvas.width - 5 - PLAYER_WIDTH, game.computer.y, PLAYER_WIDTH, PLAYER_HEIGHT);
 		// Draw ball
 		context.beginPath();
-		context.fillStyle = 'white';
+		context.fillStyle = (type === 'hard' ? 'red' : 'white');
 		context.arc(game.ball.x, game.ball.y, game.ball.r, 0, Math.PI * 2, false);
 		context.fill();
 	}
@@ -162,6 +159,12 @@ function handleCanvas(init: boolean, type: 'simple' | 'space' | 'tennis')
 
 	function play()
 	{
+		if (scoreP1 === 11 || scoreP2 === 11)
+		{
+			canvas.style.display = "none";
+			return;
+		}
+
 		draw();
 		Move_ball();
 		requestAnimationFrame(play);
@@ -208,7 +211,7 @@ function handleCanvas(init: boolean, type: 'simple' | 'space' | 'tennis')
 		else
 		{
 			// Increase speed and change direction
-			game.ball.speed.x *= -1.25;
+			game.ball.speed.x *= (type === 'hard' ? -1.5 : -1.2);
 			Angle_Direction(player.y);
 		}
 	}
