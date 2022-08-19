@@ -6,6 +6,8 @@ import i_map from '../../../interface/map.interface';
 
 import { ReactComponent as Back } from '../../../icon/left-svgrepo-com.svg'
 
+import tennis from './tennis_pong.jpg'
+
 function Pong(props: { map: i_map, goBack: () => void })
 {
 	const [inGame, setInGame] = useState(false);
@@ -57,6 +59,7 @@ function Pong(props: { map: i_map, goBack: () => void })
 					<span id="scoreP1HTML" />-<span id="scoreP2HTML" />
 				</p>
 			</div>
+			{props.map.type === 'tennis' && <img id='tennis' src={tennis} alt='tennis' style={{ display: "none" }} />}
 			<canvas id="canvas" />
 		</div >
 	);
@@ -69,6 +72,7 @@ function handleCanvas(init: boolean, type: 'simple' | 'hard' | 'tennis')
 	canvas.style.margin = "auto";
 	canvas.width = window.innerWidth / 2;
 	canvas.height = window.innerHeight / 2.5;
+
 	const PLAYER_HEIGHT = (type === 'hard' ? 50 : 100);
 	const PLAYER_WIDTH = 5;
 
@@ -106,11 +110,11 @@ function handleCanvas(init: boolean, type: 'simple' | 'hard' | 'tennis')
 
 	canvas.addEventListener('mousemove', Move_player);
 
+
 	function draw()
 	{
 		let context = canvas.getContext('2d')!;
-		let img = new Image();
-
+		const img = document.querySelector("#tennis")! as HTMLImageElement;
 		if (type === 'simple' || type === 'hard')
 		{
 			// Draw field
@@ -123,21 +127,42 @@ function handleCanvas(init: boolean, type: 'simple' | 'hard' | 'tennis')
 			context.lineTo(canvas.width / 2, canvas.height);
 			context.stroke();
 		}
-		else 
+		else
 		{
-			img.src = 'https://us.123rf.com/450wm/sermax55/sermax551811/sermax55181100034/127713212-court-de-tennis-champ-de-couverture-d-herbe-illustration-vectorielle-vue-de-dessus-avec-grille-et-om.jpg?ver=6'
-			context.drawImage(img, 0, 0, canvas.width, canvas.height);
+			try
+			{
+				if (init)
+				{
+					img.addEventListener('load', function ()
+					{
+						context.drawImage(img, 0, 0, canvas.width, canvas.height);
+						drawMovingPart();
+					});
+				}
+				else
+					context.drawImage(img, 0, 0, canvas.width, canvas.height);
+			}
+			catch (e)
+			{
+				console.log(e);
+				window.location.href = '/youlose';
+				return;
+			}
 		}
 
-		// Draw players
-		context.fillStyle = (type === 'hard' ? 'red' : 'white');
-		context.fillRect(5, game.player.y, PLAYER_WIDTH, PLAYER_HEIGHT);
-		context.fillRect(canvas.width - 5 - PLAYER_WIDTH, game.computer.y, PLAYER_WIDTH, PLAYER_HEIGHT);
-		// Draw ball
-		context.beginPath();
-		context.fillStyle = (type === 'hard' ? 'red' : 'white');
-		context.arc(game.ball.x, game.ball.y, game.ball.r, 0, Math.PI * 2, false);
-		context.fill();
+		function drawMovingPart()
+		{
+			// Draw players
+			context.fillStyle = (type === 'hard' ? 'red' : 'white');
+			context.fillRect(5, game.player.y, PLAYER_WIDTH, PLAYER_HEIGHT);
+			context.fillRect(canvas.width - 5 - PLAYER_WIDTH, game.computer.y, PLAYER_WIDTH, PLAYER_HEIGHT);
+			// Draw ball
+			context.beginPath();
+			context.fillStyle = (type === 'hard' ? 'red' : 'white');
+			context.arc(game.ball.x, game.ball.y, game.ball.r, 0, Math.PI * 2, false);
+			context.fill();
+		}
+		drawMovingPart();
 	}
 
 	function Move_ball()
@@ -159,7 +184,7 @@ function handleCanvas(init: boolean, type: 'simple' | 'hard' | 'tennis')
 
 	function play()
 	{
-		if (scoreP1 === 11 || scoreP2 === 11)
+		if (scoreP1 === 2 || scoreP2 === 2)
 		{
 			canvas.style.display = "none";
 			return;
