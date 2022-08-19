@@ -44,19 +44,20 @@ function Pong(props: { map: i_map, goBack: () => void })
 			<br />
 			[DEBUG] map chosen: {props.map.type}
 			<p className='pong--player'>{props.map.p1} vs {props.map.p2}</p>
-			{
-				!inGame &&
-				<div style={{ display: "flex", justifyContent: "center" }}>
-					<button className='pong--btn--play' onClick={launchGame}>
-						<span id="play-pong">play</span>
-					</button>
-					<br />
-				</div>
-			}
+			<div style={{ height: "3rem" }}>
+				{!inGame &&
+					<div style={{ display: "flex", justifyContent: "center" }}>
+						<button className='pong--btn--play' onClick={launchGame}>
+							<span id="play-pong">play</span>
+						</button>
+						<br />
+					</div>
+				}
+				<p id="score" style={{ visibility: (inGame ? "visible" : "hidden") }}>
+					<span id="scoreP1HTML" />-<span id="scoreP2HTML" />
+				</p>
+			</div>
 			<canvas id="canvas" />
-			<p id="score" style={{ visibility: (inGame ? "visible" : "hidden") }}>
-				<span id="scoreP1HTML" />-<span id="scoreP2HTML" />
-			</p>
 		</div >
 	);
 }
