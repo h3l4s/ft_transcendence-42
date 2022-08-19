@@ -5,9 +5,7 @@ import './../../../style/pong.css';
 import i_map from '../../../interface/map.interface';
 
 import { ReactComponent as Back } from '../../../icon/left-svgrepo-com.svg'
-
-let scoreP1 = 0;
-let scoreP2 = 0;
+import sleep from '../../../utils/sleep';
 
 function Pong(props: { map: i_map, goBack: () => void })
 {
@@ -23,8 +21,8 @@ function Pong(props: { map: i_map, goBack: () => void })
 	{
 		props.map.p1 = "wassim";
 		props.map.p2 = "gildas";
-		setInGame(true)
-		window.addEventListener("click", handleCanvas);
+		setInGame(true);
+		handleCanvas(false);
 	}
 
 	return (
@@ -51,14 +49,19 @@ function Pong(props: { map: i_map, goBack: () => void })
 					<br />
 				</div>
 			}
-			<canvas id="canvas" ></canvas>
-			{inGame && <p id="score">{scoreP1}-{scoreP2}</p>}
+			<canvas id="canvas" />
+			<p id="score" style={{ visibility: (inGame ? "visible" : "hidden") }}>
+				<span id="scoreP1" />-<span id="scoreP2" />
+			</p>
 		</div >
 	);
 }
 
-function handleCanvas()
+function handleCanvas(init: boolean)
 {
+	console.log("loading");
+	if (window.location.href !== 'http://localhost:3001/play')
+		return;
 	//let canvas = document.getElementById('canvas')! as HTMLCanvasElement;
 	let canvas = document.querySelector("#canvas")! as HTMLCanvasElement;
 	console.log(canvas);
@@ -87,10 +90,18 @@ function handleCanvas()
 		}
 	};
 	let ball_start = false;
+	let scoreP1 = document.querySelector("#scoreP1")! as HTMLElement;
+	let scoreP2 = document.querySelector("#scoreP2")! as HTMLElement;
+
+	scoreP1.innerText = "0";
+	scoreP2.innerText = "0";
+
 
 	console.log("in");	// doesn't seems to load the event
 
 	draw();
+	if (init)
+		return;
 
 	canvas.addEventListener('mousemove', Move_player);
 
@@ -166,12 +177,12 @@ function handleCanvas()
 			if (game.ball.x > 400)
 			{
 				ball_start = false;
-				scoreP1++;
+				scoreP1.innerText = (1 + scoreP1.innerText);
 			}
 			else
 			{
 				ball_start = true;
-				scoreP2++;
+				scoreP2.innerText = "" + 1 + scoreP2.innerText;
 			}
 			game.ball.x = canvas.width / 2;
 			game.ball.y = canvas.height / 2;

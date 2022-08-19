@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Navigate } from 'react-router-dom';
 //import { Link } from 'react-router-dom'
 
 import './../../../style/pong.css';
@@ -34,20 +33,21 @@ function PongPage()
 				</div>
 			) : (
 				<div>
-					<Navigate to="/play/pong" />
+					<Pong map={{ type: map }} goBack={() => { setMap(null) }} />
 				</div>
 			)}
 		</div>
 	);
 }
-//<Pong map={{ type: map }} goBack={() => { setMap(null) }} />
+//<Navigate to="/play/pong" />
+
 
 /*window.addEventListener("load", function ()
 {
 	let pong1 = this.document.querySelector("#pong1")! as HTMLElement;
 	let pong2 = this.document.querySelector("#pong2")! as HTMLElement;
 	let pong3 = this.document.querySelector("#pong3")! as HTMLElement;
-
+	
 	pong1.style.fontFamily = "OCR A Std";
 	pong2.style.fontFamily = "OCR A Std";
 	pong3.style.fontFamily = "OCR A Std";
