@@ -25,31 +25,38 @@ function Pong(props: { map: i_map, goBack: () => void })
 
 	return (
 		<div>
-			<button className='btn--back'
-				style={{ position: "absolute", top: "calc(1rem + var(--nav-h))", left: "1rem" }}
-				onClick={() => props.goBack()}>
-				<Back />
-			</button>
-			<h1 className='pong--header'>Pong</h1>
+			<div className='pong--header'>
+				<button className='btn--back'
+					onClick={() => props.goBack()}>
+					<Back />
+				</button>
+				<h1>Pong</h1>
+				<button className='btn--back' style={{ visibility: "hidden" }}>
+					<Back />
+				</button>
+			</div>
 			<br />
 			[DEBUG] map chosen: {props.map.type}
 			<p className='pong--player'>{props.map.p1} vs {props.map.p2}</p>
-			{!inGame &&
-				<div>
+			{
+				!inGame &&
+				<div style={{ display: "flex", justifyContent: "center" }}>
 					<button id="play-pong" className='pong--btn--play' onClick={launchGame}>
 						play
 					</button>
 					<br />
-				</div>}
+				</div>
+			}
 			<canvas id="canvas" ></canvas>
-			{inGame &&
+			{
+				inGame &&
 				<p id="score">
 					<span id="score-pong" />
 					<span id="tiret" />
 					<span id="score2-pong" />
 				</p>
 			}
-		</div>
+		</div >
 	);
 }
 
@@ -69,12 +76,48 @@ window.addEventListener("load", function ()
 
 	console.log("in");	// doesn't seems to load the event
 
-	//score2.style.marginLeft = "69%";
-	/*click.style.textAlign = "center";
-	click.style.marginLeft = "46%";
-	click.style.marginBottom = "48%";
+	click.style.display = "flex";
+	click.style.justifyContent = "center";
 	click.style.fontSize = "205%";
-	click.style.fontFamily = "OCR A Std";*/
+	click.style.fontFamily = "OCR A Std";
+
+	click.innerHTML = "Play";
+	canvas = document.getElementById('canvas');
+	canvas.style.display = "block";
+	canvas.style.margin = "auto";
+	canvas.width = this.window.innerWidth / 2;
+	canvas.height = this.window.innerHeight / 2.5;
+	game = {
+		player: {
+			y: canvas.height / 2 - PLAYER_HEIGHT / 2
+		},
+		computer: {
+			y: canvas.height / 2 - PLAYER_HEIGHT / 2
+		},
+		ball: {
+			x: canvas.width / 2,
+			y: canvas.height / 2,
+			r: 5,
+			speed: {
+				x: 2,
+				y: 2
+			}
+		}
+	};
+	draw();
+
+	canvas.addEventListener('mousemove', Move_player);
+
+	click.addEventListener('click', function ()
+	{
+		console.log("clicked");
+
+		click.style.display = "none";
+		score.innerHTML = "0";
+		score2.innerHTML = "0";
+		tiret.innerHTML = "-";
+		play();
+	});
 
 	function draw()
 	{
@@ -161,7 +204,8 @@ window.addEventListener("load", function ()
 				game.ball.speed.x = -2;
 			else
 				game.ball.speed.x = 2;
-		} else
+		}
+		else
 		{
 			// Increase speed and change direction
 			game.ball.speed.x *= -1.25;
@@ -169,35 +213,12 @@ window.addEventListener("load", function ()
 		}
 	}
 
-	click.innerHTML = "Play";
-	canvas = document.getElementById('canvas');
-	canvas.style.display = "block";
-	canvas.style.margin = "auto";
-	canvas.width = this.window.innerWidth / 2;
-	canvas.height = this.window.innerHeight / 2;
-	game = {
-		player: {
-			y: canvas.height / 2 - PLAYER_HEIGHT / 2
-		},
-		computer: {
-			y: canvas.height / 2 - PLAYER_HEIGHT / 2
-		},
-		ball: {
-			x: canvas.width / 2,
-			y: canvas.height / 2,
-			r: 5,
-			speed: {
-				x: 2,
-				y: 2
-			}
-		}
-	};
-	canvas.addEventListener('mousemove', Move_player);
 	function Move_player(event: any)
 	{
 		// Get the mouse location in the canvas
 		var canvasLocation = canvas.getBoundingClientRect();
 		var mouseLocation = event.clientY - canvasLocation.y;
+
 		if (mouseLocation < PLAYER_HEIGHT / 2)
 			game.player.y = 0;
 		else if (mouseLocation > canvas.height - PLAYER_HEIGHT / 2)
@@ -205,18 +226,6 @@ window.addEventListener("load", function ()
 		else
 			game.player.y = mouseLocation - PLAYER_HEIGHT / 2;
 	}
-	draw();
-	click.addEventListener('click', function ()
-	{
-		console.log("clicked");
-		click.style.display = "none";
-		/*player1.innerHTML = "wassim";
-		player2.innerHTML = "gildas";*/
-		score.innerHTML = "0";
-		score2.innerHTML = "0";
-		tiret.innerHTML = "-";
-		play();
-	});
 });
 
 export default Pong;

@@ -16,7 +16,9 @@ function PongPage()
 			{!map ? (
 				<div>
 					<div style={{ height: "3rem" }} />
-					<p className='to-play'>If you want to play to a simple pong please use the map 1.</p>
+					<div style={{ display: "flex", justifyContent: "center" }}>
+						<p className='to-play'>If you want to play to a simple pong please use the map 1.</p>
+					</div>
 					<div className=/*'card card--border*/'choice' /* should probably be a card */>
 						<button onClick={() => { setMap('simple') }}>
 							simple pong
