@@ -25,8 +25,6 @@ function App()
 
 	const value = useMemo(() => ({ user, setUser }), [user, setUser]);
 
-	console.log(window.location.href)
-
 	return (
 		<Router>
 			<NavBar />
