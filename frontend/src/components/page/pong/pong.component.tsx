@@ -1,22 +1,57 @@
-import React from 'react';
+import { useState } from 'react';
 
 import './../../../style/pong.css';
 
-function Pong(props: { map: {} })
+import i_map from '../../../interface/map.interface';
+
+import { ReactComponent as Back } from '../../../icon/left-svgrepo-com.svg'
+
+function Pong(props: { map: i_map, goBack: () => void })
 {
+	const [inGame, setInGame] = useState(false);
+
+	if (!inGame)	// should initialize diferently
+	{
+		props.map.p1 = "player 1";
+		props.map.p2 = "player 2";
+	}
+
+	function launchGame()
+	{
+		props.map.p1 = "wassim";
+		props.map.p2 = "gildas";
+		setInGame(true);
+	}
+
 	return (
-		<body>
-			<h1 id="pong-pong">Pong</h1>
-			<p id="player-pong"><span id="joueur1-pong"> player 1 </span> vs <span id="joueur2-pong"> player 2 </span></p>
-			<main>
-				<p><span id="play-pong">play</span></p>    <canvas id="canvas" ></canvas>
-				<p id="score"> <span id="score-pong"> </span> <span id="tiret"> </span> <span id="score2-pong"> </span></p>
-			</main>
-		</body>
+		<div>
+			<button className='btn--back'
+				style={{ position: "absolute", top: "calc(1rem + var(--nav-h))", left: "1rem" }}
+				onClick={() => props.goBack()}>
+				<Back />
+			</button>
+			<h1 className='pong--header'>Pong</h1>
+			<br />
+			[DEBUG] map chosen: {props.map.type}
+			<p className='pong--player'>{props.map.p1} vs {props.map.p2}</p>
+			{!inGame &&
+				<div>
+					<button id="play-pong" className='pong--btn--play' onClick={launchGame}>
+						play
+					</button>
+					<br />
+				</div>}
+			<canvas id="canvas" ></canvas>
+			{inGame &&
+				<p id="score">
+					<span id="score-pong" />
+					<span id="tiret" />
+					<span id="score2-pong" />
+				</p>
+			}
+		</div>
 	);
 }
-
-
 
 window.addEventListener("load", function ()
 {
@@ -29,21 +64,17 @@ window.addEventListener("load", function ()
 	let ball_start = 0;
 	let PLAYER_HEIGHT = 100;
 	let PLAYER_WIDTH = 5;
-	let pong = document.querySelector("#pong-pong")! as HTMLElement;
 	let click = document.querySelector("#play-pong")! as HTMLElement;
-	let player1 = document.querySelector("#joueur1-pong")! as HTMLElement;
-	let player2 = document.querySelector("#joueur2-pong")! as HTMLElement;
 	let tiret = document.querySelector("#tiret")! as HTMLElement;
 
+	console.log("in");	// doesn't seems to load the event
+
 	//score2.style.marginLeft = "69%";
-	pong.style.textAlign = "center";
-	pong.style.fontSize = "400%";
-	pong.style.fontFamily = "OCR A Std";
-	click.style.textAlign = "center";
+	/*click.style.textAlign = "center";
 	click.style.marginLeft = "46%";
 	click.style.marginBottom = "48%";
 	click.style.fontSize = "205%";
-	click.style.fontFamily = "OCR A Std";
+	click.style.fontFamily = "OCR A Std";*/
 
 	function draw()
 	{
@@ -177,9 +208,10 @@ window.addEventListener("load", function ()
 	draw();
 	click.addEventListener('click', function ()
 	{
+		console.log("clicked");
 		click.style.display = "none";
-		player1.innerHTML = "wassim";
-		player2.innerHTML = "gildas";
+		/*player1.innerHTML = "wassim";
+		player2.innerHTML = "gildas";*/
 		score.innerHTML = "0";
 		score2.innerHTML = "0";
 		tiret.innerHTML = "-";

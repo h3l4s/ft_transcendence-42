@@ -5,6 +5,11 @@
 
 .pong {
 	height: calc(100vh - var(--nav-h));
+	background-repeat: no-repeat;
+	background-size: cover;
+	font-family: OCR A Std;
+	/*background-color: #4682B4;*/
+	background-color: var(--background-color);
 }
 
 /*#bandeau {
@@ -17,13 +22,6 @@
 	box-shadow: 15px 15px 12px #555;
 }*/
 
-#pong-pong {
-	height: 74px;
-	margin: 0;
-	background: #A9A9A9;
-	box-shadow: 15px 15px 12px #555;
-}
-
 #canvas {
 	width: 70%;
 	height: 40%;
@@ -31,28 +29,63 @@
 	max-height: 580px;
 }
 
+.pong--header {
+	/*height: 74px;*/
+	height: 3.5rem;
+	margin: 0;
+	/*color: #000; should change the color*/
+	background: #A9A9A9;
+	box-shadow: 15px 15px 12px #555;
+	text-align: center;
+	/*font-size: 400%;*/
+	font-family: OCR A Std;
+}
+
+.btn--back {
+	background-color: unset;
+	border: unset;
+}
+
+.btn--back:hover {
+	filter: brightness(100000%);
+}
+
+/* need to change look of it */
+.pong--btn--play {
+	background-color: #fff8;
+	border: unset;
+	border-radius: 1rem;
+	font-size: 1.5rem;
+	font-family: OCR A Std;
+	transition: 300ms;
+}
+
+.pong--btn--play:hover {
+	color: #fff;
+	background-color: #0006;
+	border-radius: unset;
+}
+
 .to-play {
 	width: 55%;
-	height: auto;
 	background-size: 100% auto !important;
 	text-align: center;
 	box-shadow: 15px 15px 12px #555;
-	margin-left: 22%;
-	margin-right: 22%;
+	margin: 0 22%;
 	border-width: medium;
 	margin: 20;
 	background: #778899;
 	line-height: 60px;
 }
 
-#all {
+/*#all {
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: cover;
 	min-height: 100vh;
 	font-family: OCR A Std;
 	background-color: #4682B4;
-}
+}*/
 
 /* choice probably should be a card */
 .choice {
@@ -61,15 +94,16 @@
 	width: 300px;
 	/* need to use vw value */
 
-	/* need the display flex */
-	/*
 	display: flex;
+	flex-direction: column;
 	justify-content: space-around;
-	*/
+	margin-top: 3rem;
+	padding: 2rem;
+
 	margin-left: auto;
 	margin-right: auto;
+
 	background: #A9A9A9;
-	text-align: center;
 	box-shadow: 15px 15px 12px #555;
 }
 
@@ -89,7 +123,7 @@
 	color: white;
 }
 
-#player-pong {
+.pong--player {
 	text-align: center;
 	font-size: 30px;
 	font-family: OCR A Std;

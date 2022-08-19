@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 //import { Link } from 'react-router-dom'
 
 import './../../../style/pong.css';
@@ -8,34 +8,33 @@ import Pong from './pong.component';
 
 function PongPage()
 {
-	const [map, setMap] = useState<'basic' | 'interstellar' | 'tennis' | null>(null);
+	const [map, setMap] = useState<'simple' | 'space' | 'tennis' | null>(null);
 	// might not store the type of map
 
 	return (
 		<div className='pong'>
 			{!map ? (
 				<div>
+					<div style={{ height: "3rem" }} />
 					<p className='to-play'>If you want to play to a simple pong please use the map 1.</p>
-					<div className='choice' /* should probably be a card */>
-						<button onClick={() => { setMap('basic') }}>
+					<div className=/*'card card--border*/'choice' /* should probably be a card */>
+						<button onClick={() => { setMap('simple') }}>
 							simple pong
 						</button>
-						<button onClick={() => { setMap('interstellar') }}>
+						<button onClick={() => { setMap('space') }}>
 							space pong
 						</button>
 						<button onClick={() => { setMap('tennis') }}>
 							tennis pong
 						</button>
-					</div >
-				</div >
+					</div>
+				</div>
 			) : (
 				<div>
-					map chosen: {map}
-					<br />
-					<Pong map={{}} />
+					<Pong map={{ type: map }} goBack={() => { setMap(null) }} />
 				</div>
 			)}
-		</div >
+		</div>
 	);
 }
 
