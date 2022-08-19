@@ -21,12 +21,12 @@ function Pong(props: { map: i_map, goBack: () => void })
 		props.map.p1 = "wassim";
 		props.map.p2 = "gildas";
 		setInGame(true);
-		handleCanvas(false);
+		handleCanvas(false, props.map.type);
 	}
 
 	useEffect(() =>
 	{
-		handleCanvas(true);
+		handleCanvas(true, props.map.type);
 	});
 
 	return (
@@ -62,7 +62,7 @@ function Pong(props: { map: i_map, goBack: () => void })
 	);
 }
 
-function handleCanvas(init: boolean)
+function handleCanvas(init: boolean, type: 'simple' | 'space' | 'tennis')
 {
 	let canvas = document.querySelector("#canvas")! as HTMLCanvasElement;
 	canvas.style.display = "block";
@@ -109,15 +109,29 @@ function handleCanvas(init: boolean)
 	function draw()
 	{
 		let context = canvas.getContext('2d')!;
-		// Draw field
-		context.fillStyle = 'black';
-		context.fillRect(0, 0, canvas.width, canvas.height);
-		// Draw middle line
-		context.strokeStyle = 'white';
-		context.beginPath();
-		context.moveTo(canvas.width / 2, 0);
-		context.lineTo(canvas.width / 2, canvas.height);
-		context.stroke();
+		let img = new Image();
+
+		if (type === 'simple')
+		{
+			// Draw field
+			context.fillStyle = 'black';
+			context.fillRect(0, 0, canvas.width, canvas.height);
+			// Draw middle line
+			context.strokeStyle = 'white';
+			context.beginPath();
+			context.moveTo(canvas.width / 2, 0);
+			context.lineTo(canvas.width / 2, canvas.height);
+			context.stroke();
+		}
+		else
+		{
+			if (type === 'space')
+				img.src = 'https://cdn-7.nikon-cdn.com/Images/Learn-Explore/Photography-Techniques/2019/Milky-Way-Photography-Robinson-Krup/Media/Diana-Robinson-Milky-Way-Sitting-Hen-Butte.jpg'
+			else
+				img.src = 'https://us.123rf.com/450wm/sermax55/sermax551811/sermax55181100034/127713212-court-de-tennis-champ-de-couverture-d-herbe-illustration-vectorielle-vue-de-dessus-avec-grille-et-om.jpg?ver=6'
+			context.drawImage(img, 0, 0, canvas.width, canvas.height);
+		}
+
 		// Draw players
 		context.fillStyle = 'white';
 		context.fillRect(5, game.player.y, PLAYER_WIDTH, PLAYER_HEIGHT);
