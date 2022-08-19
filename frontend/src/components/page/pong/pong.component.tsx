@@ -1,11 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import './../../../style/pong.css';
 
 import i_map from '../../../interface/map.interface';
 
 import { ReactComponent as Back } from '../../../icon/left-svgrepo-com.svg'
-import sleep from '../../../utils/sleep';
 
 function Pong(props: { map: i_map, goBack: () => void })
 {
@@ -24,6 +23,11 @@ function Pong(props: { map: i_map, goBack: () => void })
 		setInGame(true);
 		handleCanvas(false);
 	}
+
+	useEffect(() =>
+	{
+		handleCanvas(true);
+	});
 
 	return (
 		<div className='pong'>
@@ -51,7 +55,7 @@ function Pong(props: { map: i_map, goBack: () => void })
 			}
 			<canvas id="canvas" />
 			<p id="score" style={{ visibility: (inGame ? "visible" : "hidden") }}>
-				<span id="scoreP1" />-<span id="scoreP2" />
+				<span id="scoreP1HTML" />-<span id="scoreP2HTML" />
 			</p>
 		</div >
 	);
@@ -90,11 +94,13 @@ function handleCanvas(init: boolean)
 		}
 	};
 	let ball_start = false;
-	let scoreP1 = document.querySelector("#scoreP1")! as HTMLElement;
-	let scoreP2 = document.querySelector("#scoreP2")! as HTMLElement;
+	let scoreP1HTML = document.querySelector("#scoreP1HTML")! as HTMLElement;
+	let scoreP2HTML = document.querySelector("#scoreP2HTML")! as HTMLElement;
+	let scoreP1 = 0;
+	let scoreP2 = 0;
 
-	scoreP1.innerText = "0";
-	scoreP2.innerText = "0";
+	scoreP1HTML.innerText = "0";
+	scoreP2HTML.innerText = "0";
 
 
 	console.log("in");	// doesn't seems to load the event
@@ -103,15 +109,9 @@ function handleCanvas(init: boolean)
 	if (init)
 		return;
 
+	play();
+
 	canvas.addEventListener('mousemove', Move_player);
-
-	//
-	document.querySelector("#play-pong")!.addEventListener('click', function ()
-	{
-		console.log("clicked");
-
-		play();
-	});
 
 	function draw()
 	{
@@ -177,12 +177,14 @@ function handleCanvas(init: boolean)
 			if (game.ball.x > 400)
 			{
 				ball_start = false;
-				scoreP1.innerText = (1 + scoreP1.innerText);
+				scoreP1++
+				scoreP1HTML.innerText = scoreP1.toString();
 			}
 			else
 			{
 				ball_start = true;
-				scoreP2.innerText = "" + 1 + scoreP2.innerText;
+				scoreP2++
+				scoreP2HTML.innerText = scoreP2.toString();
 			}
 			game.ball.x = canvas.width / 2;
 			game.ball.y = canvas.height / 2;
