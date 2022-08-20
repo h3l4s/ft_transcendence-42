@@ -77,12 +77,6 @@ export class UserService
 			user.win += 1;
 		if (updateUserDto.lose)
 			user.lose += 1;
-		if (updateUserDto.matchHistory)
-		{
-			if (!user.matchHistory)
-				user.matchHistory = [];
-			user.matchHistory.push(updateUserDto.matchHistory);
-		}
 		if (updateUserDto.friendId)
 		{
 			if (!user.friendsId)
