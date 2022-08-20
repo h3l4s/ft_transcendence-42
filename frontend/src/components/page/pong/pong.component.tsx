@@ -1,35 +1,38 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import axios from 'axios';
 
 import './../../../style/pong.css';
+
+import { AuthContext } from '../../../context/auth.context';
 
 import i_map from '../../../interface/map.interface';
 
 import { ReactComponent as Back } from '../../../icon/left-svgrepo-com.svg'
-
 import tennis from './tennis_pong.jpg'
+
+import Error from '../../request_answer_component/error.component';
 
 function Pong(props: { map: i_map, goBack: () => void })
 {
 	const [inGame, setInGame] = useState(false);
-
-	if (!inGame)	// should initialize diferently
-	{
-		props.map.p1 = "player 1";
-		props.map.p2 = "player 2";
-	}
-
-	function launchGame()
-	{
-		props.map.p1 = "wassim";
-		props.map.p2 = "gildas";
-		setInGame(true);
-		handleCanvas(false, props.map.type);
-	}
+	const { user } = useContext(AuthContext);
 
 	useEffect(() =>
 	{
-		handleCanvas(true, props.map.type);
+		handleCanvas(true, props.map);
 	});
+
+	if (!user || !user.name)
+		return (<Error msg="failed to get connected user" />);
+
+	props.map.p1 = user.name;
+	props.map.p2 = (!inGame ? "..." : "wassim");
+
+	function launchGame()
+	{
+		setInGame(true);
+		handleCanvas(false, props.map);
+	}
 
 	return (
 		<div className='pong'>
@@ -65,7 +68,7 @@ function Pong(props: { map: i_map, goBack: () => void })
 	);
 }
 
-function handleCanvas(init: boolean, type: 'simple' | 'hard' | 'tennis')
+function handleCanvas(init: boolean, map: i_map)
 {
 	let canvas = document.querySelector("#canvas")! as HTMLCanvasElement;
 	canvas.style.display = "block";
@@ -73,7 +76,7 @@ function handleCanvas(init: boolean, type: 'simple' | 'hard' | 'tennis')
 	canvas.width = window.innerWidth / 2;
 	canvas.height = window.innerHeight / 2.5;
 
-	const PLAYER_HEIGHT = (type === 'hard' ? 50 : 100);
+	const PLAYER_HEIGHT = (map.type === 'hard' ? 50 : 100);
 	const PLAYER_WIDTH = 5;
 
 	let game = {
@@ -115,7 +118,7 @@ function handleCanvas(init: boolean, type: 'simple' | 'hard' | 'tennis')
 	{
 		let context = canvas.getContext('2d')!;
 		const img = document.querySelector("#tennis")! as HTMLImageElement;
-		if (type === 'simple' || type === 'hard')
+		if (map.type === 'simple' || map.type === 'hard')
 		{
 			// Draw field
 			context.fillStyle = 'black';
@@ -154,12 +157,12 @@ function handleCanvas(init: boolean, type: 'simple' | 'hard' | 'tennis')
 		function drawMovingPart()
 		{
 			// Draw players
-			context.fillStyle = (type === 'hard' ? 'red' : 'white');
+			context.fillStyle = (map.type === 'hard' ? 'red' : 'white');
 			context.fillRect(5, game.player.y, PLAYER_WIDTH, PLAYER_HEIGHT);
 			context.fillRect(canvas.width - 5 - PLAYER_WIDTH, game.computer.y, PLAYER_WIDTH, PLAYER_HEIGHT);
 			// Draw ball
 			context.beginPath();
-			context.fillStyle = (type === 'hard' ? 'red' : 'white');
+			context.fillStyle = (map.type === 'hard' ? 'red' : 'white');
 			context.arc(game.ball.x, game.ball.y, game.ball.r, 0, Math.PI * 2, false);
 			context.fill();
 		}
@@ -188,6 +191,19 @@ function handleCanvas(init: boolean, type: 'simple' | 'hard' | 'tennis')
 		if (scoreP1 >= 11 || scoreP2 >= 11)
 		{
 			canvas.style.display = "none";
+			// only the winner will post the match to the api
+			if (scoreP1 === 11)
+			{
+				if (!map.p1 || !map.p2)
+					return;
+				const match_stats = {
+					winner: map.p1,
+					loser: map.p2,
+					scoreWinner: scoreP1,
+					scoreLoser: scoreP2
+				}
+				axios.post("http://localhost:3000/pong/match", match_stats);
+			}
 			return;
 		}
 
@@ -237,7 +253,7 @@ function handleCanvas(init: boolean, type: 'simple' | 'hard' | 'tennis')
 		else
 		{
 			// Increase speed and change direction
-			game.ball.speed.x *= (type === 'hard' ? -1.5 : -1.2);
+			game.ball.speed.x *= (map.type === 'hard' ? -1.5 : -1.2);
 			Angle_Direction(player.y);
 		}
 	}

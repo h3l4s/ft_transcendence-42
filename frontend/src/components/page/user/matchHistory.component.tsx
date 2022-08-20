@@ -9,14 +9,6 @@ import ProfileModal from "../../modal/profile.modal";
 import Error from "../../request_answer_component/error.component";
 import Loading from "../../request_answer_component/loading.component";
 
-function get_opponent(username: string, users: i_user[])
-{
-	for (let i = 0; i < users.length; i++)
-		if (users[i].name === username)
-			return (users[i]);
-	return (users[0]);
-}
-
 function MatchHistory(props: { username: string | undefined, users: i_user[] })
 {
 	const { data, loading, error } = useFetch("http://localhost:3000/pong/match/" + props.username, 'get');
@@ -36,7 +28,10 @@ function MatchHistoryArray(props: { matches: i_matchHistory[], username: string,
 	let ret: JSX.Element[] = [];
 
 	for (let i = 0; i < props.matches.length; i++)
-	{ ret.push(<Match match={props.matches[i]} username={props.username} opponent={get_opponent(props.username, props.users)} />); }
+	{
+		ret.push(<Match match={props.matches[i]} username={props.username}
+			users={props.users} />);
+	}
 
 	return (
 		<div style={{ height: "100%", width: "100%" }}>
@@ -45,7 +40,7 @@ function MatchHistoryArray(props: { matches: i_matchHistory[], username: string,
 	);
 }
 
-function Match(props: { match: i_matchHistory, username: string, opponent: i_user })
+function Match(props: { match: i_matchHistory, username: string, users: i_user[] })
 {
 	const [showProfile, setShowProfile] = useState(false);
 
@@ -53,6 +48,15 @@ function Match(props: { match: i_matchHistory, username: string, opponent: i_use
 	const win: boolean = props.match.winner === props.username;
 	const color = (win ? "#0B0" : "#B00")
 	const border = "4px solid " + color;
+	let opponent = -1;
+
+	for (let i = 0; i < props.users.length; i++)
+		if (props.users[i].name === (win ? props.match.loser : props.match.loser))
+			opponent = i;
+	if (opponent === -1)
+		for (let i = 0; i < props.users.length; i++)
+			if (props.users[i].id === 1)
+				opponent = i;
 
 	return (
 		<div>
@@ -69,12 +73,12 @@ function Match(props: { match: i_matchHistory, username: string, opponent: i_use
 					<span className='card--alt--glow' style={{ marginRight: "1rem" }}>{(win ? props.match.loser : props.match.winner)}</span>
 					<img className='img'
 						style={{ width: "3rem", height: "3rem" }}
-						src={props.opponent.profilePicPath} alt="profile" />
+						src={props.users[opponent].profilePicPath} alt="profile" />
 				</div>
 			</div>
 			<div>
 				{showProfile && <Backdrop onClick={() => { setShowProfile(false) }} />}
-				{showProfile && <ProfileModal user={props.opponent} onClose={() => { setShowProfile(false) }} />}
+				{showProfile && <ProfileModal user={props.users[opponent]} onClose={() => { setShowProfile(false) }} />}
 			</div>
 		</div>
 	);
