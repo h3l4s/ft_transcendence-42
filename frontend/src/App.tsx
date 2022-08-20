@@ -17,6 +17,7 @@ import Home from './components/page/home.page';
 import SignUp from './components/page/login/signup.component';
 import { ChanPage, ToChan } from './components/page/chan/chan.page';
 import UserPage from './components/page/user/user.page';
+import PongPage from './components/page/pong/pong.page';
 
 function App()
 {
@@ -31,7 +32,7 @@ function App()
 				<Routes>
 					<Route path="/" element={<Home />} />
 					<Route path="/login" element={<SignUp />} />
-					<Route path="/play" element={<RequireAuth><NoMatch /*need to put the pong page here*/ /></RequireAuth>} />
+					<Route path="/play" element={<RequireAuth><PongPage /></RequireAuth>} />
 					<Route path="/chan" element={<RequireAuth><ChanPage id={1} /></RequireAuth> /*need to handle if is signup and update connected_user*/} />
 					<Route path="/chan/:id" element={<RequireAuth><ToChan /></RequireAuth> /*need to handle if is signup and update connected_user*/} />
 					<Route path="/user" element={<RequireAuth><UserPage /></RequireAuth>} />
