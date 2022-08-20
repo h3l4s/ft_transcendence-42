@@ -1,11 +1,10 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import '../../../style/chan.css';
 import '../../../style/user.css';
 
 import i_user from '../../../interface/user.interface';
-import i_matchHistory from '../../../interface/matchHistory.interface';
 
 import { AuthContext } from '../../../context/auth.context';
 
