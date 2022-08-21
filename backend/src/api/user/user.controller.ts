@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Inject, Param, ParseIntPipe, Post, Put, UploadedFile, UseInterceptors } from '@nestjs/common';
-import { CreateUserDto, UpdateUserDto } from './user.dto';
+import { UpdateUsersAfterGameDto } from './user.dto';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 import axios from 'axios';
@@ -62,6 +62,12 @@ export class UserController
 	public updateUser(@Param('id', ParseIntPipe) id: number, @Body() data: any)
 	{
 		return this.service.updateUser(id, data.updateUserDto);
+	}
+
+	@Post('match')
+	public updateUsersAfterGame(@Body() data: UpdateUsersAfterGameDto)
+	{
+		return this.service.updateUsersAfterGame(data);
 	}
 
 	@Put('pp/:id')
