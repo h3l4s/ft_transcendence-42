@@ -1,11 +1,10 @@
+import i_user from "./user.interface";
+
 interface i_matchHistory
 {
-	id: number;
-	winner: string;
-	loser: string;
-	scoreWinner: number;
-	scoreLoser: number;
-	createdAt: Date;
+	opponent: i_user,
+	won_round: number,
+	lost_round: number,
 }
 
 export default i_matchHistory;
