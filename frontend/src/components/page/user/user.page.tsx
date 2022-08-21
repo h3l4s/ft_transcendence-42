@@ -51,7 +51,7 @@ function UserPage()
 	const { user } = useContext(AuthContext);
 	const [image, setImage] = useState<any | null>(null);
 	const p_username = useParams().username;
-	let userToLoad: i_user | null;
+	let userToLoad: i_user | null = null;
 
 	if (loading)
 		return (<div className='back'><Loading /></div>);
@@ -60,7 +60,13 @@ function UserPage()
 	else if (p_username)
 		userToLoad = isUserInDb(p_username, reqUsers);
 	else
-		userToLoad = user;
+	{
+		if (!user || !user.id)
+			return (<NoMatch />);
+		for (let i = 0; i < reqUsers.length; i++)
+			if (reqUsers[i].id === user.id)
+				userToLoad = reqUsers[i];
+	}
 	if (!userToLoad)
 		return (<NoMatch />);
 

@@ -26,7 +26,7 @@ function UserStats(props: { user: i_user })
 			<div className='typewriter userstats card--alt--glow' style={{ animationDelay: animation_delay + increment * 1 + "s" }}>
 				<span>xp:</span>
 				<span>
-					<span style={{ color: "var(--main-color-hover)" }}>{xp}</span>
+					<span style={{ color: "var(--main-color-hover)" }}>{xp.toFixed(2)}</span>
 					<span>/</span>
 					<span style={{ color: "var(--color-number)" }}>{xp_next_level}</span>
 				</span>
@@ -36,7 +36,7 @@ function UserStats(props: { user: i_user })
 				<span>
 					<span>(</span>
 					<span style={{ color: "greenyellow" }}>+</span>
-					<span style={{ color: "var(--color-number)" }}>{xp_needed}</span>
+					<span style={{ color: "var(--color-number)" }}>{xp_needed.toFixed(2)}</span>
 					<span>)</span>
 				</span>
 			</div>
