@@ -1,5 +1,17 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
+export class ColumnNumericTransformer
+{
+	to(data: number): number
+	{
+		return data;
+	}
+	from(data: string): number
+	{
+		return parseFloat(data);
+	}
+}
+
 @Entity()
 export class User
 {
@@ -18,7 +30,11 @@ export class User
 	@Column({ type: 'varchar', length: 255, default: "" })
 	public pp_name: string
 
-	@Column({ type: 'int', default: 0 })
+	@Column('numeric', {
+		precision: 7,
+		scale: 2,
+		transformer: new ColumnNumericTransformer(),
+	})
 	public xp: number;
 
 	@Column({ type: 'int', default: 1000 })
