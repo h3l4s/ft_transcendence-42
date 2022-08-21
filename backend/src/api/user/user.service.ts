@@ -119,8 +119,13 @@ export class UserService
 		winner.elo += Math.ceil(K * (Sw - Ew));
 		loser.elo += Math.ceil(K * (Sl - El));
 
-		winner.xp += data.scoreWinner / 2 * ((winner.elo - 942) / 142) + 1.42;
-		loser.xp += data.scoreLoser / 2 * ((loser.elo - 942) / 142);
+		if (winner.elo > 942)
+		{
+			winner.xp += data.scoreWinner / 2 * ((winner.elo - 942) / 142) + 1.42;
+			loser.xp += data.scoreLoser / 2 * ((loser.elo - 942) / 142);
+		}
+		else
+			winner.xp += 1.42;
 
 		this.repository.save(loser);
 		return this.repository.save(winner);
