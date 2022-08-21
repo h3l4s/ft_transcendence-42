@@ -1,11 +1,10 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import '../../../style/chan.css';
 import '../../../style/user.css';
 
 import i_user from '../../../interface/user.interface';
-import i_matchHistory from '../../../interface/matchHistory.interface';
 
 import { AuthContext } from '../../../context/auth.context';
 
@@ -52,8 +51,7 @@ function UserPage()
 	const { user } = useContext(AuthContext);
 	const [image, setImage] = useState<any | null>(null);
 	const p_username = useParams().username;
-	let userToLoad: i_user | null;
-	let matches: i_matchHistory[] = [];	// tmp until match history in db
+	let userToLoad: i_user | null = null;
 
 	if (loading)
 		return (<div className='back'><Loading /></div>);
@@ -62,7 +60,13 @@ function UserPage()
 	else if (p_username)
 		userToLoad = isUserInDb(p_username, reqUsers);
 	else
-		userToLoad = user;
+	{
+		if (!user || !user.id)
+			return (<NoMatch />);
+		for (let i = 0; i < reqUsers.length; i++)
+			if (reqUsers[i].id === user.id)
+				userToLoad = reqUsers[i];
+	}
 	if (!userToLoad)
 		return (<NoMatch />);
 

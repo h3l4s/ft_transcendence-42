@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateChanDto } from './chan.dto';
 import { Chan } from './chan.entity';
-import { ChanModule } from './chan.module';
 
 @Injectable()
 export class ChanService

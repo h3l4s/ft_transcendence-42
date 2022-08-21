@@ -2,7 +2,7 @@ import { Injectable, StreamableFile } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Readable } from 'stream';
 import { Repository } from 'typeorm';
-import { CreateUserDto, UpdateUserDto } from './user.dto';
+import { CreateUserDto, UpdateUserDto, UpdateUsersAfterGameDto } from './user.dto';
 import { User } from './user.entity';
 
 @Injectable()
@@ -70,7 +70,6 @@ export class UserService
 			user.name = updateUserDto.name;
 		if (updateUserDto.xp)
 			user.xp += updateUserDto.xp;
-		user.xp++;
 		if (updateUserDto.elo)
 			user.elo += updateUserDto.elo;
 		if (updateUserDto.win)
@@ -105,6 +104,32 @@ export class UserService
 		}
 
 		return await this.repository.save(user);
+	}
+
+	public async updateUsersAfterGame(data: UpdateUsersAfterGameDto)
+	{
+		const winner: User = await this.repository.findOne({ name: data.winner });
+		const loser: User = await this.repository.findOne({ name: data.loser });
+
+		winner.win++;
+		loser.lose++;
+
+		const K = 42;	// could change it depending on elo:
+		// (higher elo, lower number. But usualy only applies over 2000 elo)
+
+		const Sw = data.scoreWinner / (data.scoreWinner + data.scoreLoser);
+		const Sl = data.scoreLoser / (data.scoreWinner + data.scoreLoser);
+		const Ew = 1 / (1 + Math.pow(10, ((loser.elo - winner.elo) / 400)));
+		const El = 1 / (1 + Math.pow(10, ((winner.elo - loser.elo) / 400)));
+
+		winner.elo += Math.ceil(K * (Sw - Ew));
+		loser.elo += Math.ceil(K * (Sl - El));
+
+		winner.xp += data.scoreWinner / 2 * ((winner.elo - 942) / 142) + 1.42;
+		loser.xp += data.scoreLoser / 2 * ((loser.elo - 942) / 142);
+
+		this.repository.save(loser);
+		return this.repository.save(winner);
 	}
 
 	public deleteUser(id: number)
