@@ -33,6 +33,11 @@ export class UpdateUserDto
 	@IsOptional()
 	public lose: number;
 
+	@IsNotEmptyObject()
+	@IsOptional()
+	//public matchHistory: matchHistoryDto;
+	public matchHistory: { tmp: number };
+
 	@IsNumber()
 	@IsNotEmpty()
 	@IsOptional()

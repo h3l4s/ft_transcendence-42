@@ -13,7 +13,7 @@ import { ReactComponent as Edit } from '../../../icon/write-pencil-svgrepo-com.s
 
 import { useReqUsers } from '../../../request/user.request';
 import UserStats from './userstats.component';
-import MatchHistory from './matchHistory.component';
+import MatchHistoty from './matchHistory.component';
 import UserListById from './UserListById.component';
 import NoMatch from '../nomatch.page';
 import Loading from '../../request_answer_component/loading.component';
@@ -97,7 +97,7 @@ function UserPage()
 				</div>
 			</div>
 			<div className='card card--alt' style={{ width: "33vw", height: "100%", margin: "0 2rem 0 -0.3rem", overflowY: "scroll" }}>
-				<MatchHistory username={userToLoad.name} users={reqUsers} />
+				<MatchHistoty matches={matches} />
 			</div>
 			<div style={{ width: "33vw", margin: "-1rem 0 -2rem 0", padding: "0.3rem 0 2rem 0", overflowX: "hidden" }}>
 				<div style={{ display: "flex", alignItems: "center", justifyContent: "center", margin: "0.7rem 1rem 0 0" }}>
