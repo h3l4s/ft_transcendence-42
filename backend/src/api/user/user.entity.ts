@@ -30,10 +30,12 @@ export class User
 	@Column({ type: 'varchar', length: 255, default: "" })
 	public pp_name: string
 
-	@Column('numeric', {
+	@Column({
+		type: 'decimal',
 		precision: 7,
 		scale: 2,
 		transformer: new ColumnNumericTransformer(),
+		default: 0
 	})
 	public xp: number;
 
