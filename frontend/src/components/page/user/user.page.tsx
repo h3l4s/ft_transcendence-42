@@ -96,10 +96,10 @@ function UserPage()
 					<UserStats user={userToLoad} />
 				</div>
 			</div>
-			<div className='card card--alt' style={{ width: "33vw", height: "100%", margin: "0 2rem 0 -0.3rem", overflowY: "scroll" }}>
+			<div className='card card--alt' style={{ width: "41vw", height: "100%", margin: "0 2rem 0 -0.3rem", overflowY: "scroll" }}>
 				<MatchHistory username={userToLoad.name} users={reqUsers} />
 			</div>
-			<div style={{ width: "33vw", margin: "-1rem 0 -2rem 0", padding: "0.3rem 0 2rem 0", overflowX: "hidden" }}>
+			<div style={{ width: "25vw", margin: "-1rem 0 -2rem 0", padding: "0.3rem 0 2rem 0", overflowX: "hidden" }}>
 				<div style={{ display: "flex", alignItems: "center", justifyContent: "center", margin: "0.7rem 1rem 0 0" }}>
 					<Friend style={{ width: "3rem", height: "3rem" }} />
 					<div style={{ margin: "0 1rem 0 1rem" }} />

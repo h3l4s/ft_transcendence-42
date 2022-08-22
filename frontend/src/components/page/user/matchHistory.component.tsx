@@ -44,6 +44,8 @@ function Match(props: { match: i_matchHistory, username: string, users: i_user[]
 {
 	const [showProfile, setShowProfile] = useState(false);
 
+	const date = new Date(props.match.createdAt);
+
 	//const win: boolean = props.match.won_round >= props.match.lost_round;
 	const win: boolean = props.match.winner === props.username;
 	const color = (win ? "#0B0" : "#B00")
@@ -64,13 +66,32 @@ function Match(props: { match: i_matchHistory, username: string, users: i_user[]
 				style={{ border: border }}
 				onClick={() => { setShowProfile(true) }}
 			>
-				<div className='card--alt--glow' style={{ marginLeft: "2rem", fontSize: "2rem" }}>
+				<div className='card--alt--glow' style={{ margin: "0 2rem 0 1rem", fontSize: "2rem" }}>
 					<span style={{ color: "#67c61a" }}>{(win ? props.match.scoreWinner : props.match.scoreLoser)}</span>
 					<span>|</span>
 					<span style={{ color: "red" }}>{(win ? props.match.scoreLoser : props.match.scoreWinner)}</span>
 				</div>
+				<div className='truncate card--alt--glow card--alt--glow'
+					style={{ fontSize: "0.5rem", display: "flex", flexDirection: "column", justifyContent: "space-around" }}>
+					<div>
+						<span style={{ color: "var(--color-number)" }}>{date.getDate()}</span>
+						/
+						<span style={{ color: "var(--color-number)" }}>{date.getMonth() + 1}</span>
+						/
+						<span style={{ color: "var(--color-number)" }}>{date.getFullYear()}</span>
+					</div>
+					<div style={{ height: "0.3rem" }} />
+					<div>
+						<span style={{ color: "var(--color-number)" }}>{date.getHours()}</span>
+						h
+						<span style={{ color: "var(--color-number)" }}>{date.getMinutes()}</span>
+						m
+						<span style={{ color: "var(--color-number)" }}>{date.getSeconds()}</span>
+						s
+					</div>
+				</div>
 				<div className='truncate' style={{ padding: "0.3rem 1rem 0.3rem 2rem" }}>
-					<span className='card--alt--glow' style={{ marginRight: "1rem" }}>{(win ? props.match.loser : props.match.winner)}</span>
+					<span className='card--alt--glow card--alt--glow' style={{ marginRight: "1rem" }}>{(win ? props.match.loser : props.match.winner)}</span>
 					<img className='img'
 						style={{ width: "3rem", height: "3rem" }}
 						src={props.users[opponent].profilePicPath} alt="profile" />
