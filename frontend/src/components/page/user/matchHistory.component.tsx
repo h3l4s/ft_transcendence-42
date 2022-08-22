@@ -29,7 +29,7 @@ function MatchHistoryArray(props: { matches: i_matchHistory[], username: string,
 
 	for (let i = props.matches.length - 1; i >= 0; i--)
 	{
-		ret.push(<Match match={props.matches[i]} username={props.username}
+		ret.push(<Match key={i} match={props.matches[i]} username={props.username}
 			users={props.users} />);
 	}
 

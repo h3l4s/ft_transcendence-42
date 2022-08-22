@@ -28,7 +28,7 @@ function PickUsers(props: { users: i_user[] }): JSX.Element
 
 	for (let i = 0; i < props.users.length; i++)
 		if (props.users[i].id !== user.id)
-			ret.push(<PickUser user={props.users[i]} />);
+			ret.push(<PickUser key={i} user={props.users[i]} />);
 
 	return (<div>{ret}</div>);
 }
