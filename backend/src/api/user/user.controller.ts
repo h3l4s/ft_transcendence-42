@@ -52,12 +52,6 @@ export class UserController
 		return this.service.tmpCreateUser({ name: name });
 	}
 
-	@Post('name/:name')
-	public tmpCreateDefaultUser(@Param('name') name: string)
-	{
-		return this.service.tmpCreateUser({ name: name });
-	}
-
 	@Get('name/:name')
 	public tmpGetUser(@Param('name') name: string)
 	{
