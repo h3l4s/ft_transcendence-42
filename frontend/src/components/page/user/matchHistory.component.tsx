@@ -40,7 +40,6 @@ function MatchHistoryArray(props: { matches: i_matchHistory[], username: string,
 	);
 }
 
-
 function Match(props: { match: i_matchHistory, username: string, users: i_user[] })
 {
 	const [showProfile, setShowProfile] = useState(false);
@@ -102,7 +101,7 @@ function Match(props: { match: i_matchHistory, username: string, users: i_user[]
 				{showProfile && <Backdrop onClick={() => { setShowProfile(false) }} />}
 				{showProfile && <ProfileModal user={props.users[opponent]} onClose={() => { setShowProfile(false) }} />}
 			</div>
-		</div >
+		</div>
 	);
 }
 

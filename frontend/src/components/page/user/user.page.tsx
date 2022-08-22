@@ -13,12 +13,12 @@ import { ReactComponent as Edit } from '../../../icon/write-pencil-svgrepo-com.s
 
 import { useReqUsers } from '../../../request/user.request';
 import UserStats from './userstats.component';
+import MatchHistory from './matchHistory.component';
 import UserListById from './UserListById.component';
 import NoMatch from '../nomatch.page';
 import Loading from '../../request_answer_component/loading.component';
 import Error from '../../request_answer_component/error.component';
 import axios from 'axios';
-import MatchHistory from './matchHistory.component';
 
 function isUserInDb(username: string, users: i_user[]): i_user | null
 {

@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
+import CreateDefaultUser from "../../request/user.create.default";
 import TestBackend from "../test.backend";
-import CreateDefaultUser from "../CreateDefaultUser";
 
-function Home() {
+function Home()
+{
 	return (
 		<div style={{ backgroundColor: "#96c471", color: "#fff", textAlign: "center", paddingTop: "5rem" }}>
 			home page
@@ -18,10 +19,8 @@ function Home() {
 			<br />
 			<br />
 			<TestBackend />
-			<br />
-			<br />
-			<br />
-			<CreateDefaultUser/>
+
+			<CreateDefaultUser />
 		</div>
 	);
 }
