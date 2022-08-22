@@ -27,7 +27,7 @@ function MatchHistoryArray(props: { matches: i_matchHistory[], username: string,
 {
 	let ret: JSX.Element[] = [];
 
-	for (let i = 0; i < props.matches.length; i++)
+	for (let i = props.matches.length - 1; i >= 0; i--)
 	{
 		ret.push(<Match match={props.matches[i]} username={props.username}
 			users={props.users} />);

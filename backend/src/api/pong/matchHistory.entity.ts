@@ -18,6 +18,6 @@ export class MatchHistory
 	@Column({ type: 'int' })
 	public scoreLoser: number;
 
-	@CreateDateColumn({ type: 'timestamp' })
+	@CreateDateColumn({ type: 'timestamp with time zone' })
 	public createdAt!: Date;
 }
