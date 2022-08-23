@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import './style/root.css'
 import './style/App.css';
@@ -33,7 +33,7 @@ function App()
 					<Route path="/" element={<Home />} />
 					<Route path="/login" element={<SignUp />} />
 					<Route path="/play" element={<RequireAuth><PongPage /></RequireAuth>} />
-					<Route path="/chan" element={<RequireAuth><ChanPage /></RequireAuth> /*need to handle if is signup and update connected_user*/} />
+					<Route path="/chan" element={<RequireAuth><ChanPage /></RequireAuth>} />
 					<Route path="/user" element={<RequireAuth><UserPage /></RequireAuth>} />
 					<Route path="/user/:username" element={<UserPage />} />
 					<Route path="*" element={<NoMatch />} />

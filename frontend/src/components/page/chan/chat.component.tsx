@@ -75,7 +75,7 @@ function Chat(props: { chan: i_chan, all_users: i_user[], users: i_user[], user:
 
 	function msgSendHandle(event: React.KeyboardEvent<HTMLInputElement>)
 	{
-		if (event.key === 'Enter')
+		if (event.key === 'Enter' && msg.length > 0)
 		{
 			event.preventDefault();
 			const date = new Date();

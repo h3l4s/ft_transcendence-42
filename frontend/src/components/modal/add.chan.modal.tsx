@@ -1,6 +1,5 @@
-import { useContext, useState } from "react";
-
-import { ChanContext } from "../../context/chan.context";
+import { useEffect, useState } from "react";
+import i_chan from "../../interface/chan.interface";
 
 import useFetch from "../../request/useFetch";
 
@@ -12,10 +11,9 @@ function SumbitAddChan(props: {
 	name: string,
 	type: 'public' | 'private' | 'protected',
 	pwd: string,
+	callback: (chan: i_chan) => void
 })
 {
-	const { setSelectedChan } = useContext(ChanContext);
-
 	const { data, loading, error } = useFetch("http://localhost:3000/chan", 'post', {
 		name: props.name,
 		ownerId: props.user_id,
@@ -24,6 +22,12 @@ function SumbitAddChan(props: {
 		hash: props.pwd
 	})
 
+	useEffect(() =>
+	{
+		if (!loading && !error)
+			props.callback(data);
+	}, [data, loading, error, props]);
+
 	if (loading)
 		return (<div style={{ textAlign: "center" }}><Loading /></div>);
 	else if (error)
@@ -31,12 +35,11 @@ function SumbitAddChan(props: {
 	else
 	{
 		console.log(data);
-		setSelectedChan(data.id);
 		return (<div />);
 	}
 }
 
-function AddChanModal(props: { user_id: number })
+function AddChanModal(props: { user_id: number, callback: (chan: i_chan) => void })
 {
 	const [title, setTitle] = useState("");
 	const [type, setType] = useState<'public' | 'private' | 'protected'>('public');
@@ -71,7 +74,7 @@ function AddChanModal(props: { user_id: number })
 				}
 			</div>
 			<div style={{ position: "absolute", top: "-4rem" }}>
-				{sumbit && <SumbitAddChan user_id={props.user_id} name={title} type={type} pwd={pwd} />}
+				{sumbit && <SumbitAddChan user_id={props.user_id} name={title} type={type} pwd={pwd} callback={props.callback} />}
 			</div>
 			<div style={{ width: "calc(100% - 6rem)" }}>
 				<input className='form--submit' type='submit' value='✔' />
