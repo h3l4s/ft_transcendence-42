@@ -19,7 +19,6 @@ function ChanPage()
 	const [selectedChan, setSelectedChan] = useState(1);
 	const value = useMemo(() => ({ selectedChan, setSelectedChan }), [selectedChan, setSelectedChan]);
 
-
 	if (reqChans.loading || reqUsers.loading)
 		return (<div className='back'><Loading /></div>);
 	else if (reqChans.error)
