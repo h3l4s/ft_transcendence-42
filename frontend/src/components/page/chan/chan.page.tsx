@@ -1,24 +1,21 @@
-import { useContext, useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import { InitChan, useReqChans } from '../../../request/chan.request';
 import { useReqUsers } from '../../../request/user.request';
 
 import '../../../style/chan.css';
 
-import { ChanContext } from '../../../context/chan.context';
-
 import Chans from './chan.component';
 import Loading from '../../request_answer_component/loading.component';
 import Error from '../../request_answer_component/error.component';
+import i_chan from '../../../interface/chan.interface';
+import axios from 'axios';
 
-function ChanPage()
+function ChanReq(props: { chans: i_chan[] | null, to_chan: number, callback: (id: number) => void })
 {
+	console.log("load");
 	const reqChans = useReqChans();
 	const reqUsers = useReqUsers();
-	const context = useContext(ChanContext);
-	const [selectedChan, setSelectedChan] = useState(1);
-	const value = useMemo(() => ({ selectedChan, setSelectedChan }), [selectedChan, setSelectedChan]);
-
 	if (reqChans.loading || reqUsers.loading)
 		return (<div className='back'><Loading /></div>);
 	else if (reqChans.error)
@@ -28,19 +25,35 @@ function ChanPage()
 	else
 	{
 		return (
-			<ChanContext.Provider value={value}>
-				<div>
-					{reqChans.reqChans.length === 0 ? (
-						<InitChan />
-					) : (
-						<div>
-							<Chans chans={reqChans.reqChans} users={reqUsers.reqUsers} to_chan={context.selectedChan} />
-						</div>
-					)}
-				</div>
-			</ChanContext.Provider>
+			<div>
+				{reqChans.reqChans.length === 0 ? (
+					<InitChan />
+				) : (
+					<div>
+						<Chans chans={(props.chans ? props.chans : reqChans.reqChans)} users={reqUsers.reqUsers}
+							to_chan={props.to_chan} callback={props.callback} />
+					</div>
+				)}
+			</div>
 		);
 	}
+}
+
+function ChanPage()
+{
+	const [selectedChan, setSelectedChan] = useState(1);
+	const [chans, setChans] = useState<i_chan[] | null>(null);
+
+	function callback(id: number)
+	{
+		axios.get("http://localhost:3000/chan/").then(res =>
+		{
+			setChans(res.data);
+			setSelectedChan(id);
+		}).catch(err => console.log(err));
+	}
+
+	return (<ChanReq chans={chans} to_chan={selectedChan} callback={callback} />);
 }
 
 export default ChanPage;

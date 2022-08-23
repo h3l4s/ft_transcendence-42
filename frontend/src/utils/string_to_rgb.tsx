@@ -8,11 +8,21 @@ function hashCode(str: string)
 	return hash;
 }
 
-function intToRGB(i: number)
+function intToHex(i: number)
 {
-	let c = (i & 0x00FFFFFF)
+	const c = (i & 0x00FFFFFF)
 		.toString(16)
 		.toUpperCase();
+
+	function hexToRgb(hex)
+	{
+		var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+		return result ? {
+			r: parseInt(result[1], 16),
+			g: parseInt(result[2], 16),
+			b: parseInt(result[3], 16)
+		} : null;
+	}
 
 	return "00000".substring(0, 6 - c.length) + c;
 }
