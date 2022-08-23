@@ -9,6 +9,7 @@ import Backdrop from "../../modal/backdrop";
 import OptionModal from "../../modal/option.modal";
 import PickUserModal from "../../modal/pick.user.modal";
 import PickPwdModal from "../../modal/pick.pwd.modal";
+import Msgs from "./msg.component";
 
 function userNotInChan(users_id: number[] | undefined, users: i_user[]): i_user[]
 {
@@ -73,6 +74,7 @@ function Chat(props: { chan: i_chan, all_users: i_user[], users: i_user[], user:
 						<Option />
 					</button>
 				</div>
+				<Msgs id={props.user.id} msgs={props.chan.msg} />
 				<input className='card--input input--chat' type='text' placeholder=' 💬' />
 			</div>
 
