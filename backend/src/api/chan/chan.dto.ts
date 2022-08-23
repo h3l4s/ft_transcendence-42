@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString, IsNumber, IsNotEmptyObject, IsArray, IsDate } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, IsNumber, IsArray, IsDateString } from 'class-validator';
 
 export class CreateChanDto
 {
@@ -38,7 +38,7 @@ export class MsgDto
 	@IsNotEmpty()
 	public msg: string;
 
-	@IsDate()
+	@IsDateString()
 	@IsNotEmpty()
 	public sendAt: Date;
 }

@@ -10,6 +10,7 @@ import OptionModal from "../../modal/option.modal";
 import PickUserModal from "../../modal/pick.user.modal";
 import PickPwdModal from "../../modal/pick.pwd.modal";
 import Msgs from "./msg.component";
+import axios from "axios";
 
 function userNotInChan(users_id: number[] | undefined, users: i_user[]): i_user[]
 {
@@ -44,6 +45,8 @@ function userNotAdmin(admins_id: number[] | undefined, users: i_user[]): i_user[
 
 function Chat(props: { chan: i_chan, all_users: i_user[], users: i_user[], user: i_user, is_admin: boolean, is_owner: boolean })
 {
+	const [msg, setMsg] = useState("");
+
 	const [showOption, setShowOption] = useState(false);
 	const [showAdd, setShowAdd] = useState(false);
 	const [showChallenge, setShowChallenge] = useState(false);
@@ -65,6 +68,27 @@ function Chat(props: { chan: i_chan, all_users: i_user[], users: i_user[], user:
 		setShowOwnerPwd(false);
 	}
 
+	function msgUpdateHandle(event: React.KeyboardEvent<HTMLInputElement>)
+	{
+		setMsg(event.target.value);
+	};
+
+	function msgSendHandle(event: React.KeyboardEvent<HTMLInputElement>)
+	{
+		if (event.key === 'Enter')
+		{
+			event.preventDefault();
+			const date = new Date();
+			axios.post("http://localhost:3000/chan/msg/" + props.chan.id, {
+				userId: props.user.id,
+				username: props.user.name,
+				msg: msg,
+				sendAt: date
+			}).catch(err => console.log(err));
+			setMsg("");
+		}
+	}
+
 	return (
 		<div>
 			<div className='card card--alt card--chat' >
@@ -75,7 +99,7 @@ function Chat(props: { chan: i_chan, all_users: i_user[], users: i_user[], user:
 					</button>
 				</div>
 				<Msgs id={props.user.id} msgs={props.chan.msg} />
-				<input className='card--input input--chat' type='text' placeholder=' 💬' />
+				<input className='card--input input--chat' type='text' placeholder=' 💬' onChange={msgUpdateHandle} value={msg} onKeyDown={msgSendHandle} />
 			</div>
 
 			{(showOption || showAdd || showChallenge || showMute || showAdminAdd || showAdminBan || showAdminMute || showOwnerPwd)

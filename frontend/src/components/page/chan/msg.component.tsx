@@ -1,6 +1,6 @@
 import i_msg from '../../../interface/msg.interface';
 
-import strToRGB from '../../../utils/string_to_rgb';
+import strToHex from '../../../utils/string_to_rgb';
 
 function Msgs(props: { id: number | undefined, msgs: i_msg[] | undefined })
 {
@@ -13,7 +13,7 @@ function Msgs(props: { id: number | undefined, msgs: i_msg[] | undefined })
 	{ ret.push(<Msg key={i} id={props.id} msg={props.msgs[i]} />); }
 
 	return (
-		<div>
+		<div className='msg--holder'>
 			{ret}
 		</div>
 	);
@@ -24,17 +24,21 @@ function Msg(props: { id: number, msg: i_msg })
 	if (props.id === props.msg.userId)
 	{
 		return (
-			<div className='msg' style={{ right: 0 }}>
+			<div className='msg' style={{ marginRight: 0, marginLeft: "auto", textAlign: "right" }}>
 				<span>{props.msg.msg}</span>
 				<span style={{ fontWeight: "bolder" }}>{" :"}</span>
-				<span className='truncate' style={{ maxWidth: "20%", color: strToRGB(props.msg.username) }}>{props.msg.username}</span>
+				<span className='truncate' style={{ maxWidth: "20%", color: strToHex(props.msg.username), filter: "brightness(150%)" }}>
+					{props.msg.username}
+				</span>
 			</div>
 		);
 	}
 
 	return (
 		<div className='msg'>
-			<span className='truncate' style={{ maxWidth: "20%", color: strToRGB(props.msg.username) }}>{props.msg.username}</span>
+			<span className='truncate' style={{ maxWidth: "20%", color: strToHex(props.msg.username), filter: "brightness(150%)" }}>
+				{props.msg.username}
+			</span>
 			<span style={{ fontWeight: "bolder" }}>{": "}</span>
 			<span>{props.msg.msg}</span>
 		</div>

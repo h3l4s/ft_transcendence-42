@@ -17,9 +17,9 @@ function intToRGB(i: number)
 	return "00000".substring(0, 6 - c.length) + c;
 }
 
-function strToRGB(str: string)
+function strToHex(str: string)
 {
-	return (intToRGB(hashCode(str)));
+	return ("#" + intToRGB(hashCode(str)));
 }
 
-export default strToRGB;
+export default strToHex;

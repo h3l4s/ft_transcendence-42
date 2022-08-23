@@ -541,3 +541,9 @@ input {
 .msg {
 	max-width: 66%;
 }
+
+.msg--holder {
+	margin: 4px 0 calc(3rem + 8px) 0;
+	width: 100%;
+	overflow-y: scroll;
+}

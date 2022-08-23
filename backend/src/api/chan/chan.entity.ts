@@ -25,7 +25,7 @@ export class Chan
 	@Column({ type: 'int', nullable: true, default: null })
 	public hash?: number;
 
-	@Column({ type: 'jsonb', array: true, nullable: true })
+	@Column({ type: 'jsonb', nullable: true })
 	public msg?: MsgDto[];
 
 	@Column({ type: 'int', array: true, nullable: null })
