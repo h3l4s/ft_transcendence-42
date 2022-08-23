@@ -86,7 +86,7 @@ export default function SignIn()
 
 	const getUsers = async () =>
 	{
-		const get_answer = await axios.get("http://localhost:3000/user");
+		const get_answer = await axios.get("http://localhost:3000/user/all");
 		console.log(get_answer);
 		let users: i_user[] = [];
 		for (let i = 0; i < get_answer.data.length; i++)
