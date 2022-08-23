@@ -1,24 +1,24 @@
+import { useContext, useMemo, useState } from 'react';
+
 import { InitChan, useReqChans } from '../../../request/chan.request';
 import { useReqUsers } from '../../../request/user.request';
 
 import '../../../style/chan.css';
 
+import { ChanContext } from '../../../context/chan.context';
+
 import Chans from './chan.component';
 import Loading from '../../request_answer_component/loading.component';
 import Error from '../../request_answer_component/error.component';
-import { useParams } from 'react-router-dom';
 
-function ToChan()
-{
-	const p_id = useParams().id;
-
-	return (<ChanPage id={(p_id ? +p_id : 1)} />);
-}
-
-function ChanPage(props: { id: number })
+function ChanPage()
 {
 	const reqChans = useReqChans();
 	const reqUsers = useReqUsers();
+	const context = useContext(ChanContext);
+	const [selectedChan, setSelectedChan] = useState(1);
+	const value = useMemo(() => ({ selectedChan, setSelectedChan }), [selectedChan, setSelectedChan]);
+
 
 	if (reqChans.loading || reqUsers.loading)
 		return (<div className='back'><Loading /></div>);
@@ -29,17 +29,19 @@ function ChanPage(props: { id: number })
 	else
 	{
 		return (
-			<div>
-				{reqChans.reqChans.length === 0 ? (
-					<InitChan />
-				) : (
-					<div>
-						<Chans chans={reqChans.reqChans} users={reqUsers.reqUsers} to_chan={props.id} />
-					</div>
-				)}
-			</div>
+			<ChanContext.Provider value={value}>
+				<div>
+					{reqChans.reqChans.length === 0 ? (
+						<InitChan />
+					) : (
+						<div>
+							<Chans chans={reqChans.reqChans} users={reqUsers.reqUsers} to_chan={context.selectedChan} />
+						</div>
+					)}
+				</div>
+			</ChanContext.Provider>
 		);
 	}
 }
 
-export { ChanPage, ToChan };
+export default ChanPage;

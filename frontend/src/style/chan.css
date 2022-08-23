@@ -543,7 +543,7 @@ input {
 }
 
 .msg--holder {
-	margin: 4px 0 calc(3rem + 8px) 0;
+	margin: 4px 0 4.2rem 0;
 	width: 100%;
 	overflow-y: scroll;
 }

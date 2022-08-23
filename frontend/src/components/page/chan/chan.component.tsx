@@ -74,7 +74,7 @@ function Chans(props: { chans: i_chan[], users: i_user[], to_chan: number })
 			</div >
 
 			{showAddChan && <Backdrop onClick={() => { setShowAddChan(false) }} />}
-			{showAddChan && user && user.id && <AddChanModal user_id={user.id} onClose={() => { setShowAddChan(false) }} />}
+			{showAddChan && user && user.id && <AddChanModal user_id={user.id} />}
 		</div >
 	);
 }
