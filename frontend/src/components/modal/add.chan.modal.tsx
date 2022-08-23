@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { Navigate } from "react-router-dom";
+import { useContext, useState } from "react";
+
+import { ChanContext } from "../../context/chan.context";
 
 import useFetch from "../../request/useFetch";
-import sleep from "../../utils/sleep";
-import Error from "../request_answer_component/error.component";
 
+import Error from "../request_answer_component/error.component";
 import Loading from "../request_answer_component/loading.component";
 
 function SumbitAddChan(props: {
@@ -12,9 +12,10 @@ function SumbitAddChan(props: {
 	name: string,
 	type: 'public' | 'private' | 'protected',
 	pwd: string,
-	onClose: () => void
 })
 {
+	const { setSelectedChan } = useContext(ChanContext);
+
 	const { data, loading, error } = useFetch("http://localhost:3000/chan", 'post', {
 		name: props.name,
 		ownerId: props.user_id,
@@ -30,13 +31,12 @@ function SumbitAddChan(props: {
 	else
 	{
 		console.log(data);
-		props.onClose();
-		//sleep(500);
-		return (<Navigate to={"/chan/" + data.id} />);
+		setSelectedChan(data.id);
+		return (<div />);
 	}
 }
 
-function AddChanModal(props: { user_id: number, onClose: () => void })
+function AddChanModal(props: { user_id: number })
 {
 	const [title, setTitle] = useState("");
 	const [type, setType] = useState<'public' | 'private' | 'protected'>('public');
@@ -45,12 +45,8 @@ function AddChanModal(props: { user_id: number, onClose: () => void })
 
 	function handleSubmit(event: any)
 	{
-		console.log(event.target.value);
-		console.log(event);
-		console.log("title: ", title);
-		console.log("type: ", type);
-		setSubmit(true);
 		event.preventDefault();
+		setSubmit(true);
 	}
 
 	return (
@@ -75,7 +71,7 @@ function AddChanModal(props: { user_id: number, onClose: () => void })
 				}
 			</div>
 			<div style={{ position: "absolute", top: "-4rem" }}>
-				{sumbit && <SumbitAddChan user_id={props.user_id} name={title} type={type} pwd={pwd} onClose={props.onClose} />}
+				{sumbit && <SumbitAddChan user_id={props.user_id} name={title} type={type} pwd={pwd} />}
 			</div>
 			<div style={{ width: "calc(100% - 6rem)" }}>
 				<input className='form--submit' type='submit' value='✔' />
