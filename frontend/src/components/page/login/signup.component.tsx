@@ -94,6 +94,8 @@ export default function SignIn()
 		setUsersData(users);
 	}
 
+	const [id, setId] = React.useState(1);
+
 	return (
 		<div style={{ backgroundColor: "var(--background-color)", height: "calc(100vh - var(--nav-h))" }}>
 			<ThemeProvider theme={theme}>
@@ -132,23 +134,26 @@ export default function SignIn()
 									🚧 test logout 🚧
 								</Button>
 							) : (
-								<Button
-									type="submit"
-									fullWidth
-									variant="contained"
-									sx={{ mt: 3, mb: 2 }}
-									onClick={async () =>
-									{
-										const tmp: i_user | null = await requestUser(2);
-										setUser(tmp);
-										if (tmp)
-											navigate("/");
-									}}
-								>
-									🚧 test login 🚧
-									<br />
-									(will login to user id 2)
-								</Button>
+								<div>
+									<Button
+										type="submit"
+										variant="contained"
+										sx={{ mt: 3, mb: 2 }}
+										onClick={async () =>
+										{
+											const tmp: i_user | null = await requestUser(3);
+											setUser(tmp);
+											if (tmp)
+												navigate("/");
+										}}
+									>
+										🚧 test login 🚧
+										<br />
+										(will login to user id: )
+									</Button>
+									<input className='input--chat' style={{ width: "3rem", textAlign: "center" }}
+										placeholder="id" onChange={(e) => setId(+e.target.value)} value={id} />
+								</div>
 							)}
 						</Box>
 						<div>
