@@ -16,7 +16,7 @@ function chanBacktoFront(chan: any)
 		ownerId: chan.ownerId,
 		adminsId: chan.adminsId,
 		type: chan.type,
-		// msg
+		msg: chan.msg,
 		bannedId: chan.bannedId,
 		mutedId: chan.mutedId
 	} : {});
