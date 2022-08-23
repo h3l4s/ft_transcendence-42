@@ -1,6 +1,6 @@
 import i_msg from '../../../interface/msg.interface';
 
-import strToHex from '../../../utils/string_to_rgb';
+import strToSHex from '../../../utils/strToHex';
 
 function Msgs(props: { id: number | undefined, msgs: i_msg[] | undefined })
 {
@@ -21,14 +21,13 @@ function Msgs(props: { id: number | undefined, msgs: i_msg[] | undefined })
 
 function Msg(props: { id: number, msg: i_msg })
 {
-	console.log(strToHex(props.msg.username));
 	if (props.id === props.msg.userId)
 	{
 		return (
 			<div className='msg' style={{ marginRight: 0, marginLeft: "auto", textAlign: "right" }}>
 				<span>{props.msg.msg}</span>
 				<span style={{ fontWeight: "bolder" }}>{" :"}</span>
-				<span className='truncate' style={{ maxWidth: "20%", color: strToHex(props.msg.username), fontSize: "110%" }}>
+				<span className='truncate' style={{ maxWidth: "20%", color: strToSHex(props.msg.username), fontSize: "110%" }}>
 					{props.msg.username}
 				</span>
 			</div>
@@ -37,7 +36,7 @@ function Msg(props: { id: number, msg: i_msg })
 
 	return (
 		<div className='msg'>
-			<span className='truncate' style={{ maxWidth: "20%", color: strToHex(props.msg.username), fontSize: "110%" }}>
+			<span className='truncate' style={{ maxWidth: "20%", color: strToSHex(props.msg.username), fontSize: "110%" }}>
 				{props.msg.username}
 			</span>
 			<span style={{ fontWeight: "bolder" }}>{": "}</span>

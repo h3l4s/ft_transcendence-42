@@ -13,7 +13,6 @@ import axios from 'axios';
 
 function ChanReq(props: { chans: i_chan[] | null, to_chan: number, callback: (id: number) => void })
 {
-	console.log("load");
 	const reqChans = useReqChans();
 	const reqUsers = useReqUsers();
 	if (reqChans.loading || reqUsers.loading)
