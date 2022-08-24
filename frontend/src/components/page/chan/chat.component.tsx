@@ -1,7 +1,10 @@
 import { useState } from "react";
+import axios from "axios";
+import { Socket } from "socket.io-client";
 
 import i_user from "../../../interface/user.interface";
 import i_chan from "../../../interface/chan.interface";
+import i_msg from "../../../interface/msg.interface";
 
 import { ReactComponent as Option } from '../../../icon/single-select-svgrepo-com.svg'
 
@@ -10,7 +13,6 @@ import OptionModal from "../../modal/option.modal";
 import PickUserModal from "../../modal/pick.user.modal";
 import PickPwdModal from "../../modal/pick.pwd.modal";
 import Msgs from "./msg.component";
-import axios from "axios";
 
 function userNotInChan(users_id: number[] | undefined, users: i_user[]): i_user[]
 {
@@ -43,9 +45,10 @@ function userNotAdmin(admins_id: number[] | undefined, users: i_user[]): i_user[
 
 }
 
-function Chat(props: { chan: i_chan, all_users: i_user[], users: i_user[], user: i_user, is_admin: boolean, is_owner: boolean })
+function Chat(props: { socket: Socket, chan: i_chan, all_users: i_user[], users: i_user[], user: i_user, is_admin: boolean, is_owner: boolean })
 {
 	const [msg, setMsg] = useState("");
+	const [msgs, setMsgs] = useState((props.chan.msg ? props.chan.msg : []));
 
 	const [showOption, setShowOption] = useState(false);
 	const [showAdd, setShowAdd] = useState(false);
@@ -68,6 +71,13 @@ function Chat(props: { chan: i_chan, all_users: i_user[], users: i_user[], user:
 		setShowOwnerPwd(false);
 	}
 
+	props.socket.on('chatToClient', (msg: i_msg) =>
+	{
+		console.log("received", msg);
+		if (msg.chanId && parseInt(msg.chanId) === props.chan.id)
+			setMsgs(current => [...current, msg]);
+	});
+
 	function msgUpdateHandle(event: React.KeyboardEvent<HTMLInputElement>)
 	{
 		setMsg(event.target.value);
@@ -75,16 +85,21 @@ function Chat(props: { chan: i_chan, all_users: i_user[], users: i_user[], user:
 
 	function msgSendHandle(event: React.KeyboardEvent<HTMLInputElement>)
 	{
+		if (!props.chan.id || !props.user.id || !props.user.name)
+			return;
 		if (event.key === 'Enter' && msg.length > 0)
 		{
 			event.preventDefault();
 			const date = new Date();
-			axios.post("http://localhost:3000/chan/msg/" + props.chan.id, {
+			let s_msg: i_msg = {
 				userId: props.user.id,
 				username: props.user.name,
 				msg: msg,
 				sendAt: date
-			}).catch(err => console.log(err));
+			}
+			axios.post("http://localhost:3000/chan/msg/" + props.chan.id, s_msg).catch(err => console.log(err));
+			s_msg.chanId = props.chan.id.toString()
+			props.socket.emit('chatToServer', s_msg);
 			setMsg("");
 		}
 	}
@@ -98,7 +113,7 @@ function Chat(props: { chan: i_chan, all_users: i_user[], users: i_user[], user:
 						<Option />
 					</button>
 				</div>
-				<Msgs id={props.user.id} msgs={props.chan.msg} />
+				<Msgs id={props.user.id} msgs={msgs} />
 				<input className='card--input input--chat' type='text' placeholder=' 💬' onChange={msgUpdateHandle} value={msg} onKeyDown={msgSendHandle} />
 			</div>
 

@@ -35,6 +35,10 @@ export class MsgDto
 	public username: string;
 
 	@IsString()
+	@IsOptional()
+	public chanId?: string;
+
+	@IsString()
 	@IsNotEmpty()
 	public msg: string;
 

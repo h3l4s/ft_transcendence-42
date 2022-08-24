@@ -14,6 +14,7 @@ import Chat from "./chat.component";
 import { Users } from "./user.component";
 import Backdrop from "../../modal/backdrop";
 import AddChanModal from "../../modal/add.chan.modal";
+import { Socket } from "socket.io-client";
 
 function get_user_in_chan(users_id: number[] | undefined, users: i_user[]): i_user[]
 {
@@ -31,7 +32,7 @@ function get_user_in_chan(users_id: number[] | undefined, users: i_user[]): i_us
 	return (ret);
 }
 
-function Chans(props: { chans: i_chan[], users: i_user[], to_chan: number, callback: (id: number) => void })
+function Chans(props: { socket: Socket, chans: i_chan[], users: i_user[], to_chan: number, callback: (id: number) => void })
 {
 	const { user } = useContext(AuthContext);
 	const [search, setSearch] = useState("");
@@ -44,11 +45,31 @@ function Chans(props: { chans: i_chan[], users: i_user[], to_chan: number, callb
 	const searchHandle = (event: React.KeyboardEvent<HTMLInputElement>) =>
 	{ setSearch(event.target.value); };
 
+	function leaveRoom()
+	{
+		props.socket.emit('leaveRoom', selectedChan.toString());
+	}
+
+	function joinRoom(id: number)
+	{
+		props.socket.emit('joinRoom', id.toString());
+	}
+
 	function Chan(props: { obj: i_chan })
 	{
+
 		return (
 			<div>
-				<div className='card card--border card--btn card--chan' onClick={() => { setSelectedChan(props.obj) }}>{props.obj.name}</div>
+				<div className='card card--border card--btn card--chan' onClick={() =>
+				{
+					if (!props.obj.id)
+						return;
+					leaveRoom();
+					joinRoom(props.obj.id);
+					setSelectedChan(props.obj);
+				}}>
+					{props.obj.name}
+				</div>
 			</div>
 		);
 	}
@@ -73,7 +94,9 @@ function Chans(props: { chans: i_chan[], users: i_user[], to_chan: number, callb
 			</div>
 
 			<div className='split split--chan split--center'>
-				{selectedChan && user && <Chat chan={selectedChan} all_users={props.users} users={users_in_chan} user={user} is_admin={is_user_admin} is_owner={is_user_owner} />}
+				{selectedChan && user && <Chat
+					socket={props.socket} chan={selectedChan}
+					all_users={props.users} users={users_in_chan} user={user} is_admin={is_user_admin} is_owner={is_user_owner} />}
 			</div>
 
 			<div className='split split--chan split--right'>
