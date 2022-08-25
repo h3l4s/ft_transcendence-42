@@ -18,7 +18,6 @@ import { Users } from "./user.component";
 import Backdrop from "../../modal/backdrop";
 import AddChanModal from "../../modal/chan.add.modal";
 import PromptPwdModal from "../../modal/chan.prompt.pwd.modal";
-import axios from "axios";
 
 function get_user_in_chan(users_id: number[] | undefined, users: i_user[]): i_user[]
 {
@@ -74,7 +73,7 @@ function Chans(props: { socket: Socket, chans: i_chan[], users: i_user[], to_cha
 				{
 					if (!props.obj.id)
 						return;
-					if (!is_in_chan)
+					if (props.obj.type === 'protected' && !is_in_chan)
 					{
 						setShowPomptPwd(true);
 						setChanPwd(props.obj);
@@ -104,19 +103,16 @@ function Chans(props: { socket: Socket, chans: i_chan[], users: i_user[], to_cha
 		props.callback((chan.id ? chan.id : 1));
 	}
 
-	function endOfPromptPwd()
+	function endOfPromptPwd(chan: i_chan)
 	{
-		if (!chanPwd.id || !user || !user.id)
+		if (!chan.id || !user || !user.id)
 		{
-			console.log("ERROR: endOfPromptPwd unset values:", chanPwd, user)
+			console.log("ERROR: endOfPromptPwd unset values:", chan, user)
 			return;
 		}
-		axios.put("http://localhost:3000/chan/join/" + chanPwd.id + "/" + user.id).then(() =>
-		{
-			setShowPomptPwd(false);
-			setSelectedChan(chanPwd);
-			props.callback((chanPwd.id ? chanPwd.id : 1));
-		}).catch(err => console.log(err));
+		setShowPomptPwd(false);
+		setSelectedChan(chan);
+		props.callback(chan.id);
 	}
 
 	return (
@@ -143,7 +139,7 @@ function Chans(props: { socket: Socket, chans: i_chan[], users: i_user[], to_cha
 
 			{(showAddChan || showPromptPwd) && <Backdrop onClick={() => { setShowAddChan(false); setShowPomptPwd(false); }} />}
 			{showAddChan && user && user.id && <AddChanModal user_id={user.id} callback={endOfForm} />}
-			{showPromptPwd && <PromptPwdModal chan_id={chanPwd.id} callback={endOfPromptPwd} />}
+			{showPromptPwd && <PromptPwdModal chan_id={chanPwd.id} user_id={(user ? user.id : undefined)} callback={endOfPromptPwd} />}
 		</div >
 	);
 }

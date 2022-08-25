@@ -46,3 +46,14 @@ export class MsgDto
 	@IsNotEmpty()
 	public sendAt: Date;
 }
+
+export class PwdDto
+{
+	@IsNumber()
+	@IsNotEmpty()
+	public userId: number;
+
+	@IsString()
+	@IsNotEmpty()
+	public pwd: string;
+}

@@ -3,7 +3,7 @@ import { Socket, Server } from 'socket.io';
 import { Logger } from '@nestjs/common';
 import { MsgDto } from './chan.dto';
 
-@WebSocketGateway({ namespace: '/chat', cors: true })
+@WebSocketGateway({ namespace: '/chat', cors: { origin: '*' } })
 export class ChatGateway implements OnGatewayInit
 {
 	@WebSocketServer() wss: Server;
@@ -15,9 +15,18 @@ export class ChatGateway implements OnGatewayInit
 		this.logger.log("server up", server);
 	}
 
+	handleConnection(client: Socket)
+	{
+		client.on('newConnection', () =>
+		{
+			console.log("New client connected: " + client.id);
+		})
+	}
+
 	@SubscribeMessage('chatToServer')
 	handleMessage(client: Socket, message: MsgDto)
 	{
+		console.log("message received:", client, message);
 		this.wss.to(message.chanId).emit('chatToClient', message);
 	}
 

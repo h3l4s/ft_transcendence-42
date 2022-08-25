@@ -1,12 +1,16 @@
 import axios from "axios";
 import { useState } from "react";
 
-function PromptPwdModal(props: { chan_id: number | undefined, callback: () => void })
+import i_chan from "../../interface/chan.interface";
+
+import Error from "../request_answer_component/error.component";
+
+function PromptPwdModal(props: { chan_id: number | undefined, user_id: number | undefined, callback: (chan: i_chan) => void })
 {
 	const [pwd, setPwd] = useState("");
 	const [wrongPwd, setWrongPwd] = useState(false);
 
-	if (!props.chan_id)
+	if (!props.chan_id || !props.user_id)
 		return (<div />);
 
 	function pwdUpdateHandle(event: React.KeyboardEvent<HTMLInputElement>)
@@ -21,12 +25,12 @@ function PromptPwdModal(props: { chan_id: number | undefined, callback: () => vo
 		if (event.key === 'Enter' && pwd.length > 0)
 		{
 			event.preventDefault();
-			axios.post("http://localhost:3000/chan/pwd/" + props.chan_id, pwd).then((res) =>
+			axios.post("http://localhost:3000/chan/pwd/" + props.chan_id, { userId: props.user_id, pwd: pwd }).then((res) =>
 			{
 				console.log(res);
 				console.log(res.data);
-				if (res.data.valid === true)
-					props.callback();
+				if (res.data.usersId.includes(props.user_id))
+					props.callback(res.data);
 				else
 					setWrongPwd(true);
 			}).catch(err => console.log(err));
@@ -35,10 +39,16 @@ function PromptPwdModal(props: { chan_id: number | undefined, callback: () => vo
 	}
 
 	return (
-		<div className='modal--add--chan'>
-			<input className='card--input input--chat' type='text' placeholder=' 💬'
+		<div className='modal--option'>
+			<span style={{ fontSize: "1.5rem", fontWeight: "bolder" }}>password</span>
+			<input className='form--input' style={{ width: "80%", alignSelf: "center" }} type='text' placeholder=' 🔑'
 				onChange={pwdUpdateHandle} value={pwd} onKeyDown={pwdSendHandle} />
-		</div >
+			{wrongPwd ? (
+				<Error msg="wrong password" />
+			) : (
+				<div />
+			)}
+		</div>
 	);
 }
 

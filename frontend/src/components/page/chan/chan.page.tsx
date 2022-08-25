@@ -44,10 +44,11 @@ function ChanPage()
 {
 	const [selectedChan, setSelectedChan] = useState(1);
 	const [chans, setChans] = useState<i_chan[] | null>(null);
-	let socket = io("http://localhost:3000/chan/");
+	let socket = io("http://localhost:3000/chat");
 
 	useEffect(() =>
 	{
+		socket.emit('newConnection');
 		if (selectedChan === 1)
 			socket.emit('joinRoom', "1");
 		// eslint-disable-next-line react-hooks/exhaustive-deps
