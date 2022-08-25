@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { Socket } from "socket.io-client";
 
 import i_chan from "../../../interface/chan.interface";
 import i_user from "../../../interface/user.interface";
@@ -10,11 +11,14 @@ import { ReactComponent as Plus } from '../../../icon/plus-svgrepo-com.svg'
 import { SearchByName } from "../../../utils/search_by_name";
 import get_id from "../../../utils/get_id";
 
+import { ReactComponent as Pwd } from '../../../icon/icons8-key.svg'
+
 import Chat from "./chat.component";
 import { Users } from "./user.component";
 import Backdrop from "../../modal/backdrop";
-import AddChanModal from "../../modal/add.chan.modal";
-import { Socket } from "socket.io-client";
+import AddChanModal from "../../modal/chan.add.modal";
+import PromptPwdModal from "../../modal/chan.prompt.pwd.modal";
+import axios from "axios";
 
 function get_user_in_chan(users_id: number[] | undefined, users: i_user[]): i_user[]
 {
@@ -38,6 +42,8 @@ function Chans(props: { socket: Socket, chans: i_chan[], users: i_user[], to_cha
 	const [search, setSearch] = useState("");
 	const [selectedChan, setSelectedChan] = useState<i_chan>(get_id(props.chans, props.to_chan));
 	const [showAddChan, setShowAddChan] = useState(false);
+	const [showPromptPwd, setShowPomptPwd] = useState(false);
+	const [chanPwd, setChanPwd] = useState<i_chan>(selectedChan);
 	const users_in_chan: i_user[] = get_user_in_chan((selectedChan ? selectedChan.usersId : [-1]), props.users);
 	const is_user_admin: boolean = (selectedChan && selectedChan.adminsId && user && user.id && selectedChan.adminsId.includes(user.id) ? true : false)
 	const is_user_owner: boolean = (selectedChan && selectedChan.ownerId && user && user.id && selectedChan.ownerId === user.id ? true : false)
@@ -57,6 +63,10 @@ function Chans(props: { socket: Socket, chans: i_chan[], users: i_user[], to_cha
 
 	function Chan(props: { obj: i_chan })
 	{
+		if (!props.obj.usersId || !user || !user.id)
+			return (<div />);
+
+		const is_in_chan: boolean = props.obj.usersId.includes(user.id);
 
 		return (
 			<div>
@@ -64,11 +74,24 @@ function Chans(props: { socket: Socket, chans: i_chan[], users: i_user[], to_cha
 				{
 					if (!props.obj.id)
 						return;
+					if (!is_in_chan)
+					{
+						setShowPomptPwd(true);
+						setChanPwd(props.obj);
+						return;
+					}
 					leaveRoom();
 					joinRoom(props.obj.id);
 					setSelectedChan(props.obj);
 				}}>
-					{props.obj.name}
+					<span>{props.obj.name}</span>
+					{props.obj.type === 'protected' && <span>
+						<Pwd style={{
+							fill: (is_in_chan ?
+								"#0008" : "hsl(0, 100%, 40%)"
+							)
+						}} />
+					</span>}
 				</div>
 			</div>
 		);
@@ -79,6 +102,21 @@ function Chans(props: { socket: Socket, chans: i_chan[], users: i_user[], to_cha
 		setShowAddChan(false);
 		setSelectedChan(chan);
 		props.callback((chan.id ? chan.id : 1));
+	}
+
+	function endOfPromptPwd()
+	{
+		if (!chanPwd.id || !user || !user.id)
+		{
+			console.log("ERROR: endOfPromptPwd unset values:", chanPwd, user)
+			return;
+		}
+		axios.put("http://localhost:3000/chan/join/" + chanPwd.id + "/" + user.id).then(() =>
+		{
+			setShowPomptPwd(false);
+			setSelectedChan(chanPwd);
+			props.callback((chanPwd.id ? chanPwd.id : 1));
+		}).catch(err => console.log(err));
 	}
 
 	return (
@@ -103,8 +141,9 @@ function Chans(props: { socket: Socket, chans: i_chan[], users: i_user[], to_cha
 				<Users users={users_in_chan} />
 			</div >
 
-			{showAddChan && <Backdrop onClick={() => { setShowAddChan(false) }} />}
+			{(showAddChan || showPromptPwd) && <Backdrop onClick={() => { setShowAddChan(false); setShowPomptPwd(false); }} />}
 			{showAddChan && user && user.id && <AddChanModal user_id={user.id} callback={endOfForm} />}
+			{showPromptPwd && <PromptPwdModal chan_id={chanPwd.id} callback={endOfPromptPwd} />}
 		</div >
 	);
 }

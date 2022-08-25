@@ -9,7 +9,7 @@ import i_msg from "../../../interface/msg.interface";
 import { ReactComponent as Option } from '../../../icon/single-select-svgrepo-com.svg'
 
 import Backdrop from "../../modal/backdrop";
-import OptionModal from "../../modal/option.modal";
+import OptionModal from "../../modal/chan.option.modal";
 import PickUserModal from "../../modal/pick.user.modal";
 import PickPwdModal from "../../modal/pick.pwd.modal";
 import Msgs from "./msg.component";

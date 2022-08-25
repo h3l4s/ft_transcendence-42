@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import io, { Socket } from 'socket.io-client'
+import { io, Socket } from 'socket.io-client'
 
 import { InitChan, useReqChans } from '../../../request/chan.request';
 import { useReqUsers } from '../../../request/user.request';
@@ -44,7 +44,7 @@ function ChanPage()
 {
 	const [selectedChan, setSelectedChan] = useState(1);
 	const [chans, setChans] = useState<i_chan[] | null>(null);
-	const [socket] = useState(io("http://localhost:3000/chan/"));
+	let socket = io("http://localhost:3000/chan/");
 
 	useEffect(() =>
 	{
