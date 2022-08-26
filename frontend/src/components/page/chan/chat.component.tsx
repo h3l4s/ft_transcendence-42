@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { Socket } from "socket.io-client";
 
@@ -49,7 +49,8 @@ function Chat(props: { socket: Socket, chan: i_chan, all_users: i_user[], users:
 {
 	const [msg, setMsg] = useState("");
 	let msgs = (props.chan.msg ? props.chan.msg : []);
-	const [reloadMsg, setReloadMsg] = useState(0);
+	const [msgsSocket, setMsgsSocket] = useState<i_msg[]>([]);
+	const [incomingMsg, setIcomingMsg] = useState<i_msg | null>(null);
 
 	const [showOption, setShowOption] = useState(false);
 	const [showAdd, setShowAdd] = useState(false);
@@ -72,15 +73,25 @@ function Chat(props: { socket: Socket, chan: i_chan, all_users: i_user[], users:
 		setShowOwnerPwd(false);
 	}
 
-	props.socket.on('chatToClient', (msg: i_msg) =>
+	if (incomingMsg)
 	{
-		console.log("received", msg);
-		if (msg.chanId && parseInt(msg.chanId) === props.chan.id)
+		if (parseInt(incomingMsg.chanId!) === props.chan.id)
+			setMsgsSocket(current => [...current, incomingMsg]);
+		setIcomingMsg(null);
+	}
+
+	if (msgsSocket.length > 0 && +msgsSocket[0].chanId! !== props.chan.id!)
+		setMsgsSocket([]);
+
+	useEffect(() =>
+	{
+		props.socket.on('chatToClient', (msg: i_msg) =>
 		{
-			msgs.push(msg);
-			setReloadMsg(reloadMsg + 1);
-		}
-	});
+			console.log("received at:", msg.chanId, msg);
+			setIcomingMsg(msg);
+		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	function msgUpdateHandle(event: React.KeyboardEvent<HTMLInputElement>)
 	{
@@ -117,8 +128,9 @@ function Chat(props: { socket: Socket, chan: i_chan, all_users: i_user[], users:
 						<Option />
 					</button>
 				</div>
-				<Msgs id={props.user.id} msgs={msgs} />
-				<input className='card--input input--chat' type='type' placeholder=' 💬' onChange={msgUpdateHandle} value={msg} onKeyDown={msgSendHandle} />
+				<Msgs id={props.user.id} msgs={[...msgs, ...msgsSocket]} />
+				<input className='card--input input--chat' type='type' placeholder=' 💬'
+					onChange={msgUpdateHandle} value={msg} onKeyDown={msgSendHandle} />
 			</div>
 
 			{(showOption || showAdd || showChallenge || showMute || showAdminAdd || showAdminBan || showAdminMute || showOwnerPwd)

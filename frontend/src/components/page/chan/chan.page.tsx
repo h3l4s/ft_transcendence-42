@@ -13,10 +13,11 @@ import Chans from './chan.component';
 import Loading from '../../request_answer_component/loading.component';
 import Error from '../../request_answer_component/error.component';
 
-function ChanReq(props: { socket: Socket, chans: i_chan[] | null, to_chan: number, callback: (id: number) => void })
+function ChanReq(props: { socket: Socket, chans: i_chan[] | null, to_chan: number, callback: (newId: number, oldId: number) => void })
 {
 	const reqChans = useReqChans();
 	const reqUsers = useReqUsers();
+
 	if (reqChans.loading || reqUsers.loading)
 		return (<div className='back'><Loading /></div>);
 	else if (reqChans.error)
@@ -48,20 +49,20 @@ function ChanPage()
 
 	useEffect(() =>
 	{
-		console.log("newConnection to socket");
 		socket.emit('newConnection');
-		if (selectedChan === 1)
-			socket.emit('joinRoom', "1");
+		socket.emit('joinRoom', selectedChan);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	function callback(id: number)
+	function callback(newId: number, oldId: number)
 	{
 		axios.get("http://localhost:3000/chan/").then(res =>
 		{
-			socket.emit('joinRoom', id.toString());
+			socket.emit('joinRoom', newId.toString());
+			socket.emit('leaveRoom', oldId.toString());
+
 			setChans(res.data);
-			setSelectedChan(id);
+			setSelectedChan(newId);
 		}).catch(err => console.log(err));
 	}
 

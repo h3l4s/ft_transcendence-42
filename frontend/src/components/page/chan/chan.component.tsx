@@ -35,11 +35,11 @@ function get_user_in_chan(users_id: number[] | undefined, users: i_user[]): i_us
 	return (ret);
 }
 
-function Chans(props: { socket: Socket, chans: i_chan[], users: i_user[], to_chan: number, callback: (id: number) => void })
+function Chans(props: { socket: Socket, chans: i_chan[], users: i_user[], to_chan: number, callback: (newId: number, oldId: number) => void })
 {
 	const { user } = useContext(AuthContext);
 	const [search, setSearch] = useState("");
-	const [selectedChan, setSelectedChan] = useState<i_chan>(get_id(props.chans, props.to_chan));
+	const selectedChan = get_id(props.chans, props.to_chan);
 	const [showAddChan, setShowAddChan] = useState(false);
 	const [showPromptPwd, setShowPomptPwd] = useState(false);
 	const [chanPwd, setChanPwd] = useState<i_chan>(selectedChan);
@@ -50,15 +50,7 @@ function Chans(props: { socket: Socket, chans: i_chan[], users: i_user[], to_cha
 	const searchHandle = (event: React.KeyboardEvent<HTMLInputElement>) =>
 	{ setSearch(event.target.value); };
 
-	function leaveRoom()
-	{
-		props.socket.emit('leaveRoom', selectedChan.id!.toString());
-	}
-
-	function joinRoom(id: number)
-	{
-		props.socket.emit('joinRoom', id.toString());
-	}
+	const unp_callback = props.callback;
 
 	function Chan(props: { obj: i_chan })
 	{
@@ -79,9 +71,7 @@ function Chans(props: { socket: Socket, chans: i_chan[], users: i_user[], to_cha
 						setChanPwd(props.obj);
 						return;
 					}
-					leaveRoom();
-					joinRoom(props.obj.id);
-					setSelectedChan(props.obj);
+					unp_callback(props.obj.id, selectedChan.id);
 				}}>
 					<span>{props.obj.name}</span>
 					{props.obj.type === 'protected' && <span>
@@ -99,8 +89,7 @@ function Chans(props: { socket: Socket, chans: i_chan[], users: i_user[], to_cha
 	function endOfForm(chan: i_chan)
 	{
 		setShowAddChan(false);
-		setSelectedChan(chan);
-		props.callback((chan.id ? chan.id : 1));
+		props.callback((chan.id ? chan.id : 1), selectedChan.id);
 	}
 
 	function endOfPromptPwd(chan: i_chan)
@@ -111,8 +100,7 @@ function Chans(props: { socket: Socket, chans: i_chan[], users: i_user[], to_cha
 			return;
 		}
 		setShowPomptPwd(false);
-		setSelectedChan(chan);
-		props.callback(chan.id);
+		props.callback(chan.id, selectedChan.id);
 	}
 
 	return (
