@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { Socket } from "socket.io-client";
 
 import i_chan from "../../../interface/chan.interface";
 import i_user from "../../../interface/user.interface";
@@ -10,10 +11,13 @@ import { ReactComponent as Plus } from '../../../icon/plus-svgrepo-com.svg'
 import { SearchByName } from "../../../utils/search_by_name";
 import get_id from "../../../utils/get_id";
 
+import { ReactComponent as Pwd } from '../../../icon/icons8-key.svg'
+
 import Chat from "./chat.component";
 import { Users } from "./user.component";
 import Backdrop from "../../modal/backdrop";
-import AddChanModal from "../../modal/add.chan.modal";
+import AddChanModal from "../../modal/chan.add.modal";
+import PromptPwdModal from "../../modal/chan.prompt.pwd.modal";
 
 function get_user_in_chan(users_id: number[] | undefined, users: i_user[]): i_user[]
 {
@@ -31,12 +35,14 @@ function get_user_in_chan(users_id: number[] | undefined, users: i_user[]): i_us
 	return (ret);
 }
 
-function Chans(props: { chans: i_chan[], users: i_user[], to_chan: number, callback: (id: number) => void })
+function Chans(props: { socket: Socket, chans: i_chan[], users: i_user[], to_chan: number, callback: (newId: number, oldId: number) => void })
 {
 	const { user } = useContext(AuthContext);
 	const [search, setSearch] = useState("");
-	const [selectedChan, setSelectedChan] = useState<i_chan>(get_id(props.chans, props.to_chan));
+	const selectedChan = get_id(props.chans, props.to_chan);
 	const [showAddChan, setShowAddChan] = useState(false);
+	const [showPromptPwd, setShowPomptPwd] = useState(false);
+	const [chanPwd, setChanPwd] = useState<i_chan>(selectedChan);
 	const users_in_chan: i_user[] = get_user_in_chan((selectedChan ? selectedChan.usersId : [-1]), props.users);
 	const is_user_admin: boolean = (selectedChan && selectedChan.adminsId && user && user.id && selectedChan.adminsId.includes(user.id) ? true : false)
 	const is_user_owner: boolean = (selectedChan && selectedChan.ownerId && user && user.id && selectedChan.ownerId === user.id ? true : false)
@@ -44,11 +50,38 @@ function Chans(props: { chans: i_chan[], users: i_user[], to_chan: number, callb
 	const searchHandle = (event: React.KeyboardEvent<HTMLInputElement>) =>
 	{ setSearch(event.target.value); };
 
+	const unp_callback = props.callback;
+
 	function Chan(props: { obj: i_chan })
 	{
+		if (!props.obj.usersId || !user || !user.id)
+			return (<div />);
+
+		const is_in_chan: boolean = props.obj.usersId.includes(user.id);
+
 		return (
 			<div>
-				<div className='card card--border card--btn card--chan' onClick={() => { setSelectedChan(props.obj) }}>{props.obj.name}</div>
+				<div className='card card--border card--btn card--chan' onClick={() =>
+				{
+					if (!props.obj.id)
+						return;
+					if (props.obj.type === 'protected' && !is_in_chan)
+					{
+						setShowPomptPwd(true);
+						setChanPwd(props.obj);
+						return;
+					}
+					unp_callback(props.obj.id, selectedChan.id);
+				}}>
+					<span>{props.obj.name}</span>
+					{props.obj.type === 'protected' && <span>
+						<Pwd style={{
+							fill: (is_in_chan ?
+								"#0008" : "hsl(0, 100%, 40%)"
+							)
+						}} />
+					</span>}
+				</div>
 			</div>
 		);
 	}
@@ -56,8 +89,18 @@ function Chans(props: { chans: i_chan[], users: i_user[], to_chan: number, callb
 	function endOfForm(chan: i_chan)
 	{
 		setShowAddChan(false);
-		setSelectedChan(chan);
-		props.callback((chan.id ? chan.id : 1));
+		props.callback((chan.id ? chan.id : 1), selectedChan.id);
+	}
+
+	function endOfPromptPwd(chan: i_chan)
+	{
+		if (!chan.id || !user || !user.id)
+		{
+			console.log("ERROR: endOfPromptPwd unset values:", chan, user)
+			return;
+		}
+		setShowPomptPwd(false);
+		props.callback(chan.id, selectedChan.id);
 	}
 
 	return (
@@ -73,15 +116,18 @@ function Chans(props: { chans: i_chan[], users: i_user[], to_chan: number, callb
 			</div>
 
 			<div className='split split--chan split--center'>
-				{selectedChan && user && <Chat chan={selectedChan} all_users={props.users} users={users_in_chan} user={user} is_admin={is_user_admin} is_owner={is_user_owner} />}
+				{selectedChan && user && <Chat
+					socket={props.socket} chan={selectedChan}
+					all_users={props.users} users={users_in_chan} user={user} is_admin={is_user_admin} is_owner={is_user_owner} />}
 			</div>
 
 			<div className='split split--chan split--right'>
 				<Users users={users_in_chan} />
 			</div >
 
-			{showAddChan && <Backdrop onClick={() => { setShowAddChan(false) }} />}
+			{(showAddChan || showPromptPwd) && <Backdrop onClick={() => { setShowAddChan(false); setShowPomptPwd(false); }} />}
 			{showAddChan && user && user.id && <AddChanModal user_id={user.id} callback={endOfForm} />}
+			{showPromptPwd && <PromptPwdModal chan_id={chanPwd.id} user_id={(user ? user.id : undefined)} callback={endOfPromptPwd} />}
 		</div >
 	);
 }

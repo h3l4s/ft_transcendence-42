@@ -1,9 +1,20 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateChanDto, MsgDto } from './chan.dto';
+import { CreateChanDto, MsgDto, PwdDto } from './chan.dto';
 import { Chan } from './chan.entity';
 
+function hashing(pwd: string)
+{
+	let hash = 0;
+	for (let i = 0; i < pwd.length; i++)
+	{
+		const char = pwd.charCodeAt(i);
+		hash = ((hash << 5) - hash) + char;
+		hash = hash & hash; // Convert to 32bit integer
+	}
+	return (hash);
+}
 @Injectable()
 export class ChanService
 {
@@ -59,17 +70,6 @@ export class ChanService
 		chan.type = body.type;
 		chan.msg = [];
 
-		function hashing(pwd: string)
-		{
-			let hash = 0;
-			for (let i = 0; i < pwd.length; i++)
-			{
-				const char = pwd.charCodeAt(i);
-				hash = ((hash << 5) - hash) + char;
-				hash = hash & hash; // Convert to 32bit integer
-			}
-			return (hash);
-		}
 		if (body.type === 'protected' && body.hash)
 			chan.hash = hashing(body.hash);
 		// init msg
@@ -123,6 +123,19 @@ export class ChanService
 		chan.msg.push(data);
 
 		return this.repository.save(chan);
+	}
+
+	public async tryPwd(id: number, data: PwdDto): Promise<Chan>
+	{
+		const chan = await this.repository.findOne(id);
+
+		if (chan.hash && chan.hash === hashing(data.pwd))
+		{
+			chan.usersId.push(data.userId);
+			return this.repository.save(chan);
+		}
+
+		return chan;
 	}
 
 	public deleteChan(id: number)
