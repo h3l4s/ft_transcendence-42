@@ -11,7 +11,8 @@ import { ReactComponent as Plus } from '../../../icon/plus-svgrepo-com.svg'
 import { SearchByName } from "../../../utils/search_by_name";
 import get_id from "../../../utils/get_id";
 
-import { ReactComponent as Pwd } from '../../../icon/icons8-key.svg'
+import { ReactComponent as Key } from '../../../icon/icons8-key.svg'
+import { ReactComponent as Lock } from '../../../icon/lock-svgrepo-com.svg'
 
 import Chat from "./chat.component";
 import { Users } from "./user.component";
@@ -76,11 +77,7 @@ function Chans(props: { socket: Socket, chans: i_chan[], users: i_user[], to_cha
 				}}>
 					<span>{props.obj.name}</span>
 					{props.obj.type === 'protected' && <span>
-						<Pwd style={{
-							fill: (is_in_chan ?
-								"#0008" : "hsl(0, 100%, 40%)"
-							)
-						}} />
+						{is_in_chan ? <Key /> : <Lock />}
 					</span>}
 				</div>
 			</div>
