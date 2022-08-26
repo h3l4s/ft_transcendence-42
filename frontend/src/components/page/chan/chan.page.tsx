@@ -1,15 +1,16 @@
 import { useState } from 'react';
+import axios from 'axios';
 
 import { InitChan, useReqChans } from '../../../request/chan.request';
 import { useReqUsers } from '../../../request/user.request';
 
 import '../../../style/chan.css';
 
+import i_chan from '../../../interface/chan.interface';
+
 import Chans from './chan.component';
 import Loading from '../../request_answer_component/loading.component';
 import Error from '../../request_answer_component/error.component';
-import i_chan from '../../../interface/chan.interface';
-import axios from 'axios';
 
 function ChanReq(props: { chans: i_chan[] | null, to_chan: number, callback: (id: number) => void })
 {
