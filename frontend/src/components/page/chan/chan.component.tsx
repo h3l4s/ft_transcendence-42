@@ -52,7 +52,7 @@ function Chans(props: { socket: Socket, chans: i_chan[], users: i_user[], to_cha
 
 	function leaveRoom()
 	{
-		props.socket.emit('leaveRoom', selectedChan.toString());
+		props.socket.emit('leaveRoom', selectedChan.id!.toString());
 	}
 
 	function joinRoom(id: number)

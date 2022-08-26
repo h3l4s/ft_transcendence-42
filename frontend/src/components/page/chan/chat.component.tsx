@@ -48,7 +48,8 @@ function userNotAdmin(admins_id: number[] | undefined, users: i_user[]): i_user[
 function Chat(props: { socket: Socket, chan: i_chan, all_users: i_user[], users: i_user[], user: i_user, is_admin: boolean, is_owner: boolean })
 {
 	const [msg, setMsg] = useState("");
-	const [msgs, setMsgs] = useState((props.chan.msg ? props.chan.msg : []));
+	let msgs = (props.chan.msg ? props.chan.msg : []);
+	const [reloadMsg, setReloadMsg] = useState(0);
 
 	const [showOption, setShowOption] = useState(false);
 	const [showAdd, setShowAdd] = useState(false);
@@ -75,7 +76,10 @@ function Chat(props: { socket: Socket, chan: i_chan, all_users: i_user[], users:
 	{
 		console.log("received", msg);
 		if (msg.chanId && parseInt(msg.chanId) === props.chan.id)
-			setMsgs(current => [...current, msg]);
+		{
+			msgs.push(msg);
+			setReloadMsg(reloadMsg + 1);
+		}
 	});
 
 	function msgUpdateHandle(event: React.KeyboardEvent<HTMLInputElement>)
@@ -98,7 +102,7 @@ function Chat(props: { socket: Socket, chan: i_chan, all_users: i_user[], users:
 				sendAt: date
 			}
 			axios.post("http://localhost:3000/chan/msg/" + props.chan.id, s_msg).catch(err => console.log(err));
-			s_msg.chanId = props.chan.id.toString()
+			s_msg.chanId = props.chan.id.toString();
 			props.socket.emit('chatToServer', s_msg);
 			setMsg("");
 		}

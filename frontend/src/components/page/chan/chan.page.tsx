@@ -44,10 +44,11 @@ function ChanPage()
 {
 	const [selectedChan, setSelectedChan] = useState(1);
 	const [chans, setChans] = useState<i_chan[] | null>(null);
-	let socket = io("http://localhost:3000/chat");
+	const [socket] = useState(io("http://localhost:3000/chat"));
 
 	useEffect(() =>
 	{
+		console.log("newConnection to socket");
 		socket.emit('newConnection');
 		if (selectedChan === 1)
 			socket.emit('joinRoom', "1");
