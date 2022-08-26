@@ -23,6 +23,8 @@ export class ChatGateway implements OnGatewayInit
 		})
 	}
 
+	// try client.on
+
 	@SubscribeMessage('chatToServer')
 	handleMessage(client: Socket, message: MsgDto)
 	{

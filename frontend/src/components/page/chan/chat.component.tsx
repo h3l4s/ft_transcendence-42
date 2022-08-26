@@ -118,7 +118,7 @@ function Chat(props: { socket: Socket, chan: i_chan, all_users: i_user[], users:
 					</button>
 				</div>
 				<Msgs id={props.user.id} msgs={msgs} />
-				<input className='card--input input--chat' type='text' placeholder=' 💬' onChange={msgUpdateHandle} value={msg} onKeyDown={msgSendHandle} />
+				<input className='card--input input--chat' type='type' placeholder=' 💬' onChange={msgUpdateHandle} value={msg} onKeyDown={msgSendHandle} />
 			</div>
 
 			{(showOption || showAdd || showChallenge || showMute || showAdminAdd || showAdminBan || showAdminMute || showOwnerPwd)
@@ -140,17 +140,17 @@ function Chat(props: { socket: Socket, chan: i_chan, all_users: i_user[], users:
 					}}
 				onClose={() => { setShowOption(false) }}
 			/>}
-			{showAdd && <PickUserModal users={userNotInChan(props.chan.usersId, props.all_users)} text='add'
+			{showAdd && <PickUserModal chanId={props.chan.id} users={userNotInChan(props.chan.usersId, props.all_users)} type='add'
 				goBack={() => { setShowAdd(false); setShowOption(true); }} onClose={() => { setShowAdd(false); setShowOption(false); }} />}
-			{showChallenge && <PickUserModal users={props.users} text='challenge'
+			{showChallenge && <PickUserModal chanId={props.chan.id} users={props.users} type='challenge'
 				goBack={() => { setShowChallenge(false); setShowOption(true); }} onClose={() => { setShowChallenge(false); setShowOption(false); }} />}
-			{showMute && <PickUserModal users={props.users} text='mute'
+			{showMute && <PickUserModal chanId={props.chan.id} users={props.users} type='mute'
 				goBack={() => { setShowMute(false); setShowOption(true); }} onClose={() => { setShowMute(false); setShowOption(false); }} />}
-			{props.is_admin && showAdminAdd && <PickUserModal users={userNotAdmin(props.chan.adminsId, props.users)} text='admin add'
+			{props.is_admin && showAdminAdd && <PickUserModal chanId={props.chan.id} users={userNotAdmin(props.chan.adminsId, props.users)} type='admin add'
 				goBack={() => { setShowAdminAdd(false); setShowOption(true); }} onClose={() => { setShowAdminAdd(false); setShowOption(false); }} />}
-			{props.is_admin && showAdminBan && <PickUserModal users={userNotAdmin(props.chan.adminsId, props.users)} text='admin ban'
+			{props.is_admin && showAdminBan && <PickUserModal chanId={props.chan.id} users={userNotAdmin(props.chan.adminsId, props.users)} type='admin ban'
 				goBack={() => { setShowAdminBan(false); setShowOption(true); }} onClose={() => { setShowAdminBan(false); setShowOption(false); }} />}
-			{props.is_admin && showAdminMute && <PickUserModal users={userNotAdmin(props.chan.adminsId, props.users)} text='admin mute'
+			{props.is_admin && showAdminMute && <PickUserModal chanId={props.chan.id} users={userNotAdmin(props.chan.adminsId, props.users)} type='admin mute'
 				goBack={() => { setShowAdminMute(false); setShowOption(true); }} onClose={() => { setShowAdminMute(false); setShowOption(false); }} />}
 			{props.is_owner && showOwnerPwd && <PickPwdModal
 				goBack={() => { setShowOwnerPwd(false); setShowOption(true); }} onClose={() => { setShowOwnerPwd(false); setShowOption(false); }} />}
