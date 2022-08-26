@@ -46,6 +46,7 @@ function Chans(props: { socket: Socket, chans: i_chan[], users: i_user[], to_cha
 	const users_in_chan: i_user[] = get_user_in_chan((selectedChan ? selectedChan.usersId : [-1]), props.users);
 	const is_user_admin: boolean = (selectedChan && selectedChan.adminsId && user && user.id && selectedChan.adminsId.includes(user.id) ? true : false)
 	const is_user_owner: boolean = (selectedChan && selectedChan.ownerId && user && user.id && selectedChan.ownerId === user.id ? true : false)
+	let visibleChans: i_chan[] = [];
 
 	const searchHandle = (event: React.KeyboardEvent<HTMLInputElement>) =>
 	{ setSearch(event.target.value); };
@@ -86,6 +87,13 @@ function Chans(props: { socket: Socket, chans: i_chan[], users: i_user[], to_cha
 		);
 	}
 
+	for (let i = props.chans.length - 1; i >= 0; i--)
+	{
+		if (props.chans[i].type === 'public' || props.chans[i].type === 'protected'
+			|| (props.chans[i].usersId && user && user.id && props.chans[i].usersId!.includes(user.id)))
+			visibleChans.push(props.chans[i]);
+	}
+
 	function endOfForm(chan: i_chan)
 	{
 		setShowAddChan(false);
@@ -112,7 +120,7 @@ function Chans(props: { socket: Socket, chans: i_chan[], users: i_user[], to_cha
 						<Plus />
 					</button>
 				</div>
-				<SearchByName objs={props.chans} query={search} Constructor={Chan} />
+				<SearchByName objs={visibleChans} query={search} Constructor={Chan} />
 			</div>
 
 			<div className='split split--chan split--center'>
