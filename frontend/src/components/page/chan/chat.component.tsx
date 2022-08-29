@@ -45,6 +45,15 @@ function userNotAdmin(admins_id: number[] | undefined, users: i_user[]): i_user[
 
 }
 
+function get_direct_chan_name(users: i_user[])
+{
+	if (users.length !== 2 || !users[0].id || !users[1].id)
+		return ("");
+	if (users[0].id < users[1].id)
+		return (users[0].name + " ⇋ " + users[1].name);
+	return (users[1].name + " ⇋ " + users[0].name);
+}
+
 function Chat(props: { socket: Socket, chan: i_chan, all_users: i_user[], users: i_user[], user: i_user, is_admin: boolean, is_owner: boolean })
 {
 	const [msg, setMsg] = useState("");
@@ -123,7 +132,7 @@ function Chat(props: { socket: Socket, chan: i_chan, all_users: i_user[], users:
 		<div>
 			<div className='card card--alt card--chat' >
 				<div className='card chan--title'>
-					<div className='truncate'>- {props.chan.name} -</div>
+					<div className='truncate'>- {props.chan.type === 'direct' ? get_direct_chan_name(props.users) : props.chan.name} -</div>
 					<button onClick={() => { setShowOption(true) }}>
 						<Option />
 					</button>

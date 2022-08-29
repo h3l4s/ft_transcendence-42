@@ -39,10 +39,22 @@ export class ChanController
 		return this.service.createChan(data);
 	}
 
+	@Post('dm')
+	public createDirectChan(@Body() data: CreateChanDto)
+	{
+		return this.service.createDirectChan(data);
+	}
+
 	@Post('msg/:id')
 	public sendMsg(@Param('id', ParseIntPipe) id: number, @Body() data: MsgDto)
 	{
 		return this.service.sendMsg(id, data);
+	}
+
+	@Post('msg/dm/:id')
+	public sendDirectMsg(@Param('id', ParseIntPipe) toUserId: number, @Body() data: MsgDto)
+	{
+		return this.service.sendDirectMsg(toUserId, data);
 	}
 
 	@Post('pwd/:id')

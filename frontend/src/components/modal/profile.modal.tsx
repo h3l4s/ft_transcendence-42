@@ -16,11 +16,13 @@ import { ReactComponent as Heart } from '../../icon/heart-friend.svg';
 
 import UserStats from '../page/user/userstats.component';
 import { asyncReqUpdateUser } from '../../request/user.update.request';
+import i_msg from '../../interface/msg.interface';
 
 function ProfileModal(props: { user: i_user, onClose: () => void })
 {
 	const { user, setUser } = useContext(AuthContext);
 	const [friend, setFriend] = useState((user && user.friendsId ? user.friendsId.includes(props.user.id!) : false));
+	const [msg, setMsg] = useState("");
 
 	const link_to_profile = "/user/" + props.user.name;
 
@@ -38,6 +40,30 @@ function ProfileModal(props: { user: i_user, onClose: () => void })
 			{
 				console.log(err);
 			});
+	}
+
+	function msgUpdateHandle(event: React.KeyboardEvent<HTMLInputElement>)
+	{
+		setMsg(event.target.value);
+	};
+
+	function msgSendHandle(event: React.KeyboardEvent<HTMLInputElement>)
+	{
+		if (!props.user.id || !props.user.name || !user || !user.id || !user.name)
+			return;
+		if (event.key === 'Enter' && msg.length > 0)
+		{
+			event.preventDefault();
+			const date = new Date();
+			let s_msg: i_msg = {
+				userId: user.id,
+				username: user.name,
+				msg: msg,
+				sendAt: date
+			}
+			axios.post("http://localhost:3000/chan/msg/dm/" + props.user.id, s_msg).catch(err => console.log(err));
+			setMsg("");
+		}
 	}
 
 	return (
@@ -72,7 +98,9 @@ function ProfileModal(props: { user: i_user, onClose: () => void })
 				<UserStats user={props.user} />
 			</div>
 			<div>
-				{user && user.name !== props.user.name && <input className='card card--input' type='text' placeholder=' 💬' />}
+				{user && user.name !== props.user.name &&
+					<input className='card card--input' type='type' placeholder=' 💬'
+						onChange={msgUpdateHandle} value={msg} onKeyDown={msgSendHandle} />}
 			</div>
 		</div >
 	);
