@@ -42,12 +42,10 @@ function TestBackend()
 			<div>
 				{msg}
 				<br />
-				<br />
 				<div>
 					<div>
 						loading appearance: <Loading />
 					</div>
-					<br />
 					<div>
 						error appearance: <Error msg="message describing error" />
 					</div>
