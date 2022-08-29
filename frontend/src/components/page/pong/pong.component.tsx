@@ -278,8 +278,8 @@ function postResults(map: i_map, scoreP1: number, scoreP2: number)
 			scoreWinner: scoreP1,
 			scoreLoser: scoreP2
 		}
-		axios.post("http://localhost:3000/user/match", match_stats);
-		axios.post("http://localhost:3000/pong/match", match_stats);
+		axios.post("http://backend:3000/user/match", match_stats);
+		axios.post("http://backend:3000/pong/match", match_stats);
 	}
 }
 

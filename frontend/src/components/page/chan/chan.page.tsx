@@ -45,7 +45,7 @@ function ChanPage()
 {
 	const [selectedChan, setSelectedChan] = useState(1);
 	const [chans, setChans] = useState<i_chan[] | null>(null);
-	const [socket] = useState(io("http://localhost:3000/chat"));
+	const [socket] = useState(io("http://backend:3000/chat"));
 
 	useEffect(() =>
 	{
@@ -56,7 +56,7 @@ function ChanPage()
 
 	function callback(newId: number, oldId: number)
 	{
-		axios.get("http://localhost:3000/chan/").then(res =>
+		axios.get("http://backend:3000/chan/").then(res =>
 		{
 			socket.emit('joinRoom', newId.toString());
 			socket.emit('leaveRoom', oldId.toString());

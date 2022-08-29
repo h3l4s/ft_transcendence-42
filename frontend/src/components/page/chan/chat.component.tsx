@@ -121,7 +121,7 @@ function Chat(props: { socket: Socket, chan: i_chan, all_users: i_user[], users:
 				msg: msg,
 				sendAt: date
 			}
-			axios.post("http://localhost:3000/chan/msg/" + props.chan.id, s_msg).catch(err => console.log(err));
+			axios.post("http://backend:3000/chan/msg/" + props.chan.id, s_msg).catch(err => console.log(err));
 			s_msg.chanId = props.chan.id.toString();
 			props.socket.emit('chatToServer', s_msg);
 			setMsg("");

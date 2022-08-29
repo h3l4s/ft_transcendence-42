@@ -24,7 +24,7 @@ function PickUser(props: {
 		switch (props.type)
 		{
 			case 'add':
-				axios.post("http://localhost:3000/chan/add/" + props.chanId, { userId: props.user.id }).catch(err => console.log(err));
+				axios.post("http://backend:3000/chan/add/" + props.chanId, { userId: props.user.id }).catch(err => console.log(err));
 				break;
 		}
 		props.onClose();
