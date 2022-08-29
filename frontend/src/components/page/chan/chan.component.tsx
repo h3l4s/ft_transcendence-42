@@ -36,6 +36,27 @@ function get_user_in_chan(users_id: number[] | undefined, users: i_user[]): i_us
 	return (ret);
 }
 
+function get_direct_chan_name(usersId: number[], users: i_user[])
+{
+	let i1 = 0;
+	let i2 = 0;
+
+	if (usersId.length !== 2 || !usersId[0] || !usersId[1])
+		return ("");
+
+	for (let i = 0; i < users.length; i++)
+	{
+		if (users[i].id === usersId[0])
+			i1 = i;
+		if (users[i].id === usersId[1])
+			i2 = i;
+	}
+
+	if (usersId[0] < usersId[1])
+		return (users[i1].name + " ⇋ " + users[i2].name);
+	return (users[i2].name + " ⇋ " + users[i1].name);
+}
+
 function Chans(props: { socket: Socket, chans: i_chan[], users: i_user[], to_chan: number, callback: (newId: number, oldId: number) => void })
 {
 	const { user } = useContext(AuthContext);
@@ -53,6 +74,7 @@ function Chans(props: { socket: Socket, chans: i_chan[], users: i_user[], to_cha
 	{ setSearch(event.target.value); };
 
 	const unp_callback = props.callback;
+	const unp_users = props.users;
 
 	function Chan(props: { obj: i_chan })
 	{
@@ -75,7 +97,11 @@ function Chans(props: { socket: Socket, chans: i_chan[], users: i_user[], to_cha
 					}
 					unp_callback(props.obj.id, selectedChan.id);
 				}}>
-					<span>{props.obj.name}</span>
+					{props.obj.type === 'direct' ? (
+						<span>{get_direct_chan_name(props.obj.usersId, unp_users)}</span>
+					) : (
+						<span>{props.obj.name}</span>
+					)}
 					{props.obj.type === 'protected' && <span>
 						{is_in_chan ? <Key /> : <Lock />}
 					</span>}

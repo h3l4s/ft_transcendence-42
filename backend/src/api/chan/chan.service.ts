@@ -79,6 +79,32 @@ export class ChanService
 		return await this.repository.save(chan);
 	}
 
+	public async createDirectChan(body: CreateChanDto): Promise<Chan>
+	{
+		let name: string;
+
+		if (body.usersId[0] < body.usersId[1])
+			name = body.usersId[0] + ' ' + body.usersId[1];
+		else
+			name = body.usersId[1] + ' ' + body.usersId[0];
+
+		if (await this.repository.count({ where: { name: name } }))
+			return await this.repository.findOne({ name: name });
+
+		const chan: Chan = new Chan();
+
+		chan.name = name;
+		chan.ownerId = -1;
+		chan.adminsId = [];
+		chan.usersId = body.usersId;
+		chan.type = 'direct';
+		chan.msg = [];
+		chan.bannedId = [];
+		chan.mutedId = [];
+
+		return await this.repository.save(chan);
+	}
+
 	/*public async updateChan(id: number, updateChanDto: UpdateChanDto)
 	{
 		const chan = await this.repository.findOne(id);
@@ -119,6 +145,35 @@ export class ChanService
 	public async sendMsg(id: number, data: MsgDto)
 	{
 		const chan = await this.repository.findOne(id);
+
+		chan.msg.push(data);
+
+		return this.repository.save(chan);
+	}
+
+	public async sendDirectMsg(toUserId: number, data: MsgDto)
+	{
+		let name: string;
+		let chan: Chan;
+
+		if (toUserId < data.userId)
+			name = toUserId.toString() + ' ' + data.userId.toString();
+		else
+			name = data.userId.toString() + ' ' + toUserId.toString();
+
+		if (!await this.repository.count({ where: { name: name } }))
+		{
+			const createChanDto: CreateChanDto = {
+				name: name,
+				ownerId: -1,
+				usersId: [data.userId, toUserId],
+				type: 'direct',
+				hash: ''
+			};
+			chan = await this.createDirectChan(createChanDto);
+		}
+		else
+			chan = await this.repository.findOne({ name: name });
 
 		chan.msg.push(data);
 
