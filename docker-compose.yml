@@ -37,7 +37,7 @@ services :
       - transcendence-network
     environment:
       - PORT=3000
-      - BASE_URL=http://backend:3000
+      - BASE_URL=http://localhost:3000
       - DATABASE_HOST=db
       - DATABASE_NAME=$POSTGRES_DB
       - DATABASE_USER=$POSTGRES_USER
@@ -54,9 +54,12 @@ services :
       backend:
         condition: service_healthy
     ports:
-      - $WEBSITE_PORT:3000
+      - 3001:3001
     networks:
       - transcendence-network
+    environment:
+      - PORT=3001
+      - BASE_URL=http://localhost:3001
  
   adminer:
     image: adminer:4.8.1-standalone
