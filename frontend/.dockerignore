@@ -1,5 +1,5 @@
 .dockerignore
-dockerfile
+Dockerfile
 
 #add all .gitignore content ---
 .gitignore

@@ -1,11 +1,13 @@
-FROM alpine:3.15
+FROM node:16-alpine
 
-RUN apk update && apk upgrade && apk add --no-cache npm
+RUN npm install -g npm@latest
 
 WORKDIR /app
 
+COPY ["package.json", "package-lock.json*", "./"]
+
+RUN npm install --legacy-peer-deps
+
 COPY . .
 
-RUN npm install
-
-CMD [ "npm", "run", "start" ]
+CMD ["npm", "run", "start"]
