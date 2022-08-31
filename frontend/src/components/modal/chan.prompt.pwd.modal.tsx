@@ -25,7 +25,7 @@ function PromptPwdModal(props: { chan_id: number | undefined, user_id: number | 
 		if (event.key === 'Enter' && pwd.length > 0)
 		{
 			event.preventDefault();
-			axios.post("http://backend:3000/chan/pwd/" + props.chan_id, { userId: props.user_id, pwd: pwd }).then((res) =>
+			axios.post("http://localhost:3000/chan/pwd/" + props.chan_id, { userId: props.user_id, pwd: pwd }).then((res) =>
 			{
 				console.log(res);
 				console.log(res.data);

@@ -30,7 +30,7 @@ function ProfileModal(props: { user: i_user, onClose: () => void })
 	{
 		if (!user || !user.id)
 			return;
-		asyncReqUpdateUser("http://backend:3000/user/" + user.id, 'put',
+		asyncReqUpdateUser("http://localhost:3000/user/" + user.id, 'put',
 			{ updateUserDto: { friendId: props.user.id! } }).then((res) =>
 			{
 				setFriend(state);
@@ -61,7 +61,7 @@ function ProfileModal(props: { user: i_user, onClose: () => void })
 				msg: msg,
 				sendAt: date
 			}
-			axios.post("http://backend:3000/chan/msg/dm/" + props.user.id, s_msg).catch(err => console.log(err));
+			axios.post("http://localhost:3000/chan/msg/dm/" + props.user.id, s_msg).catch(err => console.log(err));
 			setMsg("");
 		}
 	}

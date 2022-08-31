@@ -32,16 +32,20 @@ D =		$(shell tput sgr0)
 all:	$(NAME)
 
 $(NAME):
-	docker-compose up --force-recreate --build --detach
+	docker-compose up --force-recreate --build
 
 stop:
 	docker-compose down
 
 clean:	stop
-	docker system prune -af
 	docker volume prune -f
 
-re:	clean all
+fclean: clean
+	docker system prune -af
+
+re:		clean all
+
+fre:	fclean all
 
 list:
 	@printf "\n\t$(B)$(GRE)containers$(D)\n"
@@ -54,6 +58,6 @@ list:
 	@docker volume ls
 	@echo ;
 
-.PHONY: all stop clean re list
+.PHONY: all stop clean fclean re fre list
 
 # **************************************************************************** #
