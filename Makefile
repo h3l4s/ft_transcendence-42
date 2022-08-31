@@ -38,7 +38,7 @@ stop:
 	docker-compose down
 
 clean:	stop
-	docker volume prune -f
+	docker system prune --volumes -f
 
 fclean: clean
 	docker system prune -af
