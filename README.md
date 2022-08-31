@@ -5,8 +5,8 @@ ft_transcendence project at 42 school use:
 old:
 ```sh
 make
-cd /backend && npm run start:dev
-cd ../frontend && npm run start
+cd /backend && npm i --legacy-peer-deps && npm run start:dev
+cd ../frontend && npm i --legacy-peer-deps && npm run start
 ```
 new:
 ```sh
