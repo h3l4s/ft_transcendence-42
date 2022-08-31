@@ -4,9 +4,9 @@ ft_transcendence project at 42 school use:
 
 old:
 ```sh
-	make
-	cd /backend && npm run start:dev
-	cd ../frontend && npm run start
+make
+cd /backend && npm run start:dev
+cd ../frontend && npm run start
 ```
 new:
 ```sh
