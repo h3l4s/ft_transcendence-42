@@ -1,9 +1,20 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateChanDto } from './chan.dto';
+import { CreateChanDto, MsgDto, PwdDto } from './chan.dto';
 import { Chan } from './chan.entity';
 
+function hashing(pwd: string)
+{
+	let hash = 0;
+	for (let i = 0; i < pwd.length; i++)
+	{
+		const char = pwd.charCodeAt(i);
+		hash = ((hash << 5) - hash) + char;
+		hash = hash & hash; // Convert to 32bit integer
+	}
+	return (hash);
+}
 @Injectable()
 export class ChanService
 {
@@ -19,7 +30,7 @@ export class ChanService
 			adminsId: [-1],
 			usersId: [-1],
 			type: 'public',
-			// msg init
+			msg: [],
 			bannedId: [],
 			mutedId: []
 		});
@@ -57,18 +68,8 @@ export class ChanService
 		else
 			chan.usersId.push(body.ownerId);
 		chan.type = body.type;
+		chan.msg = [];
 
-		function hashing(pwd: string)
-		{
-			let hash = 0;
-			for (let i = 0; i < pwd.length; i++)
-			{
-				const char = pwd.charCodeAt(i);
-				hash = ((hash << 5) - hash) + char;
-				hash = hash & hash; // Convert to 32bit integer
-			}
-			return (hash);
-		}
 		if (body.type === 'protected' && body.hash)
 			chan.hash = hashing(body.hash);
 		// init msg
@@ -115,8 +116,70 @@ export class ChanService
 		return await this.repository.save(chan);
 	}*/
 
+	public async sendMsg(id: number, data: MsgDto)
+	{
+		const chan = await this.repository.findOne(id);
+
+		chan.msg.push(data);
+
+		return this.repository.save(chan);
+	}
+
+	public async tryPwd(id: number, data: PwdDto): Promise<Chan>
+	{
+		const chan = await this.repository.findOne(id);
+
+		if (chan.hash && chan.hash === hashing(data.pwd))
+		{
+			chan.usersId.push(data.userId);
+			return this.repository.save(chan);
+		}
+
+		return chan;
+	}
+
 	public deleteChan(id: number)
 	{
 		return this.repository.delete(id)
+	}
+
+	public async addUserToChan(id: number, usersId: number)
+	{
+		const chan = await this.repository.findOne(id);
+
+		chan.usersId.push(usersId);
+		return this.repository.save(chan);
+	}
+
+	/*public async muteUserInChan(id: number, usersId: number)
+	{
+		const chan = await this.repository.findOne(id);
+
+		chan.mutedId.push(usersId);
+		return this.repository.save(chan);
+	}*/ // added to mutedid of the selectionned user
+
+	public async addAdminToChan(id: number, usersId: number)
+	{
+		const chan = await this.repository.findOne(id);
+
+		chan.adminsId.push(usersId);
+		return this.repository.save(chan);
+	}
+
+	public async addBannedIdToChan(id: number, usersId: number)
+	{
+		const chan = await this.repository.findOne(id);
+
+		chan.bannedId.push(usersId);
+		return this.repository.save(chan);
+	}
+
+	public async addMutedIdToChan(id: number, usersId: number)
+	{
+		const chan = await this.repository.findOne(id);
+
+		chan.mutedId.push(usersId);
+		return this.repository.save(chan);
 	}
 }
