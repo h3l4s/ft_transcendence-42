@@ -182,4 +182,31 @@ export class ChanService
 		chan.mutedId.push(usersId);
 		return this.repository.save(chan);
 	}
+
+	public async quitChan(id: number, usersId: number)
+	{
+		const chan = await this.repository.findOne(id);
+		const index_users = chan.usersId.indexOf(usersId);
+
+		if(index_users > -1)
+			chan.usersId.splice(index_users,  1);
+		console.log("after usersid splice" + chan.usersId.length);
+		console.log("before adminid splice" + chan.adminsId.length);
+		if (chan.usersId.length < 1)
+		{
+			// delete the chan
+			return this.repository.remove(chan);
+		}
+		const index_admins = chan.adminsId.indexOf(usersId);
+		if(index_admins > -1)
+			chan.adminsId.splice(index_admins,  1);
+		console.log("after adminid splice " + chan.adminsId.length + ", index_admins = " + index_admins);
+		if (chan.adminsId.length < 1)
+		{
+			// delete the chan
+			return this.repository.remove(chan);
+		}
+
+		return this.repository.save(chan);
+	}
 }

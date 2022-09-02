@@ -86,4 +86,10 @@ export class ChanController
 	{
 		return this.service.addMutedIdToChan(id, usersId);
 	}
+
+	@Post('quit/:id/:usersId')
+	public quitChan(@Param('id', ParseIntPipe) id: number, @Param('usersId', ParseIntPipe) usersId: number)
+	{
+		return this.service.quitChan(id, usersId);
+	}
 }

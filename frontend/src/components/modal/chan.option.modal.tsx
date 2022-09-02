@@ -9,6 +9,7 @@ import { ReactComponent as AdminMute } from '../../icon/comment-alt-block-svgrep
 import { ReactComponent as AdminBan } from '../../icon/thor-hammer-svgrepo-com.svg'
 import { ReactComponent as AdminAdd } from '../../icon/chevron-svgrepo-com.svg'
 import { ReactComponent as Pwd } from '../../icon/icons8-key.svg'
+import axios from "axios";
 
 function OptionModal(props: {
 	user: i_user,
@@ -27,12 +28,17 @@ function OptionModal(props: {
 	onClose: () => void
 })
 {
+	const handleQuit = async () => {
+		  await axios.post(
+			"http://localhost:3000/chan/quit/" + props.chan.id + "/" + props.user.id,).catch(err => console.log(err));
+	
+	  };
 	// need handle quiting
 	return (
 		<div onMouseLeave={props.onClose} className='modal--option'>
 			<div>
 				{props.chan.id !== 1 && <button onClick={() => props.options.setShowAdd(true)}><Add /></button>}
-				{props.chan.id !== 1 && <button><Quit fill="#c00" /></button>}
+				{props.chan.id !== 1 && <button onClick={(handleQuit)}><Quit fill="#c00" /></button>}
 			</div>
 			<div>
 				<button onClick={() => props.options.setShowChallenge(true)}><Challenge /></button>
