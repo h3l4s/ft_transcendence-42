@@ -22,12 +22,13 @@ import i_user from '../../../interface/user.interface';
 
 import { Users } from '../chan/user.component';
 import { userBacktoFront } from '../../../request/user.request';
+import { ApiUrlContext } from '../../../context/apiUrl.context';
 
-async function requestUser(id: number): Promise<i_user | null>
+async function requestUser(apiUrl: string, id: number): Promise<i_user | null>
 {
 	let user: i_user | null = null;
 
-	await axios.get("http://localhost:3000/user/" + id).then(res =>
+	await axios.get(apiUrl + "/user/" + id).then(res =>
 	{
 		console.log(res);
 		user = userBacktoFront(res.data);
@@ -57,6 +58,7 @@ const theme = createTheme();
 
 export default function SignIn()
 {
+	const { apiUrl } = React.useContext(ApiUrlContext);
 	const { user, setUser } = React.useContext(AuthContext);
 	const navigate = useNavigate();
 
@@ -72,13 +74,13 @@ export default function SignIn()
 		var url = window.location;
 		var access_token = new URLSearchParams(url.search).get('code');
 		console.log(access_token);
-		const b = await axios.post("http://localhost:3000/user", { token: access_token });
+		const b = await axios.post(apiUrl + "/user", { token: access_token });
 		console.log(b);
 	};
 
 	const tmpCreateUser = async (username: string) =>
 	{
-		const post_answer = await axios.post("http://localhost:3000/user/name/" + username);
+		const post_answer = await axios.post(apiUrl + "/user/name/" + username);
 		console.log(post_answer);
 	}
 
@@ -86,7 +88,7 @@ export default function SignIn()
 
 	const getUsers = async () =>
 	{
-		const get_answer = await axios.get("http://localhost:3000/user/all");
+		const get_answer = await axios.get(apiUrl + "/user/all");
 		console.log(get_answer);
 		let users: i_user[] = [];
 		for (let i = 0; i < get_answer.data.length; i++)
@@ -141,7 +143,7 @@ export default function SignIn()
 										sx={{ mt: 3, mb: 2 }}
 										onClick={async () =>
 										{
-											const tmp: i_user | null = await requestUser(id);
+											const tmp: i_user | null = await requestUser(apiUrl, id);
 											setUser(tmp);
 											if (tmp)
 												navigate("/");

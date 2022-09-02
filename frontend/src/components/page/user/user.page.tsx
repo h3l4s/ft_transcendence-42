@@ -6,6 +6,7 @@ import '../../../style/user.css';
 
 import i_user from '../../../interface/user.interface';
 
+import { ApiUrlContext } from '../../../context/apiUrl.context';
 import { AuthContext } from '../../../context/auth.context';
 
 import { ReactComponent as Friend } from '../../../icon/friend-svgrepo-com.svg'
@@ -28,7 +29,7 @@ function isUserInDb(username: string, users: i_user[]): i_user | null
 	return (null);
 }
 
-function uploadFile(user_id: number | undefined, image: File | null)
+function uploadFile(apiUrl: string, user_id: number | undefined, image: File | null)
 {
 	if (!user_id || !image)
 		return;
@@ -38,7 +39,7 @@ function uploadFile(user_id: number | undefined, image: File | null)
 
 	console.log("formData: ", formData);
 
-	axios.put("http://localhost:3000/user/pp/" + user_id, formData).then(
+	axios.put(apiUrl + "/user/pp/" + user_id, formData).then(
 		(res) => { console.log(res); },
 		(error) => { console.log(error); }
 	);
@@ -47,8 +48,9 @@ function uploadFile(user_id: number | undefined, image: File | null)
 
 function UserPage()
 {
-	const { reqUsers, loading, error } = useReqUsers();
+	const { apiUrl } = useContext(ApiUrlContext);
 	const { user } = useContext(AuthContext);
+	const { reqUsers, loading, error } = useReqUsers();
 	const [image, setImage] = useState<any | null>(null);
 	const p_username = useParams().username;
 	let userToLoad: i_user | null = null;
@@ -83,7 +85,7 @@ function UserPage()
 							&& <div className='input--file'>
 								<input type='file' style={{ zIndex: "99" }} onChange={(e) =>
 								{
-									uploadFile((user ? user.id : undefined), (e.target.files ? e.target.files[0] : null));
+									uploadFile(apiUrl, (user ? user.id : undefined), (e.target.files ? e.target.files[0] : null));
 									setImage((e.target.files ? e.target.files[0] : null));
 								}} />
 								<Edit className='input--file--icon' />

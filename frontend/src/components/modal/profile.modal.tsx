@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom';
 import { useContext, useState } from 'react';
 
+import axios from 'axios';
+
 import '../../style/chan.css'
 
 import { AuthContext } from '../../context/auth.context';
-
-import axios from 'axios';
+import { ApiUrlContext } from '../../context/apiUrl.context';
 
 import i_user from '../../interface/user.interface';
 
@@ -20,6 +21,7 @@ import i_msg from '../../interface/msg.interface';
 
 function ProfileModal(props: { user: i_user, onClose: () => void })
 {
+	const { apiUrl } = useContext(ApiUrlContext);
 	const { user, setUser } = useContext(AuthContext);
 	const [friend, setFriend] = useState((user && user.friendsId ? user.friendsId.includes(props.user.id!) : false));
 	const [msg, setMsg] = useState("");
@@ -30,7 +32,7 @@ function ProfileModal(props: { user: i_user, onClose: () => void })
 	{
 		if (!user || !user.id)
 			return;
-		asyncReqUpdateUser("http://localhost:3000/user/" + user.id, 'put',
+		asyncReqUpdateUser(apiUrl + "/user/" + user.id, 'put',
 			{ updateUserDto: { friendId: props.user.id! } }).then((res) =>
 			{
 				setFriend(state);
@@ -61,7 +63,7 @@ function ProfileModal(props: { user: i_user, onClose: () => void })
 				msg: msg,
 				sendAt: date
 			}
-			axios.post("http://localhost:3000/chan/msg/dm/" + props.user.id, s_msg).catch(err => console.log(err));
+			axios.post(apiUrl + "/chan/msg/dm/" + props.user.id, s_msg).catch(err => console.log(err));
 			setMsg("");
 		}
 	}

@@ -1,19 +1,26 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+
+import { ApiUrlContext } from "../context/apiUrl.context";
+
 import Error from "./request_answer_component/error.component";
 import Loading from "./request_answer_component/loading.component";
 
 function TestBackend()
 {
+	const { apiUrl } = useContext(ApiUrlContext);
 	const [error, setError] = useState<{ message: string } | null>(null);
 	const [isLoaded, setIsLoaded] = useState(false);
 	const [msg, setMsg] = useState("");
+
+	console.log("window.location.hostname: " + window.location.hostname);
+	console.log("apiUrl:", apiUrl);
 
 	// Note: the empty deps array [] means
 	// this useEffect will run once
 	// similar to componentDidMount()
 	useEffect(() =>
 	{
-		fetch("http://localhost:3000")
+		fetch(apiUrl)
 			.then(response => response.json())
 			.then(
 				(data) =>

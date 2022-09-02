@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Socket } from "socket.io-client";
+
+import { ApiUrlContext } from "../../../context/apiUrl.context";
 
 import i_user from "../../../interface/user.interface";
 import i_chan from "../../../interface/chan.interface";
@@ -56,6 +58,7 @@ function get_direct_chan_name(users: i_user[])
 
 function Chat(props: { socket: Socket, chan: i_chan, all_users: i_user[], users: i_user[], user: i_user, is_admin: boolean, is_owner: boolean })
 {
+	const { apiUrl } = useContext(ApiUrlContext);
 	const [msg, setMsg] = useState("");
 	let msgs = (props.chan.msg ? props.chan.msg : []);
 	const [msgsSocket, setMsgsSocket] = useState<i_msg[]>([]);
@@ -121,7 +124,7 @@ function Chat(props: { socket: Socket, chan: i_chan, all_users: i_user[], users:
 				msg: msg,
 				sendAt: date
 			}
-			axios.post("http://localhost:3000/chan/msg/" + props.chan.id, s_msg).catch(err => console.log(err));
+			axios.post(apiUrl + "/chan/msg/" + props.chan.id, s_msg).catch(err => console.log(err));
 			s_msg.chanId = props.chan.id.toString();
 			props.socket.emit('chatToServer', s_msg);
 			setMsg("");

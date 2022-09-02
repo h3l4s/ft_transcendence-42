@@ -1,5 +1,7 @@
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
+
+import { ApiUrlContext } from "../../context/apiUrl.context";
 
 import i_chan from "../../interface/chan.interface";
 
@@ -7,6 +9,7 @@ import Error from "../request_answer_component/error.component";
 
 function PromptPwdModal(props: { chan_id: number | undefined, user_id: number | undefined, callback: (chan: i_chan) => void })
 {
+	const { apiUrl } = useContext(ApiUrlContext);
 	const [pwd, setPwd] = useState("");
 	const [wrongPwd, setWrongPwd] = useState(false);
 
@@ -25,7 +28,7 @@ function PromptPwdModal(props: { chan_id: number | undefined, user_id: number | 
 		if (event.key === 'Enter' && pwd.length > 0)
 		{
 			event.preventDefault();
-			axios.post("http://localhost:3000/chan/pwd/" + props.chan_id, { userId: props.user_id, pwd: pwd }).then((res) =>
+			axios.post(apiUrl + "/chan/pwd/" + props.chan_id, { userId: props.user_id, pwd: pwd }).then((res) =>
 			{
 				console.log(res);
 				console.log(res.data);

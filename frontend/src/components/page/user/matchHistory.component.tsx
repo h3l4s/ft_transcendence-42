@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+
+import { ApiUrlContext } from "../../../context/apiUrl.context";
 
 import i_matchHistory from "../../../interface/matchHistory.interface";
 import i_user from "../../../interface/user.interface";
@@ -11,7 +13,8 @@ import Loading from "../../request_answer_component/loading.component";
 
 function MatchHistory(props: { username: string | undefined, users: i_user[] })
 {
-	const { data, loading, error } = useFetch("http://localhost:3000/pong/match/" + props.username, 'get');
+	const { apiUrl } = useContext(ApiUrlContext);
+	const { data, loading, error } = useFetch(apiUrl + "/pong/match/" + props.username, 'get');
 
 	if (!props.username)
 		return (<Error msg="didn't find connected user" />);
