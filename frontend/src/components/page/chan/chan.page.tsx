@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { io, Socket } from 'socket.io-client'
 
@@ -8,6 +8,8 @@ import { useReqUsers } from '../../../request/user.request';
 import '../../../style/chan.css';
 
 import i_chan from '../../../interface/chan.interface';
+
+import { ApiUrlContext } from '../../../context/apiUrl.context';
 
 import Chans from './chan.component';
 import Loading from '../../request_answer_component/loading.component';
@@ -43,9 +45,10 @@ function ChanReq(props: { socket: Socket, chans: i_chan[] | null, to_chan: numbe
 
 function ChanPage()
 {
+	const { apiUrl } = useContext(ApiUrlContext);
 	const [selectedChan, setSelectedChan] = useState(1);
 	const [chans, setChans] = useState<i_chan[] | null>(null);
-	const [socket] = useState(io("http://localhost:3000/chat"));
+	const [socket] = useState(io(apiUrl + "/chat"));
 
 	useEffect(() =>
 	{
@@ -56,7 +59,7 @@ function ChanPage()
 
 	function callback(newId: number, oldId: number)
 	{
-		axios.get("http://localhost:3000/chan/").then(res =>
+		axios.get(apiUrl + "/chan/").then(res =>
 		{
 			socket.emit('joinRoom', newId.toString());
 			socket.emit('leaveRoom', oldId.toString());
