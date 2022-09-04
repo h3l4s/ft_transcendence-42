@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Inject, Param, ParseIntPipe, Post, Put, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param, ParseIntPipe, Post, Put, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ChooseUsernameDto, UpdateUsersAfterGameDto } from './user.dto';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 import axios from 'axios';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Response } from 'express';
 
 @Controller('user')
 export class UserController
@@ -71,9 +72,9 @@ export class UserController
 	}
 
 	@Put('username/:id')
-	public chooseUsername(@Param('id', ParseIntPipe) id: number, @Body() data: ChooseUsernameDto)
+	public chooseUsername(@Param('id', ParseIntPipe) id: number, @Body() data: ChooseUsernameDto, @Res({ passthrough: true }) res: Response)
 	{
-		return this.service.chooseUsername(id, data.username);
+		return this.service.chooseUsername(id, data.username, res);
 	}
 
 	@Post('match')

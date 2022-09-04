@@ -21,6 +21,8 @@ import UserListById from './UserListById.component';
 import NoMatch from '../nomatch.page';
 import Loading from '../../request_answer_component/loading.component';
 import Error from '../../request_answer_component/error.component';
+import Backdrop from '../../modal/backdrop';
+import UsernameChangeModal from '../../modal/username.change.modal';
 
 function isUserInDb(username: string, users: i_user[]): i_user | null
 {
@@ -50,30 +52,41 @@ function uploadFile(apiUrl: string, user_id: number | undefined, image: File | n
 function UserPage()
 {
 	const { apiUrl } = useContext(ApiUrlContext);
-	const { user } = useContext(AuthContext);
+	const { user, setUser } = useContext(AuthContext);
 	const { reqUsers, loading, error } = useReqUsers();
 	const [image, setImage] = useState<any | null>(null);
+	const [showUsernameChangeModal, setShowUsernameChangeModal] = useState(false);
+	const [userToLoad, setUserToLoad] = useState<i_user | null>(null);
 	const p_username = useParams().username;
-	let userToLoad: i_user | null = null;
 
-	if (loading)
-		return (<div className='back'><Loading /></div>);
-	else if (error)
-		return (<div className='back'><Error msg={error.message} /></div>);
-	else if (p_username)
-		userToLoad = isUserInDb(p_username, reqUsers);
-	else
-	{
-		if (!user || !user.id)
-			return (<NoMatch />);
-		for (let i = 0; i < reqUsers.length; i++)
-			if (reqUsers[i].id === user.id)
-				userToLoad = reqUsers[i];
-	}
 	if (!userToLoad)
-		return (<NoMatch />);
+	{
+		if (loading)
+			return (<div className='back'><Loading /></div>);
+		else if (error)
+			return (<div className='back'><Error msg={error.message} /></div>);
+		else if (p_username)
+			setUserToLoad(isUserInDb(p_username, reqUsers));
+		else
+		{
+			if (!user || !user.id)
+				return (<NoMatch />);
+			for (let i = 0; i < reqUsers.length; i++)
+				if (reqUsers[i].id === user.id)
+					setUserToLoad(reqUsers[i]);
+		}
+		if (!userToLoad)
+			return (<NoMatch />);
+	}
 
 	console.log("image: ", image);
+
+	function callback(user: i_user)
+	{
+		setUserToLoad(user);
+		setShowUsernameChangeModal(false);
+		setUser(user);
+	}
 
 	return (
 		<div className='user--page' >
@@ -94,8 +107,12 @@ function UserPage()
 						}
 					</div>
 					<div className='user--page-title truncate'>
-						{userToLoad.name}
-						<Edit className='input--file--icon' />
+						<span style={{ marginLeft: "calc(1.6vw + 1rem)" }}>{userToLoad.name}</span>
+						{(!p_username || p_username === userToLoad.name)
+							&& <button className='btn--username--change' onClick={() => setShowUsernameChangeModal(true)}>
+								<Edit />
+							</button>
+						}
 					</div>
 				</div>
 				<div className='card card--alt' style={{ height: "100%" }}>
@@ -115,6 +132,8 @@ function UserPage()
 				</div>
 				<UserListById friendsId={userToLoad.friendsId} reqUsers={reqUsers} />
 			</div>
+			{(!p_username || p_username === userToLoad.name) && showUsernameChangeModal && <UsernameChangeModal callback={callback} />}
+			{(!p_username || p_username === userToLoad.name) && showUsernameChangeModal && <Backdrop onClick={() => setShowUsernameChangeModal(false)} />}
 		</div >
 	);
 }
