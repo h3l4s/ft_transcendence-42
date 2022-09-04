@@ -19,9 +19,9 @@ make
 
 ### dev:
 ```sh
-make dev
-cd ./backend && npm run start:dev
-cd ../frontend && npm run start
+make db
+make back
+make front
 ```
 
 ## access
