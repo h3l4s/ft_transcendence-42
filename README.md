@@ -17,11 +17,11 @@ docker-compose up --build
 make
 ```
 
-### deprecated:
+### dev:
 ```sh
-make
-cd /backend && npm i --legacy-peer-deps && npm run start:dev
-cd ../frontend && npm i --legacy-peer-deps && npm run start
+make dev
+cd ./backend && npm run start:dev
+cd ../frontend && npm run start
 ```
 
 ## access
