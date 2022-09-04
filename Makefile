@@ -6,7 +6,7 @@
 #    By: adelille <adelille@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/10 14:54:46 by adelille          #+#    #+#              #
-#    Updated: 2022/09/04 16:48:04 by adelille         ###   ########.fr        #
+#    Updated: 2022/09/04 17:16:13 by adelille         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,9 @@ BACKENV =	$(BACK)/src/common/envs/development.env
 #include	srcs/.env
 #export	$(shell sed 's/=.*//' srcs/.env)
 
+include $(ENV)
+$(eval export $(shell sed -ne 's/ *#.*$$//; /./ s/=.*$$// p' $(ENV)))
+
 SHELL := bash
 
 B =		$(shell tput bold)
@@ -40,22 +43,22 @@ all:	$(NAME)
 $(NAME):
 	docker-compose up --force-recreate --build
 
-dev:
-	[ -d $(BACK)/node_modules ] || npm --prefix $(BACK) install $(BACK)
-	[ -d $(FRONT)/node_modules ] || npm --prefix $(FRONT) install $(FRONT) --legacy-peer-deps
-	@echo "PORT=3000" > $(BACKENV)
-	@echo "BASE_URL=http://localhost:3000" >> $(BACKENV)
-	@echo "DATABASE_HOST=localhost" >> $(BACKENV)
-	@echo "DATABASE_PORT=5432" >> $(BACKENV)
-	@cat $(ENV) >> $(BACKENV)
+db:
 	docker-compose up --force-recreate --build db
+
+back:
+	[ -d $(BACK)/node_modules ] || npm --prefix $(BACK) install $(BACK)
+	npm --prefix $(BACK) run start:dev
+
+front:
+	[ -d $(FRONT)/node_modules ] || npm --prefix $(FRONT) install $(FRONT) --legacy-peer-deps
+	npm --prefix $(FRONT) run start
 
 stop:
 	docker-compose down
 
 clean:	stop
 	docker system prune --volumes -f
-	true > $(BACKENV)
 
 fclean: clean
 	docker system prune -af
@@ -75,6 +78,6 @@ list:
 	@docker volume ls
 	@echo ;
 
-.PHONY: all stop clean fclean re fre list
+.PHONY: all db back front stop clean fclean re fre list
 
 # **************************************************************************** #
