@@ -62,3 +62,10 @@ export class UpdateUsersAfterGameDto
 	@IsNotEmpty()
 	public scoreLoser: number;
 }
+
+export class ChooseUsernameDto
+{
+	@IsString()
+	@IsNotEmpty()
+	public username: string;
+}

@@ -1,17 +1,42 @@
-version: '3.1'
 services :
+
   db:
-    image: postgres:10-alpine
+    image: postgres:14.5-alpine
+    container_name: db
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $POSTGRES_DB -U $POSTGRES_USER"]
+      interval: 1s
+      timeout: 5s
+      retries: 20
+      start_period: 1s
+    networks:
+      - transcendence-network
+    environment:
+      - WEBSITE_PORT
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
     ports:
       - "5432:5432"
-    environment:
-      POSTGRES_USER: user1
-      POSTGRES_PASSWORD: changeme
-      POSTGRES_DB: tododb
-  admin:
-    image: adminer
+  
+  adminer:
+    image: adminer:4.8.1-standalone
+    container_name: adminer
     restart: always
-    depends_on: 
-      - db
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - $ADMINER_PORT:8080
+    networks:
+      - transcendence-network
+    environment:
+      - ADMINER_DEFAULT_SYSTEM=PostgreSQL
+      - ADMINER_DEFAULT_SERVER=db
+      - ADMINER_DEFAULT_USER=$POSTGRES_USER
     ports:
       - 8080:8080
+
+networks:
+  transcendence-network:

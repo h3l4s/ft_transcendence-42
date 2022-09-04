@@ -1,5 +1,6 @@
-import { Injectable, StreamableFile } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, StreamableFile } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Response } from 'express';
 import { Readable } from 'stream';
 import { Not, Repository } from 'typeorm';
 import { CreateUserDto, UpdateUserDto, UpdateUsersAfterGameDto } from './user.dto';
@@ -101,6 +102,18 @@ export class UserService
 			else
 				user.mutedId.push(updateUserDto.mutedId);
 		}
+
+		return await this.repository.save(user);
+	}
+
+	public async chooseUsername(id: number, name: string, res: Response)
+	{
+		const user = await this.repository.findOne(id);
+
+		if (await this.repository.count({ where: { name: name } }))
+			throw new HttpException("username already taken", HttpStatus.CONFLICT);
+
+		user.name = name;
 
 		return await this.repository.save(user);
 	}
