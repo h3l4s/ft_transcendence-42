@@ -6,11 +6,17 @@
 #    By: adelille <adelille@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/10 14:54:46 by adelille          #+#    #+#              #
-#    Updated: 2022/08/08 20:14:31 by adelille         ###   ########.fr        #
+#    Updated: 2022/09/04 16:48:04 by adelille         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = ft_transcendence
+NAME =	ft_transcendence
+
+FRONT =	./frontend
+BACK =	./backend
+
+ENV =		.env
+BACKENV =	$(BACK)/src/common/envs/development.env
 
 # **************************************************************************** #
 #	MAKEFILE	#
@@ -34,11 +40,22 @@ all:	$(NAME)
 $(NAME):
 	docker-compose up --force-recreate --build
 
+dev:
+	[ -d $(BACK)/node_modules ] || npm --prefix $(BACK) install $(BACK)
+	[ -d $(FRONT)/node_modules ] || npm --prefix $(FRONT) install $(FRONT) --legacy-peer-deps
+	@echo "PORT=3000" > $(BACKENV)
+	@echo "BASE_URL=http://localhost:3000" >> $(BACKENV)
+	@echo "DATABASE_HOST=localhost" >> $(BACKENV)
+	@echo "DATABASE_PORT=5432" >> $(BACKENV)
+	@cat $(ENV) >> $(BACKENV)
+	docker-compose up --force-recreate --build db
+
 stop:
 	docker-compose down
 
 clean:	stop
 	docker system prune --volumes -f
+	true > $(BACKENV)
 
 fclean: clean
 	docker system prune -af
