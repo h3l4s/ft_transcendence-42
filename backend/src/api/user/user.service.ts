@@ -105,6 +105,18 @@ export class UserService
 		return await this.repository.save(user);
 	}
 
+	public async chooseUsername(id: number, name: string)
+	{
+		const user = await this.repository.findOne(id);
+
+		if (await this.repository.count({ where: { name: name } }))
+			throw new HttpException('username already taken', HttpStatus.CONFLICT);
+
+		user.name = name;
+
+		return await this.repository.save(user);
+	}
+
 	public async updateUsersAfterGame(data: UpdateUsersAfterGameDto)
 	{
 		const winner: User = await this.repository.findOne({ name: data.winner });

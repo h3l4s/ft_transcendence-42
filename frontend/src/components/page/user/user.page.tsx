@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -13,13 +14,13 @@ import { ReactComponent as Friend } from '../../../icon/friend-svgrepo-com.svg'
 import { ReactComponent as Edit } from '../../../icon/write-pencil-svgrepo-com.svg'
 
 import { useReqUsers } from '../../../request/user.request';
+
 import UserStats from './userstats.component';
 import MatchHistory from './matchHistory.component';
 import UserListById from './UserListById.component';
 import NoMatch from '../nomatch.page';
 import Loading from '../../request_answer_component/loading.component';
 import Error from '../../request_answer_component/error.component';
-import axios from 'axios';
 
 function isUserInDb(username: string, users: i_user[]): i_user | null
 {
@@ -92,7 +93,10 @@ function UserPage()
 							</div>
 						}
 					</div>
-					<div className='user--page-title truncate'>{userToLoad.name}</div>
+					<div className='user--page-title truncate'>
+						{userToLoad.name}
+						<Edit className='input--file--icon' />
+					</div>
 				</div>
 				<div className='card card--alt' style={{ height: "100%" }}>
 					<UserStats user={userToLoad} />

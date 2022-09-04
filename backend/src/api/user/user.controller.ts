@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Inject, Param, ParseIntPipe, Post, Put, UploadedFile, UseInterceptors } from '@nestjs/common';
-import { UpdateUsersAfterGameDto } from './user.dto';
+import { ChooseUsernameDto, UpdateUsersAfterGameDto } from './user.dto';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 import axios from 'axios';
@@ -68,6 +68,12 @@ export class UserController
 	public updateUser(@Param('id', ParseIntPipe) id: number, @Body() data: any)
 	{
 		return this.service.updateUser(id, data.updateUserDto);
+	}
+
+	@Put('username/:id')
+	public chooseUsername(@Param('id', ParseIntPipe) id: number, @Body() data: ChooseUsernameDto)
+	{
+		return this.service.chooseUsername(id, data.username);
 	}
 
 	@Post('match')
