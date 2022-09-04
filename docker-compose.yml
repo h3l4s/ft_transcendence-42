@@ -17,50 +17,9 @@ services :
       - POSTGRES_USER
       - POSTGRES_PASSWORD
       - POSTGRES_DB
-
-  backend:
-    build: backend
-    container_name: backend
-    restart: always
-    healthcheck:
-      test: ["CMD-SHELL", "wget --spider -q localhost:3000 2> /dev/null"]
-      interval: 1s
-      timeout: 5s
-      retries: 20
-      start_period: 1s
-    depends_on: 
-      db:
-        condition: service_healthy
     ports:
-      - 3000:3000
-    networks:
-      - transcendence-network
-    environment:
-      - PORT=3000
-      - BASE_URL=http://localhost:3000
-      - DATABASE_HOST=db
-      - DATABASE_NAME=$POSTGRES_DB
-      - DATABASE_USER=$POSTGRES_USER
-      - DATABASE_PASSWORD=$POSTGRES_PASSWORD
-      - DATABASE_PORT=5432
-
-  frontend:
-    build: frontend
-    container_name: frontend
-    restart: always
-    depends_on: 
-      db:
-        condition: service_healthy
-      backend:
-        condition: service_healthy
-    ports:
-      - 3001:3001
-    networks:
-      - transcendence-network
-    environment:
-      - PORT=3001
-      - BASE_URL=http://localhost:3001
- 
+      - "5432:5432"
+  
   adminer:
     image: adminer:4.8.1-standalone
     container_name: adminer
@@ -76,6 +35,8 @@ services :
       - ADMINER_DEFAULT_SYSTEM=PostgreSQL
       - ADMINER_DEFAULT_SERVER=db
       - ADMINER_DEFAULT_USER=$POSTGRES_USER
+    ports:
+      - 8080:8080
 
 networks:
   transcendence-network:
