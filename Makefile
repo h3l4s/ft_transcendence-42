@@ -6,7 +6,7 @@
 #    By: adelille <adelille@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/10 14:54:46 by adelille          #+#    #+#              #
-#    Updated: 2022/09/04 17:16:13 by adelille         ###   ########.fr        #
+#    Updated: 2022/09/06 18:21:06 by adelille         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,7 +52,7 @@ back:
 
 front:
 	[ -d $(FRONT)/node_modules ] || npm --prefix $(FRONT) install $(FRONT) --legacy-peer-deps
-	npm --prefix $(FRONT) run start
+	npm --prefix $(FRONT) start
 
 stop:
 	docker-compose down

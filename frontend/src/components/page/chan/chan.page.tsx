@@ -64,6 +64,8 @@ function ChanPage()
 			socket.emit('joinRoom', newId.toString());
 			socket.emit('leaveRoom', oldId.toString());
 
+			// join chan
+
 			setChans(res.data);
 			setSelectedChan(newId);
 		}).catch(err => console.log(err));

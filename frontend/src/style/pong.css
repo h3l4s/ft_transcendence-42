@@ -19,8 +19,8 @@
 }*/
 
 #canvas {
-	width: 70%;
-	height: 40%;
+	min-width: 640px;
+	min-height: 480px;
 	max-width: 740px;
 	max-height: 580px;
 }
