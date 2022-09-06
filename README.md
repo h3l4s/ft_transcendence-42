@@ -24,6 +24,11 @@ cd ./backend && npm run start:dev
 cd ../frontend && npm run start
 ```
 
+### ip:
+```sh
+make ip
+```
+
 ## access
 enter http://localhost:3001 in your search bar
 
