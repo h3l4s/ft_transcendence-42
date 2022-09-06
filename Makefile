@@ -6,7 +6,7 @@
 #    By: adelille <adelille@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/10 14:54:46 by adelille          #+#    #+#              #
-#    Updated: 2022/09/06 22:06:47 by adelille         ###   ########.fr        #
+#    Updated: 2022/09/07 00:19:36 by adelille         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,8 +44,7 @@ $(NAME):
 	docker-compose up --force-recreate --build
 
 ip:
-	@docker inspect $(NAME) | grep IPAddress | sed 's/ *"IPAddress": *"//' | sed 's/",//'
-	@ip addr | grep enp | grep inet | sed 's/ *inet //' | sed 's/\/.*//'
+	@hostname -I | cut -d' ' -f1
 
 db:
 	docker-compose up --force-recreate --build db
