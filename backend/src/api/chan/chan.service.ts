@@ -48,7 +48,7 @@ export class ChanService
 
 	public getChans(): Promise<Chan[]>
 	{
-		return this.repository.find();
+		return this.repository.find({ order: { id: "ASC" } });
 	}
 
 	public async createChan(body: CreateChanDto): Promise<Chan>
