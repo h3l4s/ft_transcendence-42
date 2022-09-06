@@ -2,7 +2,7 @@ import i_msg from '../../../interface/msg.interface';
 
 import strToSHex from '../../../utils/strToHex';
 
-function Msgs(props: { id: number | undefined, msgs: i_msg[] | undefined })
+function Msgs(props: { id: number | undefined, msgs: i_msg[] | undefined, mutedId: number[] | undefined, adminMutedId: number[] | undefined })
 {
 	if (!props.id || !props.msgs)
 		return <div />
@@ -10,7 +10,11 @@ function Msgs(props: { id: number | undefined, msgs: i_msg[] | undefined })
 	let ret: JSX.Element[] = [];
 
 	for (let i = 0; i < props.msgs.length; i++)
-	{ ret.push(<Msg key={i} id={props.id} msg={props.msgs[i]} />); }
+	{
+		if (props.mutedId && !props.mutedId.includes(props.msgs[i].userId)
+			&& props.adminMutedId && !props.adminMutedId.includes(props.msgs[i].userId))
+			ret.push(<Msg key={i} id={props.id} msg={props.msgs[i]} />);
+	}
 
 	return (
 		<div className='msg--holder'>

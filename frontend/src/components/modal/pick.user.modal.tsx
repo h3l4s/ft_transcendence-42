@@ -12,7 +12,8 @@ function PickUser(props: {
 	user: i_user,
 	chanId: number,
 	type: 'add' | 'challenge' | 'mute' | 'admin add' | 'admin ban' | 'admin mute',
-	onClose: () => void
+	onClose: () => void,
+	callback: (newId: number, oldId: number) => void
 })
 {
 	const { apiUrl } = useContext(ApiUrlContext);
@@ -30,6 +31,7 @@ function PickUser(props: {
 				break;
 		}
 		props.onClose();
+		props.callback(props.chanId, props.chanId);
 	}
 
 	return (
@@ -47,7 +49,8 @@ function PickUsers(props: {
 	users: i_user[],
 	chanId: number,
 	type: 'add' | 'challenge' | 'mute' | 'admin add' | 'admin ban' | 'admin mute',
-	onClose: () => void
+	onClose: () => void,
+	callback: (newId: number, oldId: number) => void
 }): JSX.Element
 {
 	const { user } = useContext(AuthContext);
@@ -59,7 +62,8 @@ function PickUsers(props: {
 
 	for (let i = 0; i < props.users.length; i++)
 		if (props.users[i].id !== user.id)
-			ret.push(<PickUser key={i} user={props.users[i]} chanId={props.chanId} type={props.type} onClose={props.onClose} />);
+			ret.push(<PickUser key={i} user={props.users[i]} chanId={props.chanId} type={props.type}
+				onClose={props.onClose} callback={props.callback} />);
 
 	return (<div>{ret}</div>);
 }
@@ -68,8 +72,9 @@ function PickUserModal(props: {
 	users: i_user[],
 	chanId: number | undefined,
 	type: 'add' | 'challenge' | 'mute' | 'admin add' | 'admin ban' | 'admin mute',
-	goBack: () => void
-	onClose: () => void
+	goBack: () => void,
+	onClose: () => void,
+	callback: (newId: number, oldId: number) => void
 })
 {
 	if (!props.chanId)
@@ -82,7 +87,8 @@ function PickUserModal(props: {
 				<span style={{ fontSize: "1.5rem", fontWeight: "bolder" }}>{props.type}</span>
 			</div>
 			<div style={{ marginTop: "1rem" }}>
-				<PickUsers users={props.users} chanId={props.chanId} type={props.type} onClose={props.onClose} />
+				<PickUsers users={props.users} chanId={props.chanId} type={props.type}
+					onClose={props.onClose} callback={props.callback} />
 			</div>
 		</div>
 	);
