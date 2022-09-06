@@ -45,7 +45,17 @@ function userNotAdmin(admins_id: number[] | undefined, users: i_user[]): i_user[
 
 }
 
-function Chat(props: { socket: Socket, chan: i_chan, all_users: i_user[], users: i_user[], user: i_user, is_admin: boolean, is_owner: boolean })
+function Chat(props:
+	{
+		socket: Socket,
+		chan: i_chan,
+		all_users: i_user[],
+		users: i_user[],
+		user: i_user,
+		is_admin: boolean,
+		is_owner: boolean,
+		callback: (newId: number, oldId: number) => void
+	})
 {
 	const [msg, setMsg] = useState("");
 	let msgs = (props.chan.msg ? props.chan.msg : []);
@@ -128,7 +138,7 @@ function Chat(props: { socket: Socket, chan: i_chan, all_users: i_user[], users:
 						<Option />
 					</button>
 				</div>
-				<Msgs id={props.user.id} msgs={[...msgs, ...msgsSocket]} />
+				<Msgs id={props.user.id} msgs={[...msgs, ...msgsSocket]} mutedId={props.user.mutedId} adminMutedId={props.chan.mutedId} />
 				<input className='card--input input--chat' type='type' placeholder=' 💬'
 					onChange={msgUpdateHandle} value={msg} onKeyDown={msgSendHandle} />
 			</div>
@@ -153,19 +163,33 @@ function Chat(props: { socket: Socket, chan: i_chan, all_users: i_user[], users:
 				onClose={() => { setShowOption(false) }}
 			/>}
 			{showAdd && <PickUserModal chanId={props.chan.id} users={userNotInChan(props.chan.usersId, props.all_users)} type='add'
-				goBack={() => { setShowAdd(false); setShowOption(true); }} onClose={() => { setShowAdd(false); setShowOption(false); }} />}
+				goBack={() => { setShowAdd(false); setShowOption(true); }}
+				onClose={() => { setShowAdd(false); setShowOption(false); }}
+				callback={props.callback} />}
 			{showChallenge && <PickUserModal chanId={props.chan.id} users={props.users} type='challenge'
-				goBack={() => { setShowChallenge(false); setShowOption(true); }} onClose={() => { setShowChallenge(false); setShowOption(false); }} />}
+				goBack={() => { setShowChallenge(false); setShowOption(true); }}
+				onClose={() => { setShowChallenge(false); setShowOption(false); }}
+				callback={props.callback} />}
 			{showMute && <PickUserModal chanId={props.chan.id} users={props.users} type='mute'
-				goBack={() => { setShowMute(false); setShowOption(true); }} onClose={() => { setShowMute(false); setShowOption(false); }} />}
+				goBack={() => { setShowMute(false); setShowOption(true); }}
+				onClose={() => { setShowMute(false); setShowOption(false); }}
+				callback={props.callback} />}
 			{props.is_admin && showAdminAdd && <PickUserModal chanId={props.chan.id} users={userNotAdmin(props.chan.adminsId, props.users)} type='admin add'
-				goBack={() => { setShowAdminAdd(false); setShowOption(true); }} onClose={() => { setShowAdminAdd(false); setShowOption(false); }} />}
+				goBack={() => { setShowAdminAdd(false); setShowOption(true); }}
+				onClose={() => { setShowAdminAdd(false); setShowOption(false); }}
+				callback={props.callback} />}
 			{props.is_admin && showAdminBan && <PickUserModal chanId={props.chan.id} users={userNotAdmin(props.chan.adminsId, props.users)} type='admin ban'
-				goBack={() => { setShowAdminBan(false); setShowOption(true); }} onClose={() => { setShowAdminBan(false); setShowOption(false); }} />}
+				goBack={() => { setShowAdminBan(false); setShowOption(true); }}
+				onClose={() => { setShowAdminBan(false); setShowOption(false); }}
+				callback={props.callback} />}
 			{props.is_admin && showAdminMute && <PickUserModal chanId={props.chan.id} users={userNotAdmin(props.chan.adminsId, props.users)} type='admin mute'
-				goBack={() => { setShowAdminMute(false); setShowOption(true); }} onClose={() => { setShowAdminMute(false); setShowOption(false); }} />}
+				goBack={() => { setShowAdminMute(false); setShowOption(true); }}
+				onClose={() => { setShowAdminMute(false); setShowOption(false); }}
+				callback={props.callback} />}
 			{props.is_owner && showOwnerPwd && <PickPwdModal
-				goBack={() => { setShowOwnerPwd(false); setShowOption(true); }} onClose={() => { setShowOwnerPwd(false); setShowOption(false); }} />}
+				goBack={() => { setShowOwnerPwd(false); setShowOption(true); }}
+				onClose={() => { setShowOwnerPwd(false); setShowOption(false); }}
+				callback={props.callback} />}
 		</div>
 	);
 }

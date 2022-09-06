@@ -15,7 +15,8 @@ function userBacktoFront(user: any)
 		win: user.win,
 		lose: user.lose,
 		matchHistory: user.matchHistory,
-		friendsId: user.friendsId
+		friendsId: user.friendsId,
+		mutedId: user.mutedId
 	} : {});
 
 	return (ret_user);

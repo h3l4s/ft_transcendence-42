@@ -1,6 +1,6 @@
 import { ReactComponent as Back } from '../../icon/left-svgrepo-com.svg'
 
-function PickPwdModal(props: { goBack: () => void, onClose: () => void })
+function PickPwdModal(props: { goBack: () => void, onClose: () => void , callback: (newId: number, oldId: number) => void})
 {
 	return (
 		<div onMouseLeave={props.onClose} className='modal--pick'>
@@ -10,6 +10,7 @@ function PickPwdModal(props: { goBack: () => void, onClose: () => void })
 			</div>
 		</div>
 	);
+	// don't forget to call callback after the password is set/changed
 }
 
 export default PickPwdModal;

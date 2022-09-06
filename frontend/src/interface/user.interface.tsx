@@ -12,6 +12,7 @@ interface i_user
 	lose?: number;
 	matchHistory?: i_matchHistory[];
 	friendsId?: number[];
+	mutedId?: number[];
 }
 
 export default i_user;

@@ -123,7 +123,8 @@ function Chans(props: { socket: Socket, chans: i_chan[], users: i_user[], to_cha
 			<div className='split split--chan split--center'>
 				{selectedChan && user && <Chat
 					socket={props.socket} chan={selectedChan}
-					all_users={props.users} users={users_in_chan} user={user} is_admin={is_user_admin} is_owner={is_user_owner} />}
+					all_users={props.users} users={users_in_chan} user={user} is_admin={is_user_admin} is_owner={is_user_owner}
+					callback={props.callback} />}
 			</div>
 
 			<div className='split split--chan split--right'>
