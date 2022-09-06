@@ -10,6 +10,7 @@ export class UserService
 {
 	@InjectRepository(User)
 	private readonly repository: Repository<User>;
+	static repository: any;
 
 	public getUser(id: number): Promise<User>
 	{

@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Inject, Param, ParseIntPipe, Post, Put, 
 import { CreateChanDto, MsgDto, PwdDto } from './chan.dto';
 import { Chan } from './chan.entity';
 import { ChanService } from './chan.service';
+import { User } from '../user/user.entity';
 
 @Controller('chan')
 export class ChanController
@@ -63,11 +64,11 @@ export class ChanController
 		return this.service.addUserToChan(id, usersId);
 	}
 
-	/*@Post('mute/:id/:usersId')
-	public muteUserInChan(@Param('id', ParseIntPipe) id: number, @Param('usersId', ParseIntPipe) usersId: number)
+	@Post('mute/:id/:usersId')
+	public muteUserForUser(@Param('id', ParseIntPipe) id: number, @Param('usersId', ParseIntPipe) usersId: number)
 	{
-		return this.service.muteUserInChan(id, usersId);
-	}*/
+		return this.service.muteUserForUser(id, usersId);
+	}
 
 	@Post('adminadd/:id/:usersId')
 	public addAdminToChan(@Param('id', ParseIntPipe) id: number, @Param('usersId', ParseIntPipe) usersId: number)

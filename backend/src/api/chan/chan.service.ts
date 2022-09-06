@@ -1,8 +1,11 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { HttpException, HttpStatus, Injectable, Module } from '@nestjs/common';
+import { InjectRepository, TypeOrmModule } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateChanDto, MsgDto, PwdDto } from './chan.dto';
 import { Chan } from './chan.entity';
+import { User } from '../user/user.entity';
+import { UserService } from '../user/user.service';
+import { UserController } from '../user/user.controller';
 
 function hashing(pwd: string)
 {
@@ -15,11 +18,20 @@ function hashing(pwd: string)
 	}
 	return (hash);
 }
+
 @Injectable()
 export class ChanService
 {
 	@InjectRepository(Chan)
 	private readonly repository: Repository<Chan>;
+
+	@InjectRepository(User)
+	private readonly repo: Repository<User>;
+	static repository: any;
+
+	/*@InjectRepository(User)
+	private readonly repository_user: Repository<User>;
+	static repository_user: any;*/
 
 	public initChan(): Promise<Chan>
 	{
@@ -147,22 +159,28 @@ export class ChanService
 	{
 		const chan = await this.repository.findOne(id);
 
+		if (!chan.usersId)
+				chan.usersId = [];
 		chan.usersId.push(usersId);
 		return this.repository.save(chan);
 	}
 
-	/*public async muteUserInChan(id: number, usersId: number)
+	public async muteUserForUser(id: number, usersId: number)
 	{
-		const chan = await this.repository.findOne(id);
+		const user = await this.repo.findOne(id);
 
-		chan.mutedId.push(usersId);
-		return this.repository.save(chan);
-	}*/ // added to mutedid of the selectionned user
+		if (!user.mutedId)
+				user.mutedId = [];		
+		user.mutedId.push(usersId);
+		return this.repo.save(user);
+	}
 
 	public async addAdminToChan(id: number, usersId: number)
 	{
 		const chan = await this.repository.findOne(id);
 
+		if (!chan.adminsId)
+				chan.adminsId = [];
 		chan.adminsId.push(usersId);
 		return this.repository.save(chan);
 	}
@@ -171,6 +189,8 @@ export class ChanService
 	{
 		const chan = await this.repository.findOne(id);
 
+		if (!chan.bannedId)
+				chan.bannedId = [];
 		chan.bannedId.push(usersId);
 		return this.repository.save(chan);
 	}
@@ -179,6 +199,8 @@ export class ChanService
 	{
 		const chan = await this.repository.findOne(id);
 
+		if (!chan.mutedId)
+				chan.mutedId = [];
 		chan.mutedId.push(usersId);
 		return this.repository.save(chan);
 	}

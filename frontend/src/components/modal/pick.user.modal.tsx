@@ -33,7 +33,7 @@ function PickUser(props: {
 				axios.post("http://localhost:3000/chan/challenge/" + user?.id + "/" + props.c_user.id, { userId: props.c_user.id }).catch(err => console.log(err));
 				break; // voir comment est gere le match making pour /play/current_user/clicked_user
 			case 'mute':
-				axios.post("http://localhost:3000/chan/mute/" + props.chanId + "/" + props.c_user.id).catch(err => console.log(err));
+				axios.post("http://localhost:3000/chan/mute/" + user?.id + "/" + props.c_user.id).catch(err => console.log(err));
 				break; // le user est bien ajouter a la liste des mute dans le back mais n'est pas mute sur le site
 						// add le user selectionne par le current user dans la liste ds mutedid du current user
 			case 'admin add':
