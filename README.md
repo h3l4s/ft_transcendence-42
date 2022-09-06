@@ -31,17 +31,14 @@ click sign in then get token
 
 # languages
 
-- Typescript
-
-Back:
-- NestJS
-- TypeORM
-
-Front:
-- React
-
-Database:
-- PostgreSQL
+<div align="center">
+	<img alt="TypeScript" width="100" src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg" </img>
+	<img alt="CSS" width="110" src="https://upload.wikimedia.org/wikipedia/commons/6/62/CSS3_logo.svg"</img>
+	<a href="https://reactjs.org/" target="blank"><img alt="React" width="110" src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" </img></a>
+	<a href="http://nestjs.com/" target="blank"><img alt="nestJS" width="100" src="https://nestjs.com/img/logo-small.svg" </img></a>
+	<img alt="PostgreSQL" width="100" src="https://upload.wikimedia.org/wikipedia/commons/2/29/Postgresql_elephant.svg" </img>
+	<img alt="Docker" width="100" src="https://www.docker.com/wp-content/uploads/2022/03/vertical-logo-monochromatic.png" </img>
+</div>
 
 # features
 
