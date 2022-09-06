@@ -253,12 +253,12 @@ export class Matchmaking
 		console.log(`statu of the room : ${restart_room}`);
 		if (restart_room === -1)
 		{
-			if (bdd[pos - 2] < 50)
+			if (bdd[pos - 2] < 25)
 			{
 				clientNb_simple--;
 				joueur_simple.pop();
 			}
-			else if (bdd[pos - 2] < 100)
+			else if (bdd[pos - 2] < 50)
 			{
 				clientNb_tennis--;
 				joueur_tennis.pop();

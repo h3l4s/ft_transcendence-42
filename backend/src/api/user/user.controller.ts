@@ -12,6 +12,12 @@ export class UserController
 	@Inject(UserService)
 	private readonly service: UserService;
 
+	@Get('init')
+	public initChan(): Promise<User>
+	{
+		return this.service.initUser();
+	}
+
 	@Get()
 	public getUsers(): Promise<User[]>
 	{
