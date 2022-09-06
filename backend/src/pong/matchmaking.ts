@@ -1,8 +1,5 @@
-import { IoAdapter } from "@nestjs/platform-socket.io";
-import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
-import { Console } from "console";
+import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-//import i_map from '../../../frontend/src/interface/map.interface'
 
 let player = 0;
 let clientNb_simple = 0;
@@ -57,7 +54,6 @@ function Move_ball(game: any, PLAYER_WIDTH: number, canvas_height: number, canva
 	return (game);
 }
 
-
 function collision(player: any, game: any, canvas_height: number, canvas_width: number, PLAYER_HEIGHT: number, type: string)
 {
 	// The player does not hit the ball
@@ -97,8 +93,6 @@ function collision(player: any, game: any, canvas_height: number, canvas_width: 
 	return (game);
 }
 
-
-
 function Angle_Direction(playerPosition: any, game: any, PLAYER_HEIGHT: number,)
 {
 	var impact = game.ball.y - playerPosition - PLAYER_HEIGHT / 2;
@@ -107,7 +101,6 @@ function Angle_Direction(playerPosition: any, game: any, PLAYER_HEIGHT: number,)
 	game.ball.speed.y = Math.round(impact * ratio / 25);
 	return (game);
 }
-
 
 @WebSocketGateway({
 	cors: {
@@ -221,7 +214,7 @@ export class Matchmaking
 			let restart_room = bdd_game.indexOf(bdd[pos - 2]);
 			console.table(`client disconnected : ${bdd[pos - 1]}`);
 			//console.table(`client room : ${bdd[pos - 2]}`);
-			console.log(`statu of the room : ${restart_room}`);
+			console.log(`status of the room : ${restart_room}`);
 			if (restart_room === -1)
 			{
 				if (bdd[pos - 2] < 50)
@@ -273,5 +266,4 @@ export class Matchmaking
 		this.server.to(bdd[pos - 2]).emit('disconnection', bdd[pos - 1]);
 		player--;
 	}
-
 }

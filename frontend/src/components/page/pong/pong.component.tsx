@@ -1,19 +1,19 @@
 import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
+import { io, Socket } from 'socket.io-client';
 
 import './../../../style/pong.css';
 
+import { ApiUrlContext } from '../../../context/apiUrl.context';
 import { AuthContext } from '../../../context/auth.context';
 
 import i_map from '../../../interface/map.interface'
+
 import { ReactComponent as Back } from '../../../icon/left-svgrepo-com.svg'
 import tennis from './tennis_pong.jpg'
 
 import Error from '../../request_answer_component/error.component';
 import { useReqUser } from '../../../request/user.request';
-
-import { io, Socket } from 'socket.io-client';
-import { ApiUrlContext } from '../../../context/apiUrl.context';
 
 function Pong(props: { map: i_map, goBack: () => void })
 {
@@ -27,7 +27,9 @@ function Pong(props: { map: i_map, goBack: () => void })
 
 	useEffect(() =>
 	{
-		handleCanvas(apiUrl, true, props.map, bdd_pong, 0, socket);
+		if (!user || !user.name)
+			return;
+		handleCanvas(apiUrl, user.name, true, props.map, bdd_pong, 0, socket);
 	});
 
 	if (!user || !user.name)
@@ -47,14 +49,11 @@ function Pong(props: { map: i_map, goBack: () => void })
 	let nameP1 = user.name;
 	let bdd_pong: any[] = [];
 
-
 	// 	props.socket.on('chatToClient', (msg: i_msg) =>
 	// 	{
 	// 		console.log("received at:", msg.chanId, msg);
 	// 		setIcomingMsg(msg);
 	// 	});
-
-
 
 	function backFunction()
 	{
@@ -62,7 +61,6 @@ function Pong(props: { map: i_map, goBack: () => void })
 		socket.emit('back');
 		socket.disconnect();
 	}
-
 
 	return (
 		<div className='pong'>
@@ -105,46 +103,52 @@ function Pong(props: { map: i_map, goBack: () => void })
 function LaunchGame(props: { map: i_map, nameP1: string, saloon: any, incGameLaunch: () => number, setInGame: React.Dispatch<React.SetStateAction<boolean>>, socket: Socket })
 {
 	const { apiUrl } = useContext(ApiUrlContext);
+	const { user } = useContext(AuthContext);
+
 	props.socket.connect();
 	let client_Room: string;
 	let joueur: any;
 	let playbtn = document.querySelector("#lets-go")! as HTMLElement;
 	let bdd_pong: any[] = [];
 	playbtn.style.display = "none";
+
 	console.log("hello\n ca va");
+
 	useEffect(() =>
 	{
-		if (props.map.type)
+		if (!props.map.type)
+			return;
+		props.socket.emit('newPlayer', props.map.type.toString());
+		props.socket.on('serverToRoom', (data: string) =>
 		{
-			props.socket.emit('newPlayer', props.map.type.toString());
-			props.socket.on('serverToRoom', (data: string) =>
-			{
-				console.log(`je suis ds la room data ${data}`);
-				client_Room = data;
-				props.socket.emit('joinRoom', client_Room, props.nameP1, window.innerWidth / 2);
-			});
-			props.socket.on('switchFromServer', (data: []) =>
-			{
-				joueur = data!;
-				props.saloon.player1 = joueur[0].toString()!;
-				props.saloon.player2 = joueur[1].toString()!;
-				props.saloon.clientRoom = client_Room;
-				console.log(props.saloon);
-				bdd_pong.push(props.saloon);
-			});
-			props.socket.on('start', () =>
-			{
-				console.table(bdd_pong);
-				props.setInGame(true);
-				handleCanvas(apiUrl, false, props.map, bdd_pong, props.incGameLaunch(), props.socket);
-			});
-			// eslint-disable-next-line react-hooks/exhaustive-deps
-		}
+			console.log(`je suis ds la room data ${data}`);
+			client_Room = data;
+			props.socket.emit('joinRoom', client_Room, props.nameP1, window.innerWidth / 2);
+		});
+		props.socket.on('switchFromServer', (data: []) =>
+		{
+			joueur = data!;
+			props.saloon.player1 = joueur[0].toString()!;
+			props.saloon.player2 = joueur[1].toString()!;
+			props.saloon.clientRoom = client_Room;
+			console.log(props.saloon);
+			bdd_pong.push(props.saloon);
+		});
+		props.socket.on('start', () =>
+		{
+			console.table(bdd_pong);
+			props.setInGame(true);
+			if (!user || !user.name)
+				return;
+			handleCanvas(apiUrl, user.name, false, props.map, bdd_pong, props.incGameLaunch(), props.socket);
+		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-	return <div />
+
+	return (<div />);
 }
 
-function handleCanvas(apiUrl: string, init: boolean, map: i_map, bdd: any[] = [], room: number, socket: Socket)
+function handleCanvas(apiUrl: string, username: string, init: boolean, map: i_map, bdd: any[] = [], room: number, socket: Socket)
 {
 	let canvas = document.querySelector("#canvas")! as HTMLCanvasElement;
 	canvas.style.display = "block";
@@ -296,7 +300,7 @@ function handleCanvas(apiUrl: string, init: boolean, map: i_map, bdd: any[] = []
 			}
 			//canvas.style.display = "none";
 			console.log(map.p1);
-			postResults(apiUrl, game.score.p1, game.score.p2, bdd[room].player1, bdd[room].player2);
+			postResults(apiUrl, username, game.score.p1, game.score.p2, bdd[room].player1, bdd[room].player2);
 			return;
 		}
 		draw();
@@ -391,13 +395,11 @@ function handleCanvas(apiUrl: string, init: boolean, map: i_map, bdd: any[] = []
 	});
 }
 
-function postResults(apiUrl: string, scoreP1: number, scoreP2: number, player1: string, player2: string)
+function postResults(apiUrl: string, username: string, scoreP1: number, scoreP2: number, player1: string, player2: string)
 {
 	// only the winner will post the match to the api
-	if (scoreP1 === 11)
+	if ((scoreP1 > scoreP2 && player1 === username) || (scoreP2 > scoreP1 && player2 === username))
 	{
-		if (player1 || player2)
-			return;
 		console.log("end of match", player1, scoreP1, player2, scoreP2);
 		const match_stats = {
 			winner: player1,
