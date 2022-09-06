@@ -19,6 +19,7 @@ import SignUp from './components/page/login/signup.component';
 import ChanPage from './components/page/chan/chan.page';
 import UserPage from './components/page/user/user.page';
 import PongPage from './components/page/pong/pong.page';
+import CreateDefaultUser from './request/user.create.default';
 
 function App()
 {
@@ -44,7 +45,8 @@ function App()
 					</Routes>
 				</AuthContext.Provider>
 			</ApiUrlContext.Provider>
-		</Router >
+			<CreateDefaultUser />
+		</Router>
 	);
 }
 

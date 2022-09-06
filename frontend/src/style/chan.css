@@ -459,7 +459,9 @@ input {
 
 .pick--user {
 	cursor: pointer;
-	background-color: #fff4;
+	background-color: #fff4 !important;
+	color: #fff;
+	width: calc(100% - 2rem);
 	border-radius: 1rem;
 	margin: 0.25rem 1rem 0 1rem;
 	padding: 0.4rem 2rem 0.4rem 0.4rem;
@@ -472,7 +474,7 @@ input {
 }
 
 .pick--user:hover {
-	background-color: #fff6;
+	background-color: #fff6 !important;
 }
 
 .modal--add--chan {

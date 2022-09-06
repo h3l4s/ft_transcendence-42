@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateChanDto, MsgDto, PwdDto } from './chan.dto';
+import { CreateChanDto, MsgDto, PwdDto, UpdateChanDto } from './chan.dto';
 import { Chan } from './chan.entity';
 
 function hashing(pwd: string)
@@ -48,7 +48,7 @@ export class ChanService
 
 	public getChans(): Promise<Chan[]>
 	{
-		return this.repository.find();
+		return this.repository.find({ order: { id: "ASC" } });
 	}
 
 	public async createChan(body: CreateChanDto): Promise<Chan>
@@ -105,42 +105,79 @@ export class ChanService
 		return await this.repository.save(chan);
 	}
 
-	/*public async updateChan(id: number, updateChanDto: UpdateChanDto)
+	public async updateChan(id: number, data: UpdateChanDto)
 	{
 		const chan = await this.repository.findOne(id);
 
-		console.log
-
-		if (updateChanDto.name)
-			chan.name = updateChanDto.name;
-		if (updateChanDto.xp)
-			chan.xp += updateChanDto.xp;
-		chan.xp++;
-		if (updateChanDto.elo)
-			chan.elo += updateChanDto.elo;
-		if (updateChanDto.win)
-			chan.win += 1;
-		if (updateChanDto.lose)
-			chan.lose += 1;
-		if (updateChanDto.matchHistory)
+		if (data.name)
+			chan.name = data.name;
+		if (data.userId)
 		{
-			if (!chan.matchHistory)
-				chan.matchHistory = [];
-			chan.matchHistory.push(updateChanDto.matchHistory);
-		}
-		if (updateChanDto.friendId)
-		{
-			if (!chan.friendsId)
-				chan.friendsId = [];
-			const i = chan.friendsId.indexOf(updateChanDto.friendId);
-			if (i > -1)
-				chan.friendsId.splice(i, 1);
+			if (!chan.usersId.includes(data.userId))
+				chan.usersId.push(data.userId);
 			else
-				chan.friendsId.push(updateChanDto.friendId);
+			{
+				const index = chan.usersId.indexOf(data.userId);
+				if (index > -1)
+					chan.usersId.splice(index, 1);
+			}
+		}
+		if (data.ownerId)
+			chan.ownerId = data.ownerId;
+		if (data.adminId)
+		{
+			if (!chan.adminsId.includes(data.adminId))
+				chan.adminsId.push(data.adminId);
+			else
+			{
+				const index = chan.adminsId.indexOf(data.adminId);
+				if (index > -1)
+					chan.adminsId.splice(index, 1);
+			}
+		}
+		if (data.type)
+			chan.type = data.type;
+		if (data.hash)
+			chan.hash = hashing(data.hash);
+		if (data.bannedId)
+		{
+			if (!chan.bannedId.includes(data.bannedId))
+				chan.bannedId.push(data.bannedId);
+			else
+			{
+				const index = chan.bannedId.indexOf(data.bannedId);
+				if (index > -1)
+					chan.bannedId.splice(index, 1);
+			}
+		}
+		if (data.mutedId)
+		{
+			if (!chan.mutedId.includes(data.mutedId))
+				chan.mutedId.push(data.mutedId);
+			else
+			{
+				const index = chan.mutedId.indexOf(data.mutedId);
+				if (index > -1)
+					chan.mutedId.splice(index, 1);
+			}
 		}
 
 		return await this.repository.save(chan);
-	}*/
+	}
+
+	public async joinChan(id: number, data: UpdateChanDto)
+	{
+		const chan = await this.repository.findOne(id);
+
+		if (!data.userId)
+			return chan;
+
+		if (!chan.usersId.includes(data.userId))
+			chan.usersId.push(data.userId);
+
+		return await this.repository.save(chan);
+	}
+
 
 	public async sendMsg(id: number, data: MsgDto)
 	{

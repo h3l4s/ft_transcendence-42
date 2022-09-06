@@ -12,6 +12,24 @@ export class UserService
 	@InjectRepository(User)
 	private readonly repository: Repository<User>;
 
+	public initUser(): Promise<User>
+	{
+		return this.repository.save({
+			id: 1,
+			access_token: "none",
+			name: "default",
+			pp: null,
+			pp_name: "",
+			xp: -1,
+			elo: -1,
+			win: -1,
+			lose: -1,
+			friendsId: [],
+			mutedId: [],
+			isDeleted: false
+		});
+	}
+
 	public getUser(id: number): Promise<User>
 	{
 		return this.repository.findOne(id);
