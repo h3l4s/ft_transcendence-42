@@ -6,7 +6,7 @@
 #    By: adelille <adelille@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/10 14:54:46 by adelille          #+#    #+#              #
-#    Updated: 2022/09/06 18:21:06 by adelille         ###   ########.fr        #
+#    Updated: 2022/09/06 22:06:47 by adelille         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,6 +43,10 @@ all:	$(NAME)
 $(NAME):
 	docker-compose up --force-recreate --build
 
+ip:
+	@docker inspect $(NAME) | grep IPAddress | sed 's/ *"IPAddress": *"//' | sed 's/",//'
+	@ip addr | grep enp | grep inet | sed 's/ *inet //' | sed 's/\/.*//'
+
 db:
 	docker-compose up --force-recreate --build db
 
@@ -78,6 +82,6 @@ list:
 	@docker volume ls
 	@echo ;
 
-.PHONY: all db back front stop clean fclean re fre list
+.PHONY: all ip db back front stop clean fclean re fre list
 
 # **************************************************************************** #
