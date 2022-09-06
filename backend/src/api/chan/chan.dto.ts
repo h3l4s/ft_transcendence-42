@@ -24,6 +24,41 @@ export class CreateChanDto
 	public hash: string;
 }
 
+export class UpdateChanDto
+{
+	@IsString()
+	@IsOptional()
+	public name: string;
+
+	@IsNumber()
+	@IsOptional()
+	public usersId: number;
+
+	@IsNumber()
+	@IsOptional()
+	public ownerId: number;
+
+	@IsNumber()
+	@IsOptional()
+	public adminsId: number;
+
+	@IsString()
+	@IsOptional()
+	public type: 'public' | 'private' | 'protected' | 'direct';
+
+	@IsString()
+	@IsOptional()
+	public hash: string;
+
+	@IsNumber()
+	@IsOptional()
+	public bannedId: number;
+
+	@IsNumber()
+	@IsOptional()
+	public mutedId: number;
+}
+
 export class MsgDto
 {
 	@IsNumber()

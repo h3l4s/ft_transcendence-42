@@ -46,6 +46,17 @@ body {
 	background-color: var(--background-color);
 }
 
+.ontop {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
 /*div {
 	background-color: var(--background-color);
 }*/

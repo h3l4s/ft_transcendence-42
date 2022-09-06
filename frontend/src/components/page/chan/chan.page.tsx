@@ -61,13 +61,14 @@ function ChanPage()
 	{
 		axios.get(apiUrl + "/chan/").then(res =>
 		{
-			socket.emit('joinRoom', newId.toString());
-			socket.emit('leaveRoom', oldId.toString());
+			axios.put(apiUrl + "/chan/join/" + newId.toString()).then(res =>
+			{
+				socket.emit('joinRoom', newId.toString());
+				socket.emit('leaveRoom', oldId.toString());
 
-			// join chan
-
-			setChans(res.data);
-			setSelectedChan(newId);
+				setChans(res.data);
+				setSelectedChan(newId);
+			}).catch(err => console.log(err));
 		}).catch(err => console.log(err));
 	}
 
