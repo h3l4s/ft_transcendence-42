@@ -32,7 +32,7 @@ export class UpdateChanDto
 
 	@IsNumber()
 	@IsOptional()
-	public usersId: number;
+	public userId: number;
 
 	@IsNumber()
 	@IsOptional()
@@ -40,7 +40,7 @@ export class UpdateChanDto
 
 	@IsNumber()
 	@IsOptional()
-	public adminsId: number;
+	public adminId: number;
 
 	@IsString()
 	@IsOptional()

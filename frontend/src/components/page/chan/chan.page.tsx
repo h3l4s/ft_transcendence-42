@@ -9,6 +9,7 @@ import '../../../style/chan.css';
 
 import i_chan from '../../../interface/chan.interface';
 
+import { AuthContext } from '../../../context/auth.context';
 import { ApiUrlContext } from '../../../context/apiUrl.context';
 
 import Chans from './chan.component';
@@ -46,6 +47,7 @@ function ChanReq(props: { socket: Socket, chans: i_chan[] | null, to_chan: numbe
 function ChanPage()
 {
 	const { apiUrl } = useContext(ApiUrlContext);
+	const { user } = useContext(AuthContext);
 	const [selectedChan, setSelectedChan] = useState(1);
 	const [chans, setChans] = useState<i_chan[] | null>(null);
 	const [socket] = useState(io(apiUrl + "/chat"));
@@ -59,13 +61,15 @@ function ChanPage()
 
 	function callback(newId: number, oldId: number)
 	{
-		axios.get(apiUrl + "/chan/").then(res =>
+		if (!user || !user.id)
+			return;
+		axios.put(apiUrl + "/chan/join/" + newId.toString(), { userId: user.id }).then(res =>
 		{
-			axios.put(apiUrl + "/chan/join/" + newId.toString()).then(res =>
-			{
-				socket.emit('joinRoom', newId.toString());
-				socket.emit('leaveRoom', oldId.toString());
+			socket.emit('joinRoom', newId.toString());
+			socket.emit('leaveRoom', oldId.toString());
 
+			axios.get(apiUrl + "/chan/").then(res =>
+			{
 				setChans(res.data);
 				setSelectedChan(newId);
 			}).catch(err => console.log(err));

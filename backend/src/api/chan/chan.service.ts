@@ -111,26 +111,26 @@ export class ChanService
 
 		if (data.name)
 			chan.name = data.name;
-		if (data.usersId)
+		if (data.userId)
 		{
-			if (!chan.usersId.includes(data.usersId))
-				chan.usersId.push(data.usersId);
+			if (!chan.usersId.includes(data.userId))
+				chan.usersId.push(data.userId);
 			else
 			{
-				const index = chan.usersId.indexOf(data.usersId);
+				const index = chan.usersId.indexOf(data.userId);
 				if (index > -1)
 					chan.usersId.splice(index, 1);
 			}
 		}
 		if (data.ownerId)
 			chan.ownerId = data.ownerId;
-		if (data.adminsId)
+		if (data.adminId)
 		{
-			if (!chan.adminsId.includes(data.adminsId))
-				chan.adminsId.push(data.adminsId);
+			if (!chan.adminsId.includes(data.adminId))
+				chan.adminsId.push(data.adminId);
 			else
 			{
-				const index = chan.adminsId.indexOf(data.adminsId);
+				const index = chan.adminsId.indexOf(data.adminId);
 				if (index > -1)
 					chan.adminsId.splice(index, 1);
 			}
@@ -169,11 +169,11 @@ export class ChanService
 	{
 		const chan = await this.repository.findOne(id);
 
-		if (!data.usersId)
+		if (!data.userId)
 			return chan;
 
-		if (!chan.usersId.includes(data.usersId))
-			chan.usersId.push(data.usersId);
+		if (!chan.usersId.includes(data.userId))
+			chan.usersId.push(data.userId);
 
 		return await this.repository.save(chan);
 	}
