@@ -15,7 +15,7 @@ import NoMatch from './components/page/nomatch.page';
 import RequireAuth from './components/requireAuth.component';
 
 import Home from './components/page/home.page';
-import SignUp from './components/page/login/signup.component';
+import SignUp from './components/page/login/login.component';
 import ChanPage from './components/page/chan/chan.page';
 import UserPage from './components/page/user/user.page';
 import PongPage from './components/page/pong/pong.page';
