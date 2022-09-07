@@ -1,9 +1,16 @@
 import { IsNotEmpty, IsOptional, IsString, IsNumber } from 'class-validator';
 
-export class CreateUserDto
+export class Auth42Dto
 {
 	@IsString()
-	public access_token: string;
+	public token: string;
+
+	@IsOptional()
+	@IsString()
+	public UID?: string;
+
+	@IsString()
+	public secret: string;
 }
 
 export class UpdateUserDto

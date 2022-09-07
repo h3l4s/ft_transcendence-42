@@ -1,9 +1,10 @@
 import { HttpException, HttpStatus, Injectable, StreamableFile } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import axios from 'axios';
 import { Response } from 'express';
 import { Readable } from 'stream';
 import { Not, Repository } from 'typeorm';
-import { CreateUserDto, UpdateUserDto, UpdateUsersAfterGameDto } from './user.dto';
+import { Auth42Dto, CreateUserDto, UpdateUserDto, UpdateUsersAfterGameDto } from './user.dto';
 import { User } from './user.entity';
 
 @Injectable()
@@ -51,13 +52,29 @@ export class UserService
 		return this.repository.find();
 	}
 
-	public createUser(body: CreateUserDto): Promise<User>
+	public async auth42(data: Auth42Dto): Promise<User>
 	{
-		const user: User = new User();
+		const new_user: User = new User();
 
-		user.access_token = body.access_token;
+		console.log(data.token);
 
-		return this.repository.save(user);
+		const response = await axios.post("https://api.intra.42.fr/oauth/token", {
+			client_id: (data.UID ? data.UID : "cbd1064bd58ef5065a103fbd35e3b251f506b89d0f101660714907581d0c9bd9"),
+			client_secret: data.secret,
+			grant_type: "authorization_code",
+			code: data.token,
+			redirect_uri: "http://localhost:3001/login/"	// might not work to redirect to localhost
+		}).catch(error => console.log(error))
+
+		console.log(response);
+
+		// find user
+
+		// if exist return
+
+		// else create
+
+		return this.repository.save(new_user);
 	}
 
 	public tmpCreateUser(user: {
