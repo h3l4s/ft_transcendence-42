@@ -1,4 +1,7 @@
+import { useContext } from "react";
 import useFetch from "./useFetch";
+
+import { ApiUrlContext } from "../context/apiUrl.context";
 
 import i_user from "../interface/user.interface"
 
@@ -24,8 +27,9 @@ function userBacktoFront(user: any)
 
 function useReqUser(query: number | string)
 {
+	const { apiUrl } = useContext(ApiUrlContext);
 	const { data, loading, error } = useFetch(
-		"http://localhost:3000/user/" + (typeof query === 'number' ? query : "name/" + query), 'get');
+		apiUrl + "/user/" + (typeof query === 'number' ? query : "name/" + query), 'get');
 
 	const reqUser: i_user = userBacktoFront(data);
 	return ({ reqUser, loading, error });
@@ -33,7 +37,8 @@ function useReqUser(query: number | string)
 
 function useReqUsers()
 {
-	const { data, loading, error } = useFetch("http://localhost:3000/user/", 'get');
+	const { apiUrl } = useContext(ApiUrlContext);
+	const { data, loading, error } = useFetch(apiUrl + "/user/", 'get');
 	let reqUsers: i_user[] = [];
 
 	if (!loading && !error && data)
@@ -44,7 +49,8 @@ function useReqUsers()
 
 function useReqUsersWithDefault()
 {
-	const { data, loading, error } = useFetch("http://localhost:3000/user/all", 'get');
+	const { apiUrl } = useContext(ApiUrlContext);
+	const { data, loading, error } = useFetch(apiUrl + "/user/all", 'get');
 	let reqUsers: i_user[] = [];
 
 	if (!loading && !error && data)

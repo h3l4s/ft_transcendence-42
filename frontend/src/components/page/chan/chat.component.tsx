@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Socket } from "socket.io-client";
+
+import { ApiUrlContext } from "../../../context/apiUrl.context";
 
 import i_user from "../../../interface/user.interface";
 import i_chan from "../../../interface/chan.interface";
@@ -45,6 +47,15 @@ function userNotAdmin(admins_id: number[] | undefined, users: i_user[]): i_user[
 
 }
 
+function get_direct_chan_name(users: i_user[])
+{
+	if (users.length !== 2 || !users[0].id || !users[1].id)
+		return ("");
+	if (users[0].id < users[1].id)
+		return (users[0].name + " ⇋ " + users[1].name);
+	return (users[1].name + " ⇋ " + users[0].name);
+}
+
 function Chat(props:
 	{
 		socket: Socket,
@@ -57,6 +68,7 @@ function Chat(props:
 		callback: (newId: number, oldId: number) => void
 	})
 {
+	const { apiUrl } = useContext(ApiUrlContext);
 	const [msg, setMsg] = useState("");
 	let msgs = (props.chan.msg ? props.chan.msg : []);
 	const [msgsSocket, setMsgsSocket] = useState<i_msg[]>([]);
@@ -122,7 +134,7 @@ function Chat(props:
 				msg: msg,
 				sendAt: date
 			}
-			axios.post("http://localhost:3000/chan/msg/" + props.chan.id, s_msg).catch(err => console.log(err));
+			axios.post(apiUrl + "/chan/msg/" + props.chan.id, s_msg).catch(err => console.log(err));
 			s_msg.chanId = props.chan.id.toString();
 			props.socket.emit('chatToServer', s_msg);
 			setMsg("");
@@ -133,7 +145,7 @@ function Chat(props:
 		<div>
 			<div className='card card--alt card--chat' >
 				<div className='card chan--title'>
-					<div className='truncate'>- {props.chan.name} -</div>
+					<div className='truncate'>- {props.chan.type === 'direct' ? get_direct_chan_name(props.users) : props.chan.name} -</div>
 					<button onClick={() => { setShowOption(true) }}>
 						<Option />
 					</button>

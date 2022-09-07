@@ -1,11 +1,8 @@
-import { HttpException, HttpStatus, Injectable, Module } from '@nestjs/common';
-import { InjectRepository, TypeOrmModule } from '@nestjs/typeorm';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateChanDto, MsgDto, PwdDto } from './chan.dto';
 import { Chan } from './chan.entity';
-import { User } from '../user/user.entity';
-import { UserService } from '../user/user.service';
-import { UserController } from '../user/user.controller';
 
 function hashing(pwd: string)
 {
@@ -18,20 +15,11 @@ function hashing(pwd: string)
 	}
 	return (hash);
 }
-
 @Injectable()
 export class ChanService
 {
 	@InjectRepository(Chan)
 	private readonly repository: Repository<Chan>;
-
-	@InjectRepository(User)
-	private readonly repo: Repository<User>;
-	static repository: any;
-
-	/*@InjectRepository(User)
-	private readonly repository_user: Repository<User>;
-	static repository_user: any;*/
 
 	public initChan(): Promise<Chan>
 	{
@@ -91,6 +79,32 @@ export class ChanService
 		return await this.repository.save(chan);
 	}
 
+	public async createDirectChan(body: CreateChanDto): Promise<Chan>
+	{
+		let name: string;
+
+		if (body.usersId[0] < body.usersId[1])
+			name = body.usersId[0] + ' ' + body.usersId[1];
+		else
+			name = body.usersId[1] + ' ' + body.usersId[0];
+
+		if (await this.repository.count({ where: { name: name } }))
+			return await this.repository.findOne({ name: name });
+
+		const chan: Chan = new Chan();
+
+		chan.name = name;
+		chan.ownerId = -1;
+		chan.adminsId = [];
+		chan.usersId = body.usersId;
+		chan.type = 'direct';
+		chan.msg = [];
+		chan.bannedId = [];
+		chan.mutedId = [];
+
+		return await this.repository.save(chan);
+	}
+
 	/*public async updateChan(id: number, updateChanDto: UpdateChanDto)
 	{
 		const chan = await this.repository.findOne(id);
@@ -137,6 +151,35 @@ export class ChanService
 		return this.repository.save(chan);
 	}
 
+	public async sendDirectMsg(toUserId: number, data: MsgDto)
+	{
+		let name: string;
+		let chan: Chan;
+
+		if (toUserId < data.userId)
+			name = toUserId.toString() + ' ' + data.userId.toString();
+		else
+			name = data.userId.toString() + ' ' + toUserId.toString();
+
+		if (!await this.repository.count({ where: { name: name } }))
+		{
+			const createChanDto: CreateChanDto = {
+				name: name,
+				ownerId: -1,
+				usersId: [data.userId, toUserId],
+				type: 'direct',
+				hash: ''
+			};
+			chan = await this.createDirectChan(createChanDto);
+		}
+		else
+			chan = await this.repository.findOne({ name: name });
+
+		chan.msg.push(data);
+
+		return this.repository.save(chan);
+	}
+
 	public async tryPwd(id: number, data: PwdDto): Promise<Chan>
 	{
 		const chan = await this.repository.findOne(id);
@@ -160,19 +203,9 @@ export class ChanService
 		const chan = await this.repository.findOne(id);
 
 		if (!chan.usersId)
-				chan.usersId = [];
+			chan.usersId = [];
 		chan.usersId.push(usersId);
 		return this.repository.save(chan);
-	}
-
-	public async muteUserForUser(id: number, usersId: number)
-	{
-		const user = await this.repo.findOne(id);
-
-		if (!user.mutedId)
-				user.mutedId = [];		
-		user.mutedId.push(usersId);
-		return this.repo.save(user);
 	}
 
 	public async addAdminToChan(id: number, usersId: number)
@@ -180,7 +213,7 @@ export class ChanService
 		const chan = await this.repository.findOne(id);
 
 		if (!chan.adminsId)
-				chan.adminsId = [];
+			chan.adminsId = [];
 		chan.adminsId.push(usersId);
 		return this.repository.save(chan);
 	}
@@ -190,7 +223,7 @@ export class ChanService
 		const chan = await this.repository.findOne(id);
 
 		if (!chan.bannedId)
-				chan.bannedId = [];
+			chan.bannedId = [];
 		chan.bannedId.push(usersId);
 		return this.repository.save(chan);
 	}
@@ -200,7 +233,7 @@ export class ChanService
 		const chan = await this.repository.findOne(id);
 
 		if (!chan.mutedId)
-				chan.mutedId = [];
+			chan.mutedId = [];
 		chan.mutedId.push(usersId);
 		return this.repository.save(chan);
 	}
@@ -210,8 +243,8 @@ export class ChanService
 		const chan = await this.repository.findOne(id);
 		const index_users = chan.usersId.indexOf(usersId);
 
-		if(index_users > -1)
-			chan.usersId.splice(index_users,  1);
+		if (index_users > -1)
+			chan.usersId.splice(index_users, 1);
 		console.log("after usersid splice" + chan.usersId.length);
 		console.log("before adminid splice" + chan.adminsId.length);
 		if (chan.usersId.length < 1)
@@ -220,8 +253,8 @@ export class ChanService
 			return this.repository.remove(chan);
 		}
 		const index_admins = chan.adminsId.indexOf(usersId);
-		if(index_admins > -1)
-			chan.adminsId.splice(index_admins,  1);
+		if (index_admins > -1)
+			chan.adminsId.splice(index_admins, 1);
 		console.log("after adminid splice " + chan.adminsId.length + ", index_admins = " + index_admins);
 		if (chan.adminsId.length < 1)
 		{

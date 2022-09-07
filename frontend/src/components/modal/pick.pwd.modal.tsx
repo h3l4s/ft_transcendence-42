@@ -1,6 +1,6 @@
 import { ReactComponent as Back } from '../../icon/left-svgrepo-com.svg'
 
-function PickPwdModal(props: { goBack: () => void, onClose: () => void , callback: (newId: number, oldId: number) => void})
+function PickPwdModal(props: { goBack: () => void, onClose: () => void, callback: (newId: number, oldId: number) => void })
 {
 	return (
 		<div onMouseLeave={props.onClose} className='modal--pick'>

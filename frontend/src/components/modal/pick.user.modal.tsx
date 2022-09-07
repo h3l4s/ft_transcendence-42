@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useContext } from "react";
 
+import { ApiUrlContext } from "../../context/apiUrl.context";
 import { AuthContext } from "../../context/auth.context";
 
 import i_user from "../../interface/user.interface";
@@ -15,6 +16,7 @@ function PickUser(props: {
 	callback: (newId: number, oldId: number) => void
 })
 {
+	const { apiUrl } = useContext(ApiUrlContext);
 	const { user } = useContext(AuthContext);
 	if (!user)
 		return (<div />);
@@ -28,23 +30,23 @@ function PickUser(props: {
 		switch (props.type)
 		{
 			case 'add':
-				axios.post("http://localhost:3000/chan/add/" + props.chanId + "/" + props.c_user.id, { userId: props.c_user.id }).catch(err => console.log(err));
+				axios.post(apiUrl + "/chan/add/" + props.chanId + "/" + props.c_user.id, { userId: props.c_user.id }).catch(err => console.log(err));
 				break;
 			case 'challenge':
-				axios.post("http://localhost:3000/chan/challenge/" + user?.id + "/" + props.c_user.id, { userId: props.c_user.id }).catch(err => console.log(err));
+				axios.post(apiUrl + "/chan/challenge/" + user?.id + "/" + props.c_user.id, { userId: props.c_user.id }).catch(err => console.log(err));
 				break; // voir comment est gere le match making pour /play/current_user/clicked_user
 			case 'mute':
-				axios.post("http://localhost:3000/chan/mute/" + user?.id + "/" + props.c_user.id).catch(err => console.log(err));
+				axios.post(apiUrl + "/chan/mute/" + user?.id + "/" + props.c_user.id).catch(err => console.log(err));
 				break; // le user est bien ajouter a la liste des mute dans le back mais n'est pas mute sur le site
-						// add le user selectionne par le current user dans la liste ds mutedid du current user
+			// add le user selectionne par le current user dans la liste ds mutedid du current user
 			case 'admin add':
-				axios.post("http://localhost:3000/chan/adminadd/" + props.chanId + "/" + props.c_user.id).catch(err => console.log(err));
+				axios.post(apiUrl + "/chan/adminadd/" + props.chanId + "/" + props.c_user.id).catch(err => console.log(err));
 				break;
 			case 'admin ban':
-				axios.post("http://localhost:3000/chan/adminban/" + props.chanId + "/" + props.c_user.id).catch(err => console.log(err));
+				axios.post(apiUrl + "/chan/adminban/" + props.chanId + "/" + props.c_user.id).catch(err => console.log(err));
 				break; // ajoute le user selectionne (si le curent user est bien admin) dans les banedid du chan
 			case 'admin mute':
-				axios.post("http://localhost:3000/chan/adminmute/" + props.chanId + "/" + props.c_user.id).catch(err => console.log(err));
+				axios.post(apiUrl + "/chan/adminmute/" + props.chanId + "/" + props.c_user.id).catch(err => console.log(err));
 				break; // ajouter le user selectionne (si le curent user est bien admin) dans les mutedid du chan
 		}
 		props.onClose();
@@ -63,11 +65,11 @@ function PickUser(props: {
 }
 
 function PickUsers(props: {
-	callback: (newId: number, oldId: number) => void;
 	users: i_user[],
 	chanId: number,
 	type: 'add' | 'challenge' | 'mute' | 'admin add' | 'admin ban' | 'admin mute',
-	onClose: () => void
+	onClose: () => void,
+	callback: (newId: number, oldId: number) => void
 }): JSX.Element
 {
 	const { user } = useContext(AuthContext);
@@ -81,7 +83,6 @@ function PickUsers(props: {
 		if (props.users[i].id !== user.id)
 			ret.push(<PickUser key={i} c_user={props.users[i]} chanId={props.chanId} type={props.type}
 				onClose={props.onClose} callback={props.callback} />);
-			//ret.push(<PickUser key={i} c_user={props.users[i]} chanId={props.chanId} type={props.type} onClose={props.onClose} />);
 
 	return (<div>{ret}</div>);
 }

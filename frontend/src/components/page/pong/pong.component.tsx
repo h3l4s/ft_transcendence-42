@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import './../../../style/pong.css';
 
+import { ApiUrlContext } from '../../../context/apiUrl.context';
 import { AuthContext } from '../../../context/auth.context';
 
 import i_map from '../../../interface/map.interface';
@@ -10,18 +11,20 @@ import i_map from '../../../interface/map.interface';
 import { ReactComponent as Back } from '../../../icon/left-svgrepo-com.svg'
 import tennis from './tennis_pong.jpg'
 
-import Error from '../../request_answer_component/error.component';
 import { useReqUser } from '../../../request/user.request';
+
+import Error from '../../request_answer_component/error.component';
 
 function Pong(props: { map: i_map, goBack: () => void })
 {
+	const { apiUrl } = useContext(ApiUrlContext);
+	const { user } = useContext(AuthContext);
 	const { reqUser, loading, error } = useReqUser(2);
 	const [inGame, setInGame] = useState(false);
-	const { user } = useContext(AuthContext);
 
 	useEffect(() =>
 	{
-		handleCanvas(true, props.map);
+		handleCanvas(true, apiUrl, props.map);
 	});
 
 	if (!user || !user.name)
@@ -35,7 +38,7 @@ function Pong(props: { map: i_map, goBack: () => void })
 	function launchGame()
 	{
 		setInGame(true);
-		handleCanvas(false, props.map);
+		handleCanvas(false, apiUrl, props.map);
 	}
 
 	return (
@@ -72,7 +75,7 @@ function Pong(props: { map: i_map, goBack: () => void })
 	);
 }
 
-function handleCanvas(init: boolean, map: i_map)
+function handleCanvas(init: boolean, apiUrl: string, map: i_map)
 {
 	let canvas = document.querySelector("#canvas")! as HTMLCanvasElement;
 	canvas.style.display = "block";
@@ -195,7 +198,7 @@ function handleCanvas(init: boolean, map: i_map)
 		if (scoreP1 >= 11 || scoreP2 >= 11)
 		{
 			canvas.style.display = "none";
-			postResults(map, scoreP1, scoreP2);
+			postResults(apiUrl, map, scoreP1, scoreP2);
 			return;
 		}
 
@@ -265,7 +268,7 @@ function handleCanvas(init: boolean, map: i_map)
 	}
 }
 
-function postResults(map: i_map, scoreP1: number, scoreP2: number)
+function postResults(apiUrl: string, map: i_map, scoreP1: number, scoreP2: number)
 {
 	// only the winner will post the match to the api
 	if (scoreP1 === 11)
@@ -278,8 +281,8 @@ function postResults(map: i_map, scoreP1: number, scoreP2: number)
 			scoreWinner: scoreP1,
 			scoreLoser: scoreP2
 		}
-		axios.post("http://localhost:3000/user/match", match_stats);
-		axios.post("http://localhost:3000/pong/match", match_stats);
+		axios.post(apiUrl + "/user/match", match_stats);
+		axios.post(apiUrl + "/pong/match", match_stats);
 	}
 }
 

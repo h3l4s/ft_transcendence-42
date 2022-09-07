@@ -1,3 +1,8 @@
+import axios from "axios";
+
+import { ApiUrlContext } from "../../context/apiUrl.context";
+import { useContext } from "react";
+
 import i_chan from "../../interface/chan.interface";
 import i_user from "../../interface/user.interface";
 
@@ -9,7 +14,6 @@ import { ReactComponent as AdminMute } from '../../icon/comment-alt-block-svgrep
 import { ReactComponent as AdminBan } from '../../icon/thor-hammer-svgrepo-com.svg'
 import { ReactComponent as AdminAdd } from '../../icon/chevron-svgrepo-com.svg'
 import { ReactComponent as Pwd } from '../../icon/icons8-key.svg'
-import axios from "axios";
 
 function OptionModal(props: {
 	user: i_user,
@@ -28,21 +32,23 @@ function OptionModal(props: {
 	onClose: () => void
 })
 {
-	const handleQuit = async () => {
-		  await axios.post(
-			"http://localhost:3000/chan/quit/" + props.chan.id + "/" + props.user.id,).catch(err => console.log(err));
-	
-	  };
-	// need handle quiting
+	const { apiUrl } = useContext(ApiUrlContext);
+
+	async function handleQuit()
+	{
+		await axios.post(apiUrl + "/chan/quit/" + props.chan.id + "/" + props.user.id,).catch(err => console.log(err));
+	};
+
+
 	return (
 		<div onMouseLeave={props.onClose} className='modal--option'>
 			<div>
-				{props.chan.id !== 1 && <button onClick={() => props.options.setShowAdd(true)}><Add /></button>}
-				{props.chan.id !== 1 && <button onClick={(handleQuit)}><Quit fill="#c00" /></button>}
-			</div>
+				{props.chan.id !== 1 && props.chan.type !== 'direct' && <button onClick={() => props.options.setShowAdd(true)}><Add /></button>}
+				{props.chan.id !== 1 && props.chan.type !== 'direct' && <button onClick={handleQuit}><Quit fill="#c00" /></button>}
+			</div >
 			<div>
 				<button onClick={() => props.options.setShowChallenge(true)}><Challenge /></button>
-				<button onClick={() => props.options.setShowMute(true)}><Mute fill="#c00" /></button>
+				{props.chan.type !== 'direct' && <button onClick={() => props.options.setShowMute(true)}><Mute fill="#c00" /></button>}
 			</div>
 			<div>
 				{props.is_admin && <button onClick={() => props.options.setShowAdminBan(true)}><AdminBan fill="#c00" /></button>}

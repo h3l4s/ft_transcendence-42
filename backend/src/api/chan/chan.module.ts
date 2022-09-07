@@ -9,8 +9,8 @@ import { ChanService } from './chan.service';
 import { ChatGateway } from './chat.gateway';
 
 @Module({
-	imports: [TypeOrmModule.forFeature([Chan]), TypeOrmModule.forFeature([User])],
-	controllers: [ChanController, UserController],
-	providers: [ChanService, ChatGateway, UserService],
+	imports: [TypeOrmModule.forFeature([Chan])],
+	controllers: [ChanController],
+	providers: [ChanService, ChatGateway],
 })
 export class ChanModule { }

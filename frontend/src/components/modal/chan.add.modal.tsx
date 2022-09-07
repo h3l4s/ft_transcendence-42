@@ -1,7 +1,11 @@
-import { useEffect, useState } from "react";
-import i_chan from "../../interface/chan.interface";
+import { useContext, useEffect, useState } from "react";
 
 import useFetch from "../../request/useFetch";
+
+import { ApiUrlContext } from "../../context/apiUrl.context";
+
+import i_chan from "../../interface/chan.interface";
+
 
 import Error from "../request_answer_component/error.component";
 import Loading from "../request_answer_component/loading.component";
@@ -14,7 +18,8 @@ function SumbitAddChan(props: {
 	callback: (chan: i_chan) => void
 })
 {
-	const { data, loading, error } = useFetch("http://localhost:3000/chan", 'post', {
+	const { apiUrl } = useContext(ApiUrlContext);
+	const { data, loading, error } = useFetch(apiUrl + "/chan", 'post', {
 		name: props.name,
 		ownerId: props.user_id,
 		usersId: [props.user_id],
