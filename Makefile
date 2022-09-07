@@ -6,7 +6,7 @@
 #    By: adelille <adelille@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/10 14:54:46 by adelille          #+#    #+#              #
-#    Updated: 2022/09/07 00:19:36 by adelille         ###   ########.fr        #
+#    Updated: 2022/09/07 13:20:11 by adelille         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,7 +50,7 @@ db:
 	docker-compose up --force-recreate --build db
 
 back:
-	[ -d $(BACK)/node_modules ] || npm --prefix $(BACK) install $(BACK)
+	[ -d $(BACK)/node_modules ] || npm --prefix $(BACK) install $(BACK) --legacy-peer-deps
 	npm --prefix $(BACK) run start:dev
 
 front:

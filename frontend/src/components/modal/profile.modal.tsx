@@ -33,7 +33,7 @@ function ProfileModal(props: { user: i_user, onClose: () => void })
 		if (!user || !user.id)
 			return;
 		asyncReqUpdateUser(apiUrl + "/user/" + user.id, 'put',
-			{ updateUserDto: { friendId: props.user.id! } }).then((res) =>
+			{ friendId: props.user.id! }).then((res) =>
 			{
 				setFriend(state);
 				setUser(res);

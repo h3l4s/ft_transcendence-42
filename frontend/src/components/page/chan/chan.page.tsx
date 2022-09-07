@@ -54,6 +54,11 @@ function ChanPage()
 
 	useEffect(() =>
 	{
+		socket.on('newClient', (data: { userId: number }) =>
+		{
+			console.log("newClient", data);
+			callback(selectedChan, selectedChan);
+		});
 		socket.emit('newConnection');
 		socket.emit('joinRoom', selectedChan);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -63,10 +68,11 @@ function ChanPage()
 	{
 		if (!user || !user.id)
 			return;
+
 		axios.put(apiUrl + "/chan/join/" + newId.toString(), { userId: user.id }).then(res =>
 		{
-			socket.emit('joinRoom', newId.toString());
 			socket.emit('leaveRoom', oldId.toString());
+			socket.emit('joinRoom', newId.toString());
 
 			axios.get(apiUrl + "/chan/").then(res =>
 			{

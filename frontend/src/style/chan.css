@@ -453,7 +453,6 @@ input {
 }
 
 .modal--pick svg {
-	fill: #fff;
 	filter: brightness(10000%);
 }
 
@@ -475,6 +474,10 @@ input {
 
 .pick--user:hover {
 	background-color: #fff6 !important;
+}
+
+.pick--user svg {
+	fill: "#c00" !important;
 }
 
 .modal--add--chan {

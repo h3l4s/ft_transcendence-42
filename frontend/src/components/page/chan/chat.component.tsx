@@ -112,6 +112,7 @@ function Chat(props:
 			console.log("received at:", msg.chanId, msg);
 			setIcomingMsg(msg);
 		});
+		props.callback(props.chan.id!, props.chan.id!);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -173,28 +174,29 @@ function Chat(props:
 						setShowOwnerPwd,
 					}}
 				onClose={() => { setShowOption(false) }}
+				callback={props.callback}
 			/>}
-			{showAdd && <PickUserModal chanId={props.chan.id} users={userNotInChan(props.chan.usersId, props.all_users)} type='add'
+			{showAdd && <PickUserModal chan={props.chan} users={userNotInChan(props.chan.usersId, props.all_users)} type='add'
 				goBack={() => { setShowAdd(false); setShowOption(true); }}
 				onClose={() => { setShowAdd(false); setShowOption(false); }}
 				callback={props.callback} />}
-			{showChallenge && <PickUserModal chanId={props.chan.id} users={props.users} type='challenge'
+			{showChallenge && <PickUserModal chan={props.chan} users={props.users} type='challenge'
 				goBack={() => { setShowChallenge(false); setShowOption(true); }}
 				onClose={() => { setShowChallenge(false); setShowOption(false); }}
 				callback={props.callback} />}
-			{showMute && <PickUserModal chanId={props.chan.id} users={props.users} type='mute'
+			{showMute && <PickUserModal chan={props.chan} users={props.users} type='mute'
 				goBack={() => { setShowMute(false); setShowOption(true); }}
 				onClose={() => { setShowMute(false); setShowOption(false); }}
 				callback={props.callback} />}
-			{props.is_admin && showAdminAdd && <PickUserModal chanId={props.chan.id} users={userNotAdmin(props.chan.adminsId, props.users)} type='admin add'
+			{props.is_admin && showAdminAdd && <PickUserModal chan={props.chan} users={userNotAdmin(props.chan.adminsId, props.users)} type='admin add'
 				goBack={() => { setShowAdminAdd(false); setShowOption(true); }}
 				onClose={() => { setShowAdminAdd(false); setShowOption(false); }}
 				callback={props.callback} />}
-			{props.is_admin && showAdminBan && <PickUserModal chanId={props.chan.id} users={userNotAdmin(props.chan.adminsId, props.users)} type='admin ban'
+			{props.is_admin && showAdminBan && <PickUserModal chan={props.chan} users={userNotAdmin(props.chan.adminsId, props.users)} type='admin ban'
 				goBack={() => { setShowAdminBan(false); setShowOption(true); }}
 				onClose={() => { setShowAdminBan(false); setShowOption(false); }}
 				callback={props.callback} />}
-			{props.is_admin && showAdminMute && <PickUserModal chanId={props.chan.id} users={userNotAdmin(props.chan.adminsId, props.users)} type='admin mute'
+			{props.is_admin && showAdminMute && <PickUserModal chan={props.chan} users={userNotAdmin(props.chan.adminsId, props.users)} type='admin mute'
 				goBack={() => { setShowAdminMute(false); setShowOption(true); }}
 				onClose={() => { setShowAdminMute(false); setShowOption(false); }}
 				callback={props.callback} />}
