@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import CreateDefaultUser from "../../request/user.create.default";
 import TestBackend from "../test.backend";
 
 function Home()
@@ -22,8 +21,6 @@ function Home()
 			<br />
 			<div style={{ color: "red" }}>🚧 WIP 🚧</div>
 			<TestBackend />
-
-			<CreateDefaultUser />
 		</div >
 	);
 }

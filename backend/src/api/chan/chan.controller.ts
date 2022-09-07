@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Inject, Param, ParseIntPipe, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common';
-import { CreateChanDto, MsgDto, PwdDto } from './chan.dto';
+import { CreateChanDto, MsgDto, PwdDto, UpdateChanDto } from './chan.dto';
 import { Chan } from './chan.entity';
 import { ChanService } from './chan.service';
 
@@ -43,6 +43,18 @@ export class ChanController
 	public createDirectChan(@Body() data: CreateChanDto)
 	{
 		return this.service.createDirectChan(data);
+	}
+
+	@Put(':id')
+	public updateChan(@Param('id', ParseIntPipe) id: number, @Body() data: UpdateChanDto)
+	{
+		return this.service.updateChan(id, data);
+	}
+
+	@Put('join/:id')
+	public joinChan(@Param('id', ParseIntPipe) id: number, @Body() data: UpdateChanDto)
+	{
+		return this.service.joinChan(id, data);
 	}
 
 	@Post('msg/:id')

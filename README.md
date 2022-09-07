@@ -19,9 +19,14 @@ make
 
 ### dev:
 ```sh
-make dev
-cd ./backend && npm run start:dev
-cd ../frontend && npm run start
+make db
+make back
+make front
+```
+
+### ip:
+```sh
+make ip
 ```
 
 ## access
@@ -31,17 +36,15 @@ click sign in then get token
 
 # languages
 
-- Typescript
-
-Back:
-- NestJS
-- TypeORM
-
-Front:
-- React
-
-Database:
-- PostgreSQL
+<div align="center">
+	<a href="https://www.typescriptlang.org/" target="blank"><img alt="TypeScript" width="100" src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg" </img></a>
+	<img alt="CSS" width="110" src="https://upload.wikimedia.org/wikipedia/commons/6/62/CSS3_logo.svg"</img>
+	<a href="https://reactjs.org/" target="blank"><img alt="React" width="110" src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" </img></a>
+	<a href="http://nestjs.com/" target="blank"><img alt="NestJS" width="100" src="https://nestjs.com/img/logo-small.svg" </img></a>
+	<a href="https://www.postgresql.org/" target="blank"><img alt="PostgreSQL" width="100" src="https://upload.wikimedia.org/wikipedia/commons/2/29/Postgresql_elephant.svg" </img></a>
+	<a href="https://typeorm.io/" target="blank"><img alt="TypeORM" width="100" src="https://avatars.githubusercontent.com/u/20165699?s=200&v=4" </img></a>
+	<a href="https://www.docker.com/" target="blank"><img alt="Docker" width="100" src="https://www.docker.com/wp-content/uploads/2022/03/vertical-logo-monochromatic.png" </img></a>
+</div>
 
 # features
 

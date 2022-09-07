@@ -65,14 +65,14 @@ export default function SignIn()
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>
 	{
 		event.preventDefault();
-		window.location.replace("https://api.intra.42.fr/oauth/authorize?client_id=cbd1064bd58ef5065a103fbd35e3b251f506b89d0f101660714907581d0c9bd9&redirect_uri=http%3A%2F%2Flocalhost%3A3001&response_type=code");
+		window.location.replace("https://api.intra.42.fr/oauth/authorize?client_id=cbd1064bd58ef5065a103fbd35e3b251f506b89d0f101660714907581d0c9bd9&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Flogin&response_type=code");
 		//window.location.replace("https://api.intra.42.fr/oauth/authorize?client_id=d99b55c8716eb674d3a78116832e8a2bb2085c6706e5195a4f91f66a3739939b&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Flogin&response_type=code");
 	};
+
 	const getCode = async (event: React.FormEvent<HTMLFormElement>) =>
 	{
 		event.preventDefault();
-		var url = window.location;
-		var access_token = new URLSearchParams(url.search).get('code');
+		const access_token = new URLSearchParams(window.location.search).get('code');
 		console.log(access_token);
 		const b = await axios.post(apiUrl + "/user", { token: access_token });
 		console.log(b);

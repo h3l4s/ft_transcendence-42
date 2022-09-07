@@ -6,7 +6,7 @@
 #    By: adelille <adelille@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/10 14:54:46 by adelille          #+#    #+#              #
-#    Updated: 2022/09/04 17:16:13 by adelille         ###   ########.fr        #
+#    Updated: 2022/09/07 00:19:36 by adelille         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,6 +43,9 @@ all:	$(NAME)
 $(NAME):
 	docker-compose up --force-recreate --build
 
+ip:
+	@hostname -I | cut -d' ' -f1
+
 db:
 	docker-compose up --force-recreate --build db
 
@@ -52,7 +55,7 @@ back:
 
 front:
 	[ -d $(FRONT)/node_modules ] || npm --prefix $(FRONT) install $(FRONT) --legacy-peer-deps
-	npm --prefix $(FRONT) run start
+	npm --prefix $(FRONT) start
 
 stop:
 	docker-compose down
@@ -78,6 +81,6 @@ list:
 	@docker volume ls
 	@echo ;
 
-.PHONY: all db back front stop clean fclean re fre list
+.PHONY: all ip db back front stop clean fclean re fre list
 
 # **************************************************************************** #
