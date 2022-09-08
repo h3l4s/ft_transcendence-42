@@ -1,11 +1,15 @@
-import { useContext, useState } from 'react';
+import { KeyboardEvent, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
+
+import '../../../style/login.css';
 
 import { ApiUrlContext } from '../../../context/apiUrl.context';
 import { AuthContext } from '../../../context/auth.context';
 
 import i_user from '../../../interface/user.interface';
+
+import { ReactComponent as Auth42 } from '../../../icon/42_Logo.svg'
 
 import { Users } from '../chan/user.component';
 import { userBacktoFront } from '../../../request/user.request';
@@ -36,6 +40,17 @@ function LoginPage()
 	const [users, setUsers] = useState<i_user[]>([]);
 	const navigate = useNavigate();
 
+	function debugKeyHandle(event: KeyboardEvent<HTMLInputElement>)
+	{
+		const target = event.target as HTMLInputElement;
+		if (event.key === 'Enter')
+		{
+			event.preventDefault();
+			debugCreateUser(target.value);
+			target.value = "";
+		}
+	}
+
 	function debugCreateUser(username: string)
 	{
 		axios.post(apiUrl + "/user/name/" + username).then(res => console.log(res)).catch(err => console.log(err));
@@ -62,18 +77,19 @@ function LoginPage()
 	};
 
 	return (
-		<div style={{ backgroundColor: "var(--background-color)", height: "calc(100vh - var(--nav-h))" }}>
-			<div style={{ paddingTop: "5rem", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-				<button onClick={auth42}>42 Auth</button>
-			</div>
-			<div>
+		<div className='login--page'>
+			<button className='auth42 card--alt' onClick={auth42}>
+				<Auth42 />
+				<div>auth</div>
+			</button>
+			<div className='login--debug'>
 				<h3>🚧 DEBUG 🚧</h3>
 				{user ? (
 					<button onClick={() => setUser(null)}>
 						🚧 test logout 🚧
 					</button>
 				) : (
-					<div>
+					<div style={{ width: "100%" }}>
 						<button onClick={async () =>
 						{
 							const tmp: i_user | null = await requestUser(apiUrl, id);
@@ -90,15 +106,7 @@ function LoginPage()
 					</div>
 				)}
 				<div>
-					<input className='input--chat' placeholder="🚧 create user 🚧" onKeyPress={(event) =>
-					{
-						if (event.key === 'Enter')
-						{
-							event.preventDefault();
-							debugCreateUser(event.target.value);
-							event.target.value = "";
-						}
-					}} />
+					<input className='input--chat' placeholder="🚧 create user 🚧" onKeyPress={debugKeyHandle} />
 				</div>
 				<button onClick={debugGetUsers}>🚧 get all users 🚧</button>
 				<div>

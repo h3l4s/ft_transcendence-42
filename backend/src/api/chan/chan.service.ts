@@ -38,12 +38,12 @@ export class ChanService
 
 	public getChan(id: number): Promise<Chan>
 	{
-		return this.repository.findOne(id);
+		return this.repository.findOne({ where: { id: id } });
 	}
 
 	public getChanByName(name: string): Promise<Chan>
 	{
-		return this.repository.findOne({ name: name });
+		return this.repository.findOne({ where: { name: name } });
 	}
 
 	public getChans(): Promise<Chan[]>
@@ -89,7 +89,7 @@ export class ChanService
 			name = body.usersId[1] + ' ' + body.usersId[0];
 
 		if (await this.repository.count({ where: { name: name } }))
-			return await this.repository.findOne({ name: name });
+			return await this.repository.findOne({ where: { name: name } });
 
 		const chan: Chan = new Chan();
 
@@ -107,7 +107,7 @@ export class ChanService
 
 	public async updateChan(id: number, data: UpdateChanDto)
 	{
-		const chan = await this.repository.findOne(id);
+		const chan = await this.repository.findOne({ where: { id: id } });
 
 		if (data.name)
 			chan.name = data.name;
@@ -167,7 +167,7 @@ export class ChanService
 
 	public async joinChan(id: number, data: UpdateChanDto)
 	{
-		const chan = await this.repository.findOne(id);
+		const chan = await this.repository.findOne({ where: { id: id } });
 
 		if (!data.userId)
 			return chan;
@@ -180,7 +180,7 @@ export class ChanService
 
 	public async quitChan(id: number, data: UpdateChanDto)
 	{
-		const chan = await this.repository.findOne(id);
+		const chan = await this.repository.findOne({ where: { id: id } });
 
 		if (!data.userId)
 			return chan;
@@ -197,7 +197,7 @@ export class ChanService
 
 	public async sendMsg(id: number, data: MsgDto)
 	{
-		const chan = await this.repository.findOne(id);
+		const chan = await this.repository.findOne({ where: { id: id } });
 
 		chan.msg.push(data);
 
@@ -226,7 +226,7 @@ export class ChanService
 			chan = await this.createDirectChan(createChanDto);
 		}
 		else
-			chan = await this.repository.findOne({ name: name });
+			chan = await this.repository.findOne({ where: { name: name } });
 
 		chan.msg.push(data);
 
@@ -235,7 +235,7 @@ export class ChanService
 
 	public async tryPwd(id: number, data: PwdDto): Promise<Chan>
 	{
-		const chan = await this.repository.findOne(id);
+		const chan = await this.repository.findOne({ where: { id: id } });
 
 		if (chan.hash && chan.hash === hashing(data.pwd))
 		{

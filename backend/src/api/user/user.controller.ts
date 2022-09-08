@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Inject, Param, ParseIntPipe, Post, Put, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
-import { ChooseUsernameDto, UpdateUserDto, UpdateUsersAfterGameDto } from './user.dto';
+import { Auth42Dto, ChooseUsernameDto, UpdateUserDto, UpdateUsersAfterGameDto } from './user.dto';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -35,10 +35,10 @@ export class UserController
 		return this.service.getUser(id);
 	}
 
-	@Get(':token')
-	public auth42(@Param('token') token: string): Promise<User>
+	@Get('auth42')
+	public auth42(@Body() data: Auth42Dto): Promise<User>
 	{
-		return this.service.auth42(token);
+		return this.service.auth42(data);
 	}
 
 	// tmp add user

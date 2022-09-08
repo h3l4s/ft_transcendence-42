@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useContext, useState } from "react";
+import { ChangeEvent, useContext, useState } from "react";
 
 import { ApiUrlContext } from "../../context/apiUrl.context";
 
@@ -16,7 +16,7 @@ function PromptPwdModal(props: { chan_id: number | undefined, user_id: number | 
 	if (!props.chan_id || !props.user_id)
 		return (<div />);
 
-	function pwdUpdateHandle(event: React.KeyboardEvent<HTMLInputElement>)
+	function pwdUpdateHandle(event: ChangeEvent<HTMLInputElement>)
 	{
 		if (wrongPwd)
 			setWrongPwd(false);

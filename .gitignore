@@ -2,6 +2,7 @@
 
 # env
 frontend/*.env
+.front.env
 
 # nvim
 *~

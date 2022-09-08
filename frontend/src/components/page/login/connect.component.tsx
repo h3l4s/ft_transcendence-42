@@ -18,7 +18,11 @@ function ConnectPage()
 	const { apiUrl } = useContext(ApiUrlContext);
 	const { setUser } = useContext(AuthContext);
 	const token = useParams().token;
-	const { data, loading, error } = useFetch(apiUrl + "/user/42Auth/" + token, 'get');
+	const { data, loading, error } = useFetch(apiUrl + "/user/auth42", 'get', {
+		token: token,
+		uid: process.env.REACT_APP_UID,
+		secret: process.env.REACT_APP_SECRET
+	});
 	const [created, setCreated] = useState(false);
 	const [connected, setConnected] = useState(false);
 
