@@ -11,8 +11,8 @@ function userBacktoFront(user: any)
 		id: user.id,
 		access_token: user.access_token,
 		name: user.name,
-		// profile pic
-		profilePicPath: "profile_picture/default.png",
+		pp: user.pp,
+		pp_name: user.pp_name,
 		xp: user.xp,
 		elo: user.elo,
 		win: user.win,

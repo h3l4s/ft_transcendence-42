@@ -30,13 +30,19 @@ function OptionModal(props: {
 		setShowOwnerPwd: (value: React.SetStateAction<boolean>) => void,
 	}
 	onClose: () => void
+	callback: (newId: number, oldId: number) => void
 })
 {
 	const { apiUrl } = useContext(ApiUrlContext);
 
-	async function handleQuit()
+	function handleQuit()
 	{
-		await axios.post(apiUrl + "/chan/quit/" + props.chan.id + "/" + props.user.id,).catch(err => console.log(err));
+		if (!props.chan.id)
+			return;
+
+		axios.post(apiUrl + "/chan/quit/" + props.chan.id, { userId: props.user.id }).catch(err => console.log(err));
+		props.onClose();
+		props.callback(1, props.chan.id);
 	};
 
 

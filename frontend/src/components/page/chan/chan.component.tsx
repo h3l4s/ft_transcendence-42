@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import { ChangeEvent, useContext, useState } from "react";
 import { Socket } from "socket.io-client";
 
 import i_chan from "../../../interface/chan.interface";
@@ -70,7 +70,7 @@ function Chans(props: { socket: Socket, chans: i_chan[], users: i_user[], to_cha
 	const is_user_owner: boolean = (selectedChan && selectedChan.ownerId && user && user.id && selectedChan.ownerId === user.id ? true : false)
 	let visibleChans: i_chan[] = [];
 
-	const searchHandle = (event: React.KeyboardEvent<HTMLInputElement>) =>
+	const searchHandle = (event: ChangeEvent<HTMLInputElement>) =>
 	{ setSearch(event.target.value); };
 
 	const unp_callback = props.callback;

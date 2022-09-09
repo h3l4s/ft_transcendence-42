@@ -1,16 +1,19 @@
-import axios from "axios";
-import { useContext } from "react";
+import { Navigate } from "react-router-dom";
+import { useContext, useState } from "react";
+import axios, { AxiosResponse } from "axios";
 
 import { ApiUrlContext } from "../../context/apiUrl.context";
 import { AuthContext } from "../../context/auth.context";
 
 import i_user from "../../interface/user.interface";
+import i_chan from "../../interface/chan.interface";
 
+import { ReactComponent as Undo } from '../../icon/undo-svgrepo-com.svg'
 import { ReactComponent as Back } from '../../icon/left-svgrepo-com.svg'
 
 function PickUser(props: {
 	c_user: i_user, // clicked
-	chanId: number,
+	chan: i_chan,
 	type: 'add' | 'challenge' | 'mute' | 'admin add' | 'admin ban' | 'admin mute',
 	onClose: () => void,
 	callback: (newId: number, oldId: number) => void
@@ -18,55 +21,86 @@ function PickUser(props: {
 {
 	const { apiUrl } = useContext(ApiUrlContext);
 	const { user } = useContext(AuthContext);
-	if (!user)
-		return (<div />);
-	if (!props.c_user.id)
+	const [isChallenged, setIsChallenged] = useState(false);
+
+	if (!props.c_user.id || !props.chan.id || !user || !user.id)
 		return (<div />);
 
-	function request()
+	const undo = (((props.type === 'mute' && user.mutedId && user.mutedId.includes(props.c_user.id))
+		|| (props.type === 'admin mute' && props.chan.mutedId && props.chan.mutedId.includes(props.c_user.id))
+		|| (props.type === 'admin ban' && props.chan.bannedId && props.chan.bannedId.includes(props.c_user.id)) ? true : false));
+
+	function ResetChallenge()
 	{
-		if (!props.c_user.id)
+		if (!props.chan.id)
+			return (<div />);
+
+		setIsChallenged(false);
+		props.onClose();
+		props.callback(props.chan.id, props.chan.id);
+
+		return (<div />);
+	}
+
+	async function request()
+	{
+		if (!props.c_user.id || !props.chan.id || !user || !user.id)
 			return;
+
+		let answer: AxiosResponse<any, any> | void;
+
 		switch (props.type)
 		{
 			case 'add':
-				axios.post(apiUrl + "/chan/add/" + props.chanId + "/" + props.c_user.id, { userId: props.c_user.id }).catch(err => console.log(err));
+				answer = await axios.put(apiUrl + "/chan/" + props.chan.id, { userId: props.c_user.id }).catch(err => console.log(err));
 				break;
 			case 'challenge':
-				axios.post(apiUrl + "/chan/challenge/" + user?.id + "/" + props.c_user.id, { userId: props.c_user.id }).catch(err => console.log(err));
-				break; // voir comment est gere le match making pour /play/current_user/clicked_user
+				setIsChallenged(true);
+				break;
 			case 'mute':
-				axios.post(apiUrl + "/chan/mute/" + user?.id + "/" + props.c_user.id).catch(err => console.log(err));
-				break; // le user est bien ajouter a la liste des mute dans le back mais n'est pas mute sur le site
-			// add le user selectionne par le current user dans la liste ds mutedid du current user
+				answer = await axios.put(apiUrl + "/user/" + user.id, { mutedId: props.c_user.id }).catch(err => console.log(err));
+				break;
 			case 'admin add':
-				axios.post(apiUrl + "/chan/adminadd/" + props.chanId + "/" + props.c_user.id).catch(err => console.log(err));
+				answer = await axios.put(apiUrl + "/chan/" + props.chan.id, { adminId: props.c_user.id }).catch(err => console.log(err));
 				break;
 			case 'admin ban':
-				axios.post(apiUrl + "/chan/adminban/" + props.chanId + "/" + props.c_user.id).catch(err => console.log(err));
-				break; // ajoute le user selectionne (si le curent user est bien admin) dans les banedid du chan
+				answer = await axios.put(apiUrl + "/chan/" + props.chan.id, { bannedId: props.c_user.id }).catch(err => console.log(err));
+				break;
 			case 'admin mute':
-				axios.post(apiUrl + "/chan/adminmute/" + props.chanId + "/" + props.c_user.id).catch(err => console.log(err));
-				break; // ajouter le user selectionne (si le curent user est bien admin) dans les mutedid du chan
+				answer = await axios.put(apiUrl + "/chan/" + props.chan.id, { mutedId: props.c_user.id }).catch(err => console.log(err));
+				break;
 		}
-		props.onClose();
-		props.callback(props.chanId, props.chanId);
+		console.log("action", props.type, answer);
+		if (props.type !== 'challenge' && answer)
+		{
+			props.onClose();
+			props.callback(props.chan.id, props.chan.id);
+		}
 	}
 
 	return (
-		<button className='pick--user' onClick={request}>
-			<img className='img' style={{ height: "3rem", width: "3rem" }}
-				src={props.c_user.profilePicPath} alt="profile" />
-			<div className='truncate' style={{ color: "#fff", marginTop: "0.75rem" }}>
-				{props.c_user.name}
-			</div>
-		</button>
+		<div>
+			<button className='pick--user' onClick={request}>
+				<img className='img' style={{ height: "3rem", width: "3rem" }}
+					src={props.c_user.pp_name} alt="profile" />
+				<div className='truncate' style={{ color: "#fff", marginTop: "0.75rem" }}>
+					{props.c_user.name}
+				</div>
+				{undo ? (
+					<Undo style={{ height: "2rem", width: "2rem", fill: "#c00", filter: "hue-rotate(360deg) brightness(95%)", marginTop: "0.5rem" }} />
+				) : (
+					<div style={{ width: "2rem" }} />
+				)}
+			</button>
+			{isChallenged && <Navigate to={"/challenge/" + user.id + "/" + props.c_user.id} />}
+			{isChallenged && <ResetChallenge />}
+		</div>
 	);
 }
 
 function PickUsers(props: {
 	users: i_user[],
-	chanId: number,
+	chan: i_chan,
 	type: 'add' | 'challenge' | 'mute' | 'admin add' | 'admin ban' | 'admin mute',
 	onClose: () => void,
 	callback: (newId: number, oldId: number) => void
@@ -81,7 +115,7 @@ function PickUsers(props: {
 
 	for (let i = 0; i < props.users.length; i++)
 		if (props.users[i].id !== user.id)
-			ret.push(<PickUser key={i} c_user={props.users[i]} chanId={props.chanId} type={props.type}
+			ret.push(<PickUser key={i} c_user={props.users[i]} chan={props.chan} type={props.type}
 				onClose={props.onClose} callback={props.callback} />);
 
 	return (<div>{ret}</div>);
@@ -89,16 +123,13 @@ function PickUsers(props: {
 
 function PickUserModal(props: {
 	users: i_user[],
-	chanId: number | undefined,
+	chan: i_chan,
 	type: 'add' | 'challenge' | 'mute' | 'admin add' | 'admin ban' | 'admin mute',
 	goBack: () => void,
 	onClose: () => void,
 	callback: (newId: number, oldId: number) => void
 })
 {
-	if (!props.chanId)
-		return (<div />);
-
 	return (
 		<div onMouseLeave={props.onClose} className='modal--pick'>
 			<div>
@@ -106,9 +137,10 @@ function PickUserModal(props: {
 				<span style={{ fontSize: "1.5rem", fontWeight: "bolder" }}>{props.type}</span>
 			</div>
 			<div style={{ marginTop: "1rem" }}>
-				<PickUsers users={props.users} chanId={props.chanId} type={props.type}
+				<PickUsers users={props.users} chan={props.chan} type={props.type}
 					onClose={props.onClose} callback={props.callback} />
 			</div>
+
 		</div>
 	);
 }

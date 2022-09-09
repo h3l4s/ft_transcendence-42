@@ -94,7 +94,7 @@ function UserPage()
 				<div className='card card--border user--page--pic--title' style={{ marginBottom: "2rem" }} >
 					<div style={{ margin: "0.5rem 0 0.5rem 0" }}>
 						<img className='img' style={{ height: "23vw", width: "23vw" }}
-							src={(image ? URL.createObjectURL(image) : userToLoad.profilePicPath)} alt="profile" />
+							src={(image ? URL.createObjectURL(image) : userToLoad.pp_name)} alt="profile" />
 						{(!p_username || p_username === userToLoad.name)
 							&& <div className='input--file'>
 								<input type='file' style={{ zIndex: "99" }} onChange={(e) =>

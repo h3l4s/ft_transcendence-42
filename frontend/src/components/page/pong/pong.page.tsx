@@ -101,8 +101,5 @@ function PongPage()
 		</div>
 	);
 }
-//<Navigate to="/play/pong" />
-
-
 
 export default PongPage;

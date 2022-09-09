@@ -20,13 +20,14 @@ export class ChatGateway implements OnGatewayInit
 		client.on('newConnection', () =>
 		{
 			console.log("[CHAN] new client: " + client.id);
+			this.wss.emit('newConnection', { userId: client.id });
 		})
 	}
 
 	@SubscribeMessage('chatToServer')
 	handleMessage(client: Socket, message: MsgDto)
 	{
-		console.log("received", message.username, message.msg);
+		console.log("[CHAN] received", message.username, message.msg);
 		this.wss.to(message.chanId).emit('chatToClient', message);
 	}
 

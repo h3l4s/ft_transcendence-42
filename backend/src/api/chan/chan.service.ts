@@ -38,12 +38,12 @@ export class ChanService
 
 	public getChan(id: number): Promise<Chan>
 	{
-		return this.repository.findOne(id);
+		return this.repository.findOne({ where: { id: id } });
 	}
 
 	public getChanByName(name: string): Promise<Chan>
 	{
-		return this.repository.findOne({ name: name });
+		return this.repository.findOne({ where: { name: name } });
 	}
 
 	public getChans(): Promise<Chan[]>
@@ -89,7 +89,7 @@ export class ChanService
 			name = body.usersId[1] + ' ' + body.usersId[0];
 
 		if (await this.repository.count({ where: { name: name } }))
-			return await this.repository.findOne({ name: name });
+			return await this.repository.findOne({ where: { name: name } });
 
 		const chan: Chan = new Chan();
 
@@ -107,7 +107,7 @@ export class ChanService
 
 	public async updateChan(id: number, data: UpdateChanDto)
 	{
-		const chan = await this.repository.findOne(id);
+		const chan = await this.repository.findOne({ where: { id: id } });
 
 		if (data.name)
 			chan.name = data.name;
@@ -167,7 +167,7 @@ export class ChanService
 
 	public async joinChan(id: number, data: UpdateChanDto)
 	{
-		const chan = await this.repository.findOne(id);
+		const chan = await this.repository.findOne({ where: { id: id } });
 
 		if (!data.userId)
 			return chan;
@@ -178,10 +178,26 @@ export class ChanService
 		return await this.repository.save(chan);
 	}
 
+	public async quitChan(id: number, data: UpdateChanDto)
+	{
+		const chan = await this.repository.findOne({ where: { id: id } });
+
+		if (!data.userId)
+			return chan;
+
+		const index = chan.usersId.indexOf(data.userId);
+
+		if (index > -1)
+			chan.usersId.splice(index, 1);
+		if (chan.usersId.length == 0 || chan.ownerId == data.userId)
+			return this.repository.remove(chan);
+
+		return this.repository.save(chan);
+	}
 
 	public async sendMsg(id: number, data: MsgDto)
 	{
-		const chan = await this.repository.findOne(id);
+		const chan = await this.repository.findOne({ where: { id: id } });
 
 		chan.msg.push(data);
 
@@ -210,7 +226,7 @@ export class ChanService
 			chan = await this.createDirectChan(createChanDto);
 		}
 		else
-			chan = await this.repository.findOne({ name: name });
+			chan = await this.repository.findOne({ where: { name: name } });
 
 		chan.msg.push(data);
 
@@ -219,7 +235,7 @@ export class ChanService
 
 	public async tryPwd(id: number, data: PwdDto): Promise<Chan>
 	{
-		const chan = await this.repository.findOne(id);
+		const chan = await this.repository.findOne({ where: { id: id } });
 
 		if (chan.hash && chan.hash === hashing(data.pwd))
 		{
@@ -233,72 +249,5 @@ export class ChanService
 	public deleteChan(id: number)
 	{
 		return this.repository.delete(id)
-	}
-
-	public async addUserToChan(id: number, usersId: number)
-	{
-		const chan = await this.repository.findOne(id);
-
-		if (!chan.usersId)
-			chan.usersId = [];
-		chan.usersId.push(usersId);
-		return this.repository.save(chan);
-	}
-
-	public async addAdminToChan(id: number, usersId: number)
-	{
-		const chan = await this.repository.findOne(id);
-
-		if (!chan.adminsId)
-			chan.adminsId = [];
-		chan.adminsId.push(usersId);
-		return this.repository.save(chan);
-	}
-
-	public async addBannedIdToChan(id: number, usersId: number)
-	{
-		const chan = await this.repository.findOne(id);
-
-		if (!chan.bannedId)
-			chan.bannedId = [];
-		chan.bannedId.push(usersId);
-		return this.repository.save(chan);
-	}
-
-	public async addMutedIdToChan(id: number, usersId: number)
-	{
-		const chan = await this.repository.findOne(id);
-
-		if (!chan.mutedId)
-			chan.mutedId = [];
-		chan.mutedId.push(usersId);
-		return this.repository.save(chan);
-	}
-
-	public async quitChan(id: number, usersId: number)
-	{
-		const chan = await this.repository.findOne(id);
-		const index_users = chan.usersId.indexOf(usersId);
-
-		if (index_users > -1)
-			chan.usersId.splice(index_users, 1);
-		console.log("after usersid splice" + chan.usersId.length);
-		console.log("before adminid splice" + chan.adminsId.length);
-		if (chan.usersId.length < 1)
-		{
-			// delete the chan
-			return this.repository.remove(chan);
-		}
-		const index_admins = chan.adminsId.indexOf(usersId);
-		if (index_admins > -1)
-			chan.adminsId.splice(index_admins, 1);
-		console.log("after adminid splice " + chan.adminsId.length + ", index_admins = " + index_admins);
-		if (chan.adminsId.length < 1)
-		{
-			// delete the chan
-			return this.repository.remove(chan);
-		}
-
-		return this.repository.save(chan);
 	}
 }

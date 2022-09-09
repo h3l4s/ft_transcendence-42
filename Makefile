@@ -17,6 +17,7 @@ BACK =	./backend
 
 ENV =		.env
 BACKENV =	$(BACK)/src/common/envs/development.env
+FRONTENV =	.front.env
 
 # **************************************************************************** #
 #	MAKEFILE	#
@@ -26,6 +27,8 @@ BACKENV =	$(BACK)/src/common/envs/development.env
 
 include $(ENV)
 $(eval export $(shell sed -ne 's/ *#.*$$//; /./ s/=.*$$// p' $(ENV)))
+include $(FRONTENV)
+$(eval export $(shell sed -ne 's/ *#.*$$//; /./ s/=.*$$// p' $(FRONTENV)))
 
 SHELL := bash
 
@@ -41,6 +44,7 @@ D =		$(shell tput sgr0)
 all:	$(NAME)
 
 $(NAME):
+	@[ -f $(FRONTENV) ] || echo -e "$(B)$(YEL)[WARNING]$(D)\t$(FRONTENV) not found"
 	docker-compose up --force-recreate --build
 
 ip:
@@ -50,7 +54,7 @@ db:
 	docker-compose up --force-recreate --build db
 
 back:
-	[ -d $(BACK)/node_modules ] || npm --prefix $(BACK) install $(BACK)
+	[ -d $(BACK)/node_modules ] || npm --prefix $(BACK) install $(BACK) --legacy-peer-deps
 	npm --prefix $(BACK) run start:dev
 
 front:

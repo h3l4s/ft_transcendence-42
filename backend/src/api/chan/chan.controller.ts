@@ -57,6 +57,12 @@ export class ChanController
 		return this.service.joinChan(id, data);
 	}
 
+	@Post('quit/:id')
+	public quitChan(@Param('id', ParseIntPipe) id: number, @Body() data: UpdateChanDto)
+	{
+		return this.service.quitChan(id, data);
+	}
+
 	@Post('msg/:id')
 	public sendMsg(@Param('id', ParseIntPipe) id: number, @Body() data: MsgDto)
 	{
@@ -79,35 +85,5 @@ export class ChanController
 	public deleteChan(@Param('id', ParseIntPipe) id: number)
 	{
 		return this.service.deleteChan(id);
-	}
-
-	@Post('add/:id/:usersId')
-	public addUserToChan(@Param('id', ParseIntPipe) id: number, @Param('usersId', ParseIntPipe) usersId: number)
-	{
-		return this.service.addUserToChan(id, usersId);
-	}
-
-	@Post('adminadd/:id/:usersId')
-	public addAdminToChan(@Param('id', ParseIntPipe) id: number, @Param('usersId', ParseIntPipe) usersId: number)
-	{
-		return this.service.addAdminToChan(id, usersId);
-	}
-
-	@Post('adminban/:id/:usersId')
-	public addBannedIdToChan(@Param('id', ParseIntPipe) id: number, @Param('usersId', ParseIntPipe) usersId: number)
-	{
-		return this.service.addBannedIdToChan(id, usersId);
-	}
-
-	@Post('adminmute/:id/:usersId')
-	public addMutedIdToChan(@Param('id', ParseIntPipe) id: number, @Param('usersId', ParseIntPipe) usersId: number)
-	{
-		return this.service.addMutedIdToChan(id, usersId);
-	}
-
-	@Post('quit/:id/:usersId')
-	public quitChan(@Param('id', ParseIntPipe) id: number, @Param('usersId', ParseIntPipe) usersId: number)
-	{
-		return this.service.quitChan(id, usersId);
 	}
 }

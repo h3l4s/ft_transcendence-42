@@ -58,7 +58,6 @@ function Move_ball(game: any, PLAYER_WIDTH: number, canvas_height: number, canva
 	return (game);
 }
 
-
 function collision(player: any, game: any, canvas_height: number, canvas_width: number, PLAYER_HEIGHT: number, type: string)
 {
 	// The player does not hit the ball
@@ -98,8 +97,6 @@ function collision(player: any, game: any, canvas_height: number, canvas_width: 
 	return (game);
 }
 
-
-
 function Angle_Direction(playerPosition: any, game: any, PLAYER_HEIGHT: number,)
 {
 	var impact = game.ball.y - playerPosition - PLAYER_HEIGHT / 2;
@@ -108,7 +105,6 @@ function Angle_Direction(playerPosition: any, game: any, PLAYER_HEIGHT: number,)
 	game.ball.speed.y = Math.round(impact * ratio / 25);
 	return (game);
 }
-
 
 @WebSocketGateway({
 	cors: {
@@ -261,5 +257,4 @@ export class Matchmaking
 		this.server.to(bdd[pos - 2]).emit('disconnection', bdd[pos - 1]);
 		player--;
 	}
-
 }
