@@ -1,12 +1,16 @@
 .pong {
-	height: 100vh;
-	margin-top: - var(--nav-h);
+	height: calc(100vh - var(--nav-h));
 	background-repeat: no-repeat;
 	background-size: cover;
 	font-family: OCR A Std;
 	/*background-color: #4682B4;*/
 	background-color: var(--background-color);
 	text-align: center;
+}
+
+.pong--compo {
+	height: 100vh;
+	margin-top: calc(-1 * var(--nav-h));
 }
 
 /*#bandeau {
