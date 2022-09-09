@@ -11,8 +11,14 @@ function Matches(props: { matches: string[] })
 {
 	let ret: JSX.Element[] = [];
 
-	for (let i = 0; i < props.matches.length; i++)
-	{ ret.push(<MatchBtn key={i} match={props.matches[i]} />); }
+	const filteredArray = props.matches.filter(function(ele , pos){
+		return props.matches.indexOf(ele) == pos;
+	}) 
+	
+	
+
+	for (let i = 0; i < filteredArray.length; i++)
+	{ ret.push(<MatchBtn key={i} match={filteredArray[i]} />); }
 
 	return (
 		<div>
@@ -42,18 +48,29 @@ function MatchBtn(props: { match: string})
 
 function PongPage()
 {
-	let i = 0;
 	const { apiUrl } = useContext(ApiUrlContext);
 	const [map, setMap] = useState<'simple' | 'hard' | 'tennis' | null>(null);
 	const [gameLive, setGameLive] = useState<string[]>([]);
 	
 	const socket = io(apiUrl);
+	let i = 0;
 
 	useEffect(() =>
 	{
+		let room = "0";
+		socket.emit('want_gamelive', room);
 		socket.on('live', data => {
-			console.log(data);
-			setGameLive(current => [...current, data.toString()]);
+		console.log("first = ",data);
+		setGameLive(current => [...current, data.toString()]);
+		});
+		socket.on('new-match', (data:[]) => {
+			console.log("first = ",data);
+			setGameLive(data);
+			
+		});
+		socket.on('finish-match', (data:[]) => {
+			console.table(data);
+			setGameLive(data);
 		});
 		// socket.on('end-viewer', () => {
 		// 	setGameLive(current => [...current, data.toString()]);
@@ -61,7 +78,6 @@ function PongPage()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 	// might not store the type of map
-	
 	return (
 		<div className='pong'>
 			{!map ? (

@@ -29,7 +29,7 @@ function Pong(props: { map: i_map, goBack: () => void })
 	{
 		if (!user || !user.name)
 			return;
-		handleCanvas(apiUrl, user.name, true, props.map, bdd_pong, 0, socket);
+		handleCanvas(apiUrl, user.name, true, props.map, bdd_pong, 0, socket, "");
 	});
 
 	if (!user || !user.name)
@@ -109,7 +109,8 @@ function LaunchGame(props: { map: i_map, nameP1: string, saloon: any, incGameLau
 	let joueur: any;
 	let playbtn = document.querySelector("#lets-go")! as HTMLElement;
 	let bdd_pong: any[] = [];
-	playbtn.style.display = "none";
+	if (playbtn !== null)
+		playbtn.style.display = "none";
 
 	console.log("hello\n ca va");
 
@@ -133,13 +134,13 @@ function LaunchGame(props: { map: i_map, nameP1: string, saloon: any, incGameLau
 			console.log(props.saloon);
 			bdd_pong.push(props.saloon);
 		});
-		props.socket.on('start', () =>
+		props.socket.on('start', (data) =>
 		{
 			console.table(bdd_pong);
 			props.setInGame(true);
 			if (!user || !user.name)
 				return;
-			handleCanvas(apiUrl, user.name, false, props.map, bdd_pong, props.incGameLaunch(), props.socket);
+			handleCanvas(apiUrl, user.name, false, props.map, bdd_pong, props.incGameLaunch(), props.socket, data.toString());
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -147,7 +148,7 @@ function LaunchGame(props: { map: i_map, nameP1: string, saloon: any, incGameLau
 	return (<div />);
 }
 
-function handleCanvas(apiUrl: string, username: string, init: boolean, map: i_map, bdd: any[] = [], room: number, socket: Socket)
+function handleCanvas(apiUrl: string, username: string, init: boolean, map: i_map, bdd: any[] = [], room: number, socket: Socket, match:string)
 {
 	let canvas = document.querySelector("#canvas")! as HTMLCanvasElement;
 	canvas.style.display = "block";
@@ -297,7 +298,7 @@ function handleCanvas(apiUrl: string, username: string, init: boolean, map: i_ma
 					context.drawImage(lose, 0, 0, canvas.width, canvas.height);
 				}
 			}
-			socket.emit('finish', bdd[room].clientRoom);
+			socket.emit('finish', bdd[room].clientRoom, match);
 			//canvas.style.display = "none";
 			console.log(map.p1);
 			postResults(apiUrl, username, game.score.p1, game.score.p2, bdd[room].player1, bdd[room].player2);
