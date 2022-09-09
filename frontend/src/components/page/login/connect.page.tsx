@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
-import axios from "axios";
 
 import useFetch from "../../../request/useFetch";
 
@@ -9,7 +8,7 @@ import { AuthContext } from "../../../context/auth.context";
 
 import i_user from "../../../interface/user.interface";
 
-import LoginPage from "./login.component";
+import LoginPage from "./login.page";
 import Loading from "../../request_answer_component/loading.component";
 import Error from "../../request_answer_component/error.component";
 

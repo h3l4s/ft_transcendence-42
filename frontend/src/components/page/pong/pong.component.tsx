@@ -62,7 +62,7 @@ function Pong(props: { map: i_map, goBack: () => void })
 	}
 
 	return (
-		<div className='pong'>
+		<div className='pong pong--compo'>
 			<div className='pong--header'>
 				<button className='btn--back'
 					onClick={backFunction}>

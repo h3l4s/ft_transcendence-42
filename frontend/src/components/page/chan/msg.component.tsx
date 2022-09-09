@@ -7,6 +7,8 @@ function Msgs(props: { id: number | undefined, msgs: i_msg[] | undefined, mutedI
 	if (!props.id || !props.msgs)
 		return <div />
 
+	console.log(props.msgs);
+
 	let ret: JSX.Element[] = [];
 
 	for (let i = 0; i < props.msgs.length; i++)
