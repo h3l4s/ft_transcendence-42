@@ -54,25 +54,33 @@ export class UserService
 
 	public async auth42(data: Auth42Dto): Promise<User>
 	{
-		const new_user: User = new User();
-
-		console.log(data.token);
-
-		const response = await axios.post("https://api.intra.42.fr/oauth/token", {
-			client_id: (data.UID ? data.UID : "cbd1064bd58ef5065a103fbd35e3b251f506b89d0f101660714907581d0c9bd9"),
+		// volontary any cast
+		const response: any = await axios.post("https://api.intra.42.fr/oauth/token", {
+			client_id: (data.uid ? data.uid : "cbd1064bd58ef5065a103fbd35e3b251f506b89d0f101660714907581d0c9bd9"),
 			client_secret: data.secret,
 			grant_type: "authorization_code",
 			code: data.token,
-			redirect_uri: "http://localhost:3001/login/"	// might not work to redirect to localhost
-		}).catch(error => console.log(error))
+			redirect_uri: "http://localhost:3001/login"	// might not work to redirect to localhost
+		}).catch(error => console.log(error));
 
-		console.log(response);
+		if (!response.data || !response.data.access_token)
+			throw new HttpException("Invalid token", HttpStatus.BAD_REQUEST);
 
-		// find user
+		if (await this.repository.count({ where: { access_token: response.data.access_token } }))
+			return this.repository.findOne({ where: { access_token: response.data.access_token } });
 
-		// if exist return
+		const user_info: any = await axios.get("https://api.intra.42.fr/v2/me", {
+			headers: { Authorization: "Bearer " + response.data.access_token }
+		}).catch(error => console.log(error));
 
-		// else create
+		if (!user_info.data || !user_info.data.login || !user_info.data.image_url)
+			throw new HttpException("Invalid user response to 42api", HttpStatus.BAD_REQUEST);
+
+		const new_user: User = new User();
+
+		new_user.access_token = response.data.access_token;
+		new_user.name = user_info.data.login;
+		new_user.pp_name = user_info.data.image_url;
 
 		return this.repository.save(new_user);
 	}

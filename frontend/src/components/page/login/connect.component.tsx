@@ -1,5 +1,6 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
+import axios from "axios";
 
 import useFetch from "../../../request/useFetch";
 
@@ -11,32 +12,44 @@ import i_user from "../../../interface/user.interface";
 import LoginPage from "./login.component";
 import Loading from "../../request_answer_component/loading.component";
 import Error from "../../request_answer_component/error.component";
-import UsernameChangeModal from "../../modal/username.change.modal";
 
-function ConnectPage()
+function Connect(props: { token: string, callback: (new_user: i_user) => void })
 {
 	const { apiUrl } = useContext(ApiUrlContext);
-	const { setUser } = useContext(AuthContext);
-	const token = useParams().token;
-	const { data, loading, error } = useFetch(apiUrl + "/user/auth42", 'get', {
-		token: token,
+	const { data, loading, error } = useFetch(apiUrl + "/user/auth42", 'post', {
+		token: props.token,
 		uid: process.env.REACT_APP_UID,
 		secret: process.env.REACT_APP_SECRET
 	});
-	const [created, setCreated] = useState(false);
+
+	console.log("connecting:", data, loading, error);
+
+	useEffect(() =>
+	{
+		if (data)
+			props.callback(data);
+	}, [data, props]);
+
+	if (loading)
+		return (<div className='backdrop ontop'><Loading /></div>);
+	else if (error)
+		return (<div className='backdrop ontop'><Error msg={error.message} /></div>);
+
+	return (<div />);
+}
+
+function ConnectPage()
+{
+	const { user, setUser } = useContext(AuthContext);
+	const token = useParams().token;
 	const [connected, setConnected] = useState(false);
 
 	if (!token)
 		return (<div className='backdrop ontop'><Error msg="token not found" /></div>);
-
-	if (data.username && data.username.length > 0)
-		connect(data);
-	else if (data)
-	{
-		console.log("user created", data);
-		setUser(data);
-		setCreated(true);
-	}
+	if (!process.env.REACT_APP_UID)
+		return (<div className='backdrop ontop'><Error msg="uid not found" /></div>);
+	if (!process.env.REACT_APP_SECRET)
+		return (<div className='backdrop ontop'><Error msg="secret not found" /></div>);
 
 	function connect(new_user: i_user)
 	{
@@ -48,9 +61,7 @@ function ConnectPage()
 		<div>
 			<LoginPage />
 			<div className='backdrop'></div>
-			{loading && <div className='ontop'><Loading /></div>}
-			{error && <div className='ontop'><Error msg={error.message} /></div>}
-			{created && <UsernameChangeModal callback={connect} />}
+			{!connected && !user && <Connect token={token} callback={connect} />}
 			{connected && <Navigate to='/' />}
 		</div>
 	);

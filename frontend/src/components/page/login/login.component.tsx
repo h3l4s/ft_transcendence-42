@@ -1,5 +1,5 @@
 import { KeyboardEvent, useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import axios from 'axios'
 
 import '../../../style/login.css';
@@ -12,7 +12,7 @@ import i_user from '../../../interface/user.interface';
 import { ReactComponent as Auth42 } from '../../../icon/42_Logo.svg'
 
 import { Users } from '../chan/user.component';
-import { userBacktoFront } from '../../../request/user.request';
+import { userBacktoFront, useReqUsersWithDefault } from '../../../request/user.request';
 
 async function requestUser(apiUrl: string, id: number): Promise<i_user | null>
 {
@@ -35,11 +35,17 @@ function LoginPage()
 	const { apiUrl } = useContext(ApiUrlContext);
 	const { user, setUser } = useContext(AuthContext);
 
-	// debug
+	// debug variable
 	const [id, setId] = useState(2);
 	const [users, setUsers] = useState<i_user[]>([]);
 	const navigate = useNavigate();
+	// end of debug variable
 
+	const access_token = new URLSearchParams(window.location.search).get('code');
+	if (access_token)
+		return (<Navigate to={"/connect/" + access_token} />);
+
+	// debug function
 	function debugKeyHandle(event: KeyboardEvent<HTMLInputElement>)
 	{
 		const target = event.target as HTMLInputElement;
@@ -58,7 +64,7 @@ function LoginPage()
 
 	async function debugGetUsers()
 	{
-		const get_answer = await axios.get(apiUrl + "/user");
+		const get_answer = await axios.get(apiUrl + "/user/all");
 		console.log(get_answer);
 		let t_users: i_user[] = [];
 		for (let i = 0; i < get_answer.data.length; i++)

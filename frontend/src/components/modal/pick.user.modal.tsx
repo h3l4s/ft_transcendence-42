@@ -82,7 +82,7 @@ function PickUser(props: {
 		<div>
 			<button className='pick--user' onClick={request}>
 				<img className='img' style={{ height: "3rem", width: "3rem" }}
-					src={props.c_user.profilePicPath} alt="profile" />
+					src={props.c_user.pp_name} alt="profile" />
 				<div className='truncate' style={{ color: "#fff", marginTop: "0.75rem" }}>
 					{props.c_user.name}
 				</div>

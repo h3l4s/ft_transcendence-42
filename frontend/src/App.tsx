@@ -38,7 +38,7 @@ function App()
 					<Routes>
 						<Route path="/" element={<Home />} />
 						<Route path="/login" element={<LoginPage />} />
-						<Route path="/login?code=:token" element={<ConnectPage />} />
+						<Route path="/connect/:token" element={<ConnectPage />} />
 						<Route path="/play" element={<RequireAuth><PongPage /></RequireAuth>} />
 						<Route path="/chan" element={<RequireAuth><ChanPage /></RequireAuth>} />
 						<Route path="/user" element={<RequireAuth><UserPage /></RequireAuth>} />

@@ -89,7 +89,7 @@ function ProfileModal(props: { user: i_user, onClose: () => void })
 				}
 			</div>
 			<div>
-				<img className='img' style={{ marginTop: "-3rem", height: "30vh", width: "30vh" }} src={props.user.profilePicPath} alt="profile" />
+				<img className='img' style={{ marginTop: "-3rem", height: "30vh", width: "30vh" }} src={props.user.pp_name} alt="profile" />
 				{user && user.name !== props.user.name && friend
 					&& <Heart className='heart' onClick={() => updateFriend(false)} />}
 			</div>

@@ -3,13 +3,16 @@ import { IsNotEmpty, IsOptional, IsString, IsNumber } from 'class-validator';
 export class Auth42Dto
 {
 	@IsString()
+	@IsNotEmpty()
 	public token: string;
 
-	@IsOptional()
 	@IsString()
-	public UID?: string;
+	@IsNotEmpty()
+	@IsOptional()
+	public uid?: string;
 
 	@IsString()
+	@IsNotEmpty()
 	public secret: string;
 }
 

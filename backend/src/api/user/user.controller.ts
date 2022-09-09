@@ -29,16 +29,16 @@ export class UserController
 		return this.service.getUsersWithDefault();
 	}
 
+	@Post('auth42')
+	public auth42(@Body() data: Auth42Dto): Promise<User>
+	{
+		return this.service.auth42(data);
+	}
+
 	@Get(':id')
 	public getUser(@Param('id', ParseIntPipe) id: number): Promise<User>
 	{
 		return this.service.getUser(id);
-	}
-
-	@Get('auth42')
-	public auth42(@Body() data: Auth42Dto): Promise<User>
-	{
-		return this.service.auth42(data);
 	}
 
 	// tmp add user
