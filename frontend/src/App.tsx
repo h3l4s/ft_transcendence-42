@@ -40,6 +40,7 @@ function App()
 						<Route path="/login" element={<LoginPage />} />
 						<Route path="/connect/:token" element={<ConnectPage />} />
 						<Route path="/play" element={<RequireAuth><PongPage /></RequireAuth>} />
+						<Route path="/challenge/" element={<RequireAuth><PongPage /></RequireAuth>} />
 						<Route path="/chan" element={<RequireAuth><ChanPage /></RequireAuth>} />
 						<Route path="/user" element={<RequireAuth><UserPage /></RequireAuth>} />
 						<Route path="/user/:username" element={<UserPage />} />
