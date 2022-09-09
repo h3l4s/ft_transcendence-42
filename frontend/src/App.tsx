@@ -22,6 +22,7 @@ import CreateDefaultUser from './request/user.create.default';
 import LoginPage from './components/page/login/login.page';
 import ConnectPage from './components/page/login/connect.page';
 import ChallengePage from './components/page/pong/challenge.page';
+import PongView from './components/page/pong/pong.view';
 
 function App()
 {
@@ -38,6 +39,7 @@ function App()
 				<AuthContext.Provider value={valueUser}>
 					<Routes>
 						<Route path="/" element={<Home />} />
+						<Route path="/view/:id" element={<RequireAuth><PongView goBack={() => { }} /></RequireAuth>} />
 						<Route path="/login" element={<LoginPage />} />
 						<Route path="/connect/:token" element={<ConnectPage />} />
 						<Route path="/play" element={<RequireAuth><PongPage /></RequireAuth>} />

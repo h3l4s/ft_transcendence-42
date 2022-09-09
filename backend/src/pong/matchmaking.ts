@@ -1,5 +1,8 @@
-import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { IoAdapter } from "@nestjs/platform-socket.io";
+import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
+import { Console } from "console";
 import { Server, Socket } from 'socket.io';
+//import i_map from '../../../frontend/src/interface/map.interface'
 
 let player = 0;
 let clientNb_simple = 0;
@@ -10,6 +13,7 @@ let joueur_hard = [];
 let joueur_tennis = [];
 let bdd = [];
 let bdd_game = [];
+let match: string;
 
 function Move_player(game: any, mouseLocation: number, PLAYER_HEIGHT: number, canvas_height: number, who: number)
 {
@@ -137,10 +141,14 @@ export class Matchmaking
 					{
 						this.server.to(clientRoom).emit('switchFromServer', joueur_simple);
 						this.server.to(clientRoom).emit('start');
+						match = joueur_simple[0].toString() + " vs " + joueur_simple[1].toString() + " salon " + clientRoom.toString() + " simple";
+						console.log(match);
+						this.server.emit('live', match);
 						console.log(`joueur_simple = ${joueur_simple[0]}`);
 						console.log(`joueur_simple = ${joueur_simple[1]}`);
 						joueur_simple.pop();
 						joueur_simple.pop();
+						match = "";
 						bdd_game.push(clientRoom, type, "start");
 					}
 				});
@@ -153,19 +161,20 @@ export class Matchmaking
 				client.on('joinRoom', (clientRoom, nameP1) =>
 				{
 					//console.log(nameP1);
-					if (nameP1 !== joueur_hard[0])
+					if (nameP1 !== joueur_hard[0] && joueur_hard[1] === undefined)
 					{
 						joueur_hard.push(nameP1);
-						console.log(`joueur_hard = ${joueur_hard[0]}`);
-						console.log(`joueur_hard = ${joueur_hard[1]}`);
 						bdd.push(clientRoom, nameP1, client.id);
 					}
 					if (clientNb_hard % 2 === 0)
 					{
 						this.server.to(clientRoom).emit('switchFromServer', joueur_hard);
 						this.server.to(clientRoom).emit('start');
+						match = joueur_hard[0].toString() + " vs " + joueur_hard[1].toString() + " salon " + clientRoom.toString() + " hard";
+						this.server.emit('live', match);
 						joueur_hard.pop();
 						joueur_hard.pop();
+						match = "";
 						bdd_game.push(clientRoom, type, "start");
 					}
 				});
@@ -178,19 +187,20 @@ export class Matchmaking
 				client.on('joinRoom', (clientRoom, nameP1) =>
 				{
 					//console.log(nameP1);
-					if (nameP1 !== joueur_tennis[0])
+					if (nameP1 !== joueur_tennis[0] && joueur_tennis[1] === undefined)
 					{
 						joueur_tennis.push(nameP1);
-						console.log(`joueur_tennis = ${joueur_tennis[0]}`);
-						console.log(`joueur_tennis = ${joueur_tennis[1]}`);
 						bdd.push(clientRoom, nameP1, client.id);
 					}
 					if (clientNb_tennis % 2 === 0)
 					{
 						this.server.to(clientRoom).emit('switchFromServer', joueur_tennis);
 						this.server.to(clientRoom).emit('start');
+						match = joueur_tennis[0].toString() + " vs " + joueur_tennis[1].toString() + " salon " + clientRoom.toString()+ " tennis";
+						this.server.emit('live', match);
 						joueur_tennis.pop();
 						joueur_tennis.pop();
+						match = "";
 						bdd_game.push(clientRoom);
 					}
 				});
@@ -208,33 +218,14 @@ export class Matchmaking
 			this.server.to(info.clientRoom.name).emit('move-player-draw', game);
 
 		});
-		client.on('back', () =>
+		client.on('viewer', (clientRoom) =>
 		{
-			let pos = bdd.indexOf(client.id);
-			let restart_room = bdd_game.indexOf(bdd[pos - 2]);
-			console.table(`client disconnected : ${bdd[pos - 1]}`);
-			//console.table(`client room : ${bdd[pos - 2]}`);
-			console.log(`status of the room : ${restart_room}`);
-			if (restart_room === -1)
-			{
-				if (bdd[pos - 2] < 50)
-				{
-					clientNb_simple--;
-					joueur_simple.pop();
-				}
-				else if (bdd[pos - 2] < 100)
-				{
-					clientNb_tennis--;
-					joueur_tennis.pop();
-				}
-				else
-				{
-					clientNb_hard--;
-					joueur_hard.pop();
-				}
-				return;
-			}
-			this.server.to(bdd[pos - 2]).emit('disconnection', bdd[pos - 1]);
+			client.join(clientRoom.toString());
+			this.server.to(clientRoom.toString()).emit('start-stream');
+		});
+		client.on('finish', (clientRoom) =>
+		{
+			this.server.to(clientRoom.toString()).emit('end-viewer');
 		});
 	}
 
@@ -242,7 +233,7 @@ export class Matchmaking
 	{
 		let pos = bdd.indexOf(client.id);
 		let restart_room = bdd_game.indexOf(bdd[pos - 2]);
-		console.table(`client disconnected : ${bdd[pos - 1]}`);
+		console.table(`client disconnected : ${bdd[pos - 2]}`);
 		console.log(`statu of the room : ${restart_room}`);
 		if (restart_room === -1)
 		{
