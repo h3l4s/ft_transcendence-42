@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useContext, useState } from 'react';
+import { ChangeEvent, useContext, useState } from 'react';
 
 import { ApiUrlContext } from '../../context/apiUrl.context';
 import { AuthContext } from '../../context/auth.context';
@@ -15,7 +15,7 @@ function UsernameChangeModal(props: { callback: (user: i_user) => void })
 	const [username, setUsername] = useState("");
 	const [valid, setValid] = useState(true);
 
-	function usernameUpdateHandle(event: React.KeyboardEvent<HTMLInputElement>)
+	function usernameUpdateHandle(event: ChangeEvent<HTMLInputElement>)
 	{
 		setUsername(event.target.value);
 		if (!valid)

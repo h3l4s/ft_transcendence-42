@@ -15,11 +15,12 @@ import NoMatch from './components/page/nomatch.page';
 import RequireAuth from './components/requireAuth.component';
 
 import Home from './components/page/home.page';
-import SignUp from './components/page/login/signup.component';
 import ChanPage from './components/page/chan/chan.page';
 import UserPage from './components/page/user/user.page';
 import PongPage from './components/page/pong/pong.page';
 import CreateDefaultUser from './request/user.create.default';
+import LoginPage from './components/page/login/login.component';
+import ConnectPage from './components/page/login/connect.component';
 
 function App()
 {
@@ -36,7 +37,8 @@ function App()
 				<AuthContext.Provider value={valueUser}>
 					<Routes>
 						<Route path="/" element={<Home />} />
-						<Route path="/login" element={<SignUp />} />
+						<Route path="/login" element={<LoginPage />} />
+						<Route path="/connect/:token" element={<ConnectPage />} />
 						<Route path="/play" element={<RequireAuth><PongPage /></RequireAuth>} />
 						<Route path="/chan" element={<RequireAuth><ChanPage /></RequireAuth>} />
 						<Route path="/user" element={<RequireAuth><UserPage /></RequireAuth>} />

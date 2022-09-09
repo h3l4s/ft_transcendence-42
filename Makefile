@@ -6,7 +6,7 @@
 #    By: adelille <adelille@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/10 14:54:46 by adelille          #+#    #+#              #
-#    Updated: 2022/09/07 13:20:11 by adelille         ###   ########.fr        #
+#    Updated: 2022/09/08 21:00:58 by adelille         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,7 @@ BACK =	./backend
 
 ENV =		.env
 BACKENV =	$(BACK)/src/common/envs/development.env
+FRONTENV =	.front.env
 
 # **************************************************************************** #
 #	MAKEFILE	#
@@ -26,6 +27,8 @@ BACKENV =	$(BACK)/src/common/envs/development.env
 
 include $(ENV)
 $(eval export $(shell sed -ne 's/ *#.*$$//; /./ s/=.*$$// p' $(ENV)))
+include $(FRONTENV)
+$(eval export $(shell sed -ne 's/ *#.*$$//; /./ s/=.*$$// p' $(FRONTENV)))
 
 SHELL := bash
 
@@ -41,6 +44,7 @@ D =		$(shell tput sgr0)
 all:	$(NAME)
 
 $(NAME):
+	@[ -f $(FRONTENV) ] || echo -e "$(B)$(YEL)[WARNING]$(D)\t$(FRONTENV) not found"
 	docker-compose up --force-recreate --build
 
 ip:

@@ -5,7 +5,8 @@ interface i_user
 	id?: number;
 	access_token?: string;
 	name?: string;
-	profilePicPath?: string;
+	pp?: Buffer;
+	pp_name?: string;
 	xp?: number;
 	elo?: number;
 	win?: number;

@@ -70,6 +70,8 @@ services:
     environment:
       - PORT=3001
       - BASE_URL=http://localhost:3001
+      - REACT_APP_UID=$REACT_APP_UID
+      - REACT_APP_SECRET=$REACT_APP_SECRET
 
   adminer:
     image: adminer:4.8.1-standalone

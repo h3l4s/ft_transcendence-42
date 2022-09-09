@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useContext, useState } from 'react';
+import { ChangeEvent, useContext, useState } from 'react';
 
 import axios from 'axios';
 
@@ -9,6 +9,7 @@ import { AuthContext } from '../../context/auth.context';
 import { ApiUrlContext } from '../../context/apiUrl.context';
 
 import i_user from '../../interface/user.interface';
+import i_msg from '../../interface/msg.interface';
 
 import { ReactComponent as ProfilePage } from '../../icon/profile-user-svgrepo-com.svg';
 import { ReactComponent as AddFriend } from '../../icon/add-friend-svgrepo-com.svg';
@@ -17,7 +18,6 @@ import { ReactComponent as Heart } from '../../icon/heart-friend.svg';
 
 import UserStats from '../page/user/userstats.component';
 import { asyncReqUpdateUser } from '../../request/user.update.request';
-import i_msg from '../../interface/msg.interface';
 
 function ProfileModal(props: { user: i_user, onClose: () => void })
 {
@@ -44,7 +44,7 @@ function ProfileModal(props: { user: i_user, onClose: () => void })
 			});
 	}
 
-	function msgUpdateHandle(event: React.KeyboardEvent<HTMLInputElement>)
+	function msgUpdateHandle(event: ChangeEvent<HTMLInputElement>)
 	{
 		setMsg(event.target.value);
 	};
@@ -89,7 +89,7 @@ function ProfileModal(props: { user: i_user, onClose: () => void })
 				}
 			</div>
 			<div>
-				<img className='img' style={{ marginTop: "-3rem", height: "30vh", width: "30vh" }} src={props.user.profilePicPath} alt="profile" />
+				<img className='img' style={{ marginTop: "-3rem", height: "30vh", width: "30vh" }} src={props.user.pp_name} alt="profile" />
 				{user && user.name !== props.user.name && friend
 					&& <Heart className='heart' onClick={() => updateFriend(false)} />}
 			</div>

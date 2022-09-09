@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Socket } from "socket.io-client";
 
@@ -116,10 +116,8 @@ function Chat(props:
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	function msgUpdateHandle(event: React.KeyboardEvent<HTMLInputElement>)
-	{
-		setMsg(event.target.value);
-	};
+	function msgUpdateHandle(event: ChangeEvent<HTMLInputElement>)
+	{ setMsg(event.target.value); };
 
 	function msgSendHandle(event: React.KeyboardEvent<HTMLInputElement>)
 	{
