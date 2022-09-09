@@ -19,8 +19,9 @@ import ChanPage from './components/page/chan/chan.page';
 import UserPage from './components/page/user/user.page';
 import PongPage from './components/page/pong/pong.page';
 import CreateDefaultUser from './request/user.create.default';
-import LoginPage from './components/page/login/login.component';
-import ConnectPage from './components/page/login/connect.component';
+import LoginPage from './components/page/login/login.page';
+import ConnectPage from './components/page/login/connect.page';
+import ChallengePage from './components/page/pong/challenge.page';
 
 function App()
 {
@@ -40,7 +41,7 @@ function App()
 						<Route path="/login" element={<LoginPage />} />
 						<Route path="/connect/:token" element={<ConnectPage />} />
 						<Route path="/play" element={<RequireAuth><PongPage /></RequireAuth>} />
-						<Route path="/challenge/" element={<RequireAuth><PongPage /></RequireAuth>} />
+						<Route path="/challenge/:id" element={<RequireAuth><ChallengePage /></RequireAuth>} />
 						<Route path="/chan" element={<RequireAuth><ChanPage /></RequireAuth>} />
 						<Route path="/user" element={<RequireAuth><UserPage /></RequireAuth>} />
 						<Route path="/user/:username" element={<UserPage />} />

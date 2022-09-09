@@ -12,7 +12,7 @@ import i_user from '../../../interface/user.interface';
 import { ReactComponent as Auth42 } from '../../../icon/42_Logo.svg'
 
 import { Users } from '../chan/user.component';
-import { userBacktoFront, useReqUsersWithDefault } from '../../../request/user.request';
+import { userBacktoFront, } from '../../../request/user.request';
 
 async function requestUser(apiUrl: string, id: number): Promise<i_user | null>
 {
@@ -54,6 +54,7 @@ function LoginPage()
 			event.preventDefault();
 			debugCreateUser(target.value);
 			target.value = "";
+			debugGetUsers();
 		}
 	}
 

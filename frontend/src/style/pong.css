@@ -1,5 +1,6 @@
 .pong {
-	height: calc(100vh - var(--nav-h));
+	height: 100vh;
+	margin-top: - var(--nav-h);
 	background-repeat: no-repeat;
 	background-size: cover;
 	font-family: OCR A Std;

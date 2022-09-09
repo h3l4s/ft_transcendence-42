@@ -9,7 +9,7 @@ import { AuthContext } from "../../../context/auth.context";
 
 import i_user from "../../../interface/user.interface";
 
-import LoginPage from "./login.component";
+import LoginPage from "./login.page";
 import Loading from "../../request_answer_component/loading.component";
 import Error from "../../request_answer_component/error.component";
 
