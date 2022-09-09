@@ -11,6 +11,7 @@ import i_user from "../../../interface/user.interface";
 import LoginPage from "./login.page";
 import Loading from "../../request_answer_component/loading.component";
 import Error from "../../request_answer_component/error.component";
+import UsernameChangeModal from "../../modal/username.change.modal";
 
 function Connect(props: { token: string, callback: (new_user: i_user) => void })
 {
@@ -42,6 +43,7 @@ function ConnectPage()
 	const { user, setUser } = useContext(AuthContext);
 	const token = useParams().token;
 	const [connected, setConnected] = useState(false);
+	const [chooseUsername, setChooseUsername] = useState(false);
 
 	if (!token)
 		return (<div className='backdrop ontop'><Error msg="token not found" /></div>);
@@ -53,15 +55,24 @@ function ConnectPage()
 	function connect(new_user: i_user)
 	{
 		setUser(new_user);
+		if (new_user.name && new_user.name[0] === '#')
+			setChooseUsername(true);
 		setConnected(true);
+	}
+
+	function nameChoosen(new_user: i_user)
+	{
+		setUser(new_user);
+		setChooseUsername(false);
 	}
 
 	return (
 		<div>
 			<LoginPage />
 			<div className='backdrop'></div>
-			{!connected && !user && <Connect token={token} callback={connect} />}
-			{connected && <Navigate to='/' />}
+			{!connected && !user && !chooseUsername && <Connect token={token} callback={connect} />}
+			{connected && !chooseUsername && <Navigate to='/' />}
+			{connected && chooseUsername && <UsernameChangeModal callback={nameChoosen} />}
 		</div>
 	);
 }

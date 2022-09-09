@@ -30,7 +30,7 @@ function ChallengePage()
 	console.log(reqUsers);
 
 	return (
-		<div style={{ backgroundColor: "var(--background-color)", display: "flex", flexDirection: "column", justifyContent: "space-around" }}>
+		<div style={{ height: "100vh", backgroundColor: "var(--background-color)", display: "flex", flexDirection: "column", justifyContent: "space-around" }}>
 			<div style={{ display: "flex", flexDirection: "row", justifyContent: "space-around" }}>
 				<UserBtn user={user} />
 				vs

@@ -7,14 +7,12 @@ function Msgs(props: { id: number | undefined, msgs: i_msg[] | undefined, mutedI
 	if (!props.id || !props.msgs)
 		return <div />
 
-	console.log(props.msgs);
-
 	let ret: JSX.Element[] = [];
 
 	for (let i = 0; i < props.msgs.length; i++)
 	{
-		if (props.mutedId && !props.mutedId.includes(props.msgs[i].userId)
-			&& props.adminMutedId && !props.adminMutedId.includes(props.msgs[i].userId))
+		if ((!props.mutedId || !props.mutedId.includes(props.msgs[i].userId))
+			&& (!props.adminMutedId || !props.adminMutedId.includes(props.msgs[i].userId)))
 			ret.push(<Msg key={i} id={props.id} msg={props.msgs[i]} />);
 	}
 

@@ -79,7 +79,11 @@ export class UserService
 		const new_user: User = new User();
 
 		new_user.access_token = response.data.access_token;
-		new_user.name = user_info.data.login;
+		const c = await this.repository.count({ where: { name: user_info.data.login } })
+		if (c)
+			new_user.name = "#" + user_info.data.login + "-" + c;
+		else
+			new_user.name = user_info.data.login;
 		new_user.pp_name = user_info.data.image_url;
 
 		return this.repository.save(new_user);
