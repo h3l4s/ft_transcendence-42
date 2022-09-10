@@ -38,11 +38,23 @@ function Connect(props: { token: string, callback: (new_user: i_user) => void })
 	return (<div />);
 }
 
+function TwoFa()
+{
+	return (
+		<div className='backdrop ontop'>
+			<div className='modal--add--chan'>
+				bonjour
+			</div>
+		</div>
+	)
+}
+
 function ConnectPage()
 {
 	const { user, setUser } = useContext(AuthContext);
 	const token = useParams().token;
 	const [connected, setConnected] = useState(false);
+	const [twoFA, setTwoFA] = useState(false);
 	const [chooseUsername, setChooseUsername] = useState(false);
 
 	if (!token)
@@ -54,6 +66,11 @@ function ConnectPage()
 
 	function connect(new_user: i_user)
 	{
+		if (new_user.twofa)
+		{
+			setTwoFA(true);
+			return (<div />);
+		}
 		setUser(new_user);
 		if (new_user.name && new_user.name[0] === '#')
 			setChooseUsername(true);
@@ -71,6 +88,7 @@ function ConnectPage()
 			<LoginPage />
 			<div className='backdrop'></div>
 			{!connected && !user && !chooseUsername && <Connect token={token} callback={connect} />}
+			{twoFA && <TwoFa />}
 			{connected && !chooseUsername && <Navigate to='/' />}
 			{connected && chooseUsername && <UsernameChangeModal callback={nameChoosen} />}
 		</div>

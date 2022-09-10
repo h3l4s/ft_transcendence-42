@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString, IsNumber } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, IsNumber, IsBoolean } from 'class-validator';
 
 export class Auth42Dto
 {
@@ -22,6 +22,11 @@ export class UpdateUserDto
 	@IsNotEmpty()
 	@IsOptional()
 	public name: string;
+
+	@IsBoolean()
+	@IsNotEmpty()
+	@IsOptional()
+	public twofa: boolean;
 
 	@IsNumber()
 	@IsNotEmpty()

@@ -122,6 +122,8 @@ export class UserService
 
 		if (updateUserDto.name)
 			user.name = updateUserDto.name;
+		if (updateUserDto.twofa)
+			user.twofa = updateUserDto.twofa;
 		if (updateUserDto.xp)
 			user.xp += updateUserDto.xp;
 		if (updateUserDto.elo)
