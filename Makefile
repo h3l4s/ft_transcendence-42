@@ -6,7 +6,7 @@
 #    By: jraffin <jraffin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/10 14:54:46 by adelille          #+#    #+#              #
-#    Updated: 2022/09/10 15:45:36 by jraffin          ###   ########.fr        #
+#    Updated: 2022/09/10 18:13:02 by jraffin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,6 @@ FRONT =	./frontend
 BACK =	./backend
 
 ENV =		.env
-BACKENV =	$(BACK)/src/common/envs/development.env
 SECRETENV =	.secret.env
 
 # **************************************************************************** #
@@ -25,10 +24,10 @@ SECRETENV =	.secret.env
 #include	srcs/.env
 #export	$(shell sed 's/=.*//' srcs/.env)
 
-include $(ENV)
-$(eval export $(shell sed -ne 's/ *#.*$$//; /./ s/=.*$$// p' $(ENV)))
--include $(SECRETENV)
-$(eval export $(shell sed -ne 's/ *#.*$$//; /./ s/=.*$$// p' $(SECRETENV)))
+#include $(ENV)
+#$(eval export $(shell sed -ne 's/ *#.*$$//; /./ p' ./$(ENV)))
+#-include $(SECRETENV)
+#$(eval export $(shell sed -ne 's/ *#.*$$//; /./ s/=.*$$// p' $(SECRETENV)))
 
 SHELL := bash
 
@@ -51,15 +50,17 @@ ip:
 	@hostname -I | cut -d' ' -f1
 
 db:
-	docker-compose up --force-recreate --build db
+	docker-compose run -p 5432:5432 db
 
 back:
 	[ -d $(BACK)/node_modules ] || npm --prefix $(BACK) install $(BACK) --legacy-peer-deps
-	export PORT=3000 && npm --prefix $(BACK) run start:dev
+	@export PORT=3000 DATABASE_HOST=localhost DATABASE_PORT=5432 $(shell sed -e 's/ *#.*$$//' ./$(ENV))	\
+	&& npm --prefix $(BACK) run start:dev
 
 front:
 	[ -d $(FRONT)/node_modules ] || npm --prefix $(FRONT) install $(FRONT) --legacy-peer-deps
-	export PORT=3001 && npm --prefix $(FRONT) start
+	@export PORT=3001 $(shell sed -e 's/ *#.*$$//' ./$(SECRETENV))	\
+	&& npm --prefix $(FRONT) start
 
 stop:
 	docker-compose down
