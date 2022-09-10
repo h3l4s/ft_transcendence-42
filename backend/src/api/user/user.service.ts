@@ -60,7 +60,7 @@ export class UserService
 			client_secret: data.secret,
 			grant_type: "authorization_code",
 			code: data.token,
-			redirect_uri: "http://localhost:3001/login"	// might not work to redirect to localhost
+			redirect_uri: "http://localhost:3001/login"
 		}).catch(error => console.log(error));
 
 		if (!response.data || !response.data.access_token)
