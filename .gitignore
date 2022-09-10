@@ -16,6 +16,8 @@ dist
 
 # dependencies
 node_modules
+frontend/package-lock.json
+backend/package-lock.json
 /.pnp
 .pnp.js
 
