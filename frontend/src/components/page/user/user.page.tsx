@@ -95,6 +95,9 @@ function UserPage()
 					<div style={{ margin: "0.5rem 0 0.5rem 0" }}>
 						<img className='img' style={{ height: "23vw", width: "23vw" }}
 							src={(image ? URL.createObjectURL(image) : userToLoad.pp_name)} alt="profile" />
+						<button className='twofa' >
+							2FA
+						</button>
 						{(!p_username || p_username === userToLoad.name)
 							&& <div className='input--file'>
 								<input type='file' style={{ zIndex: "99" }} onChange={(e) =>

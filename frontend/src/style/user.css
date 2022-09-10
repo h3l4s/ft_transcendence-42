@@ -91,6 +91,18 @@
 	fill: var(--icon-color-hover);
 }
 
+.twofa {
+	position: absolute;
+	left: 0.85rem;
+	bottom: 0.85rem;
+	border: unset;
+	background-color: var(--alt-color);
+	width: 3rem;
+	height: 3rem;
+	color: #fff;
+	font-family: var(--alt-font);
+}
+
 .typewriter {
 	width: 0;
 	overflow: hidden;

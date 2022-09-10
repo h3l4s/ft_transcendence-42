@@ -42,7 +42,7 @@ function Connect(props: { token: string, callback: (new_user: i_user) => void })
 	return (<div />);
 }
 
-function TwoFa(props: { callback: () => void })
+function TwoFa(props: { secret: string, callback: () => void })
 {
 	const [twoFA, setTwoFA] = useState("");
 	const [valid, setValid] = useState(true);
@@ -53,7 +53,7 @@ function TwoFa(props: { callback: () => void })
 		let res = event.target.value.replace(/\D/g, '');
 		res = res.replace(/(.{3})/g, '$1 ');
 
-		if (!process.env.REACT_APP_XRAPID_API_KEY || !process.env.REACT_APP_XRAPID_API_SECRET)
+		if (!process.env.REACT_APP_XRAPID_API_KEY)
 		{
 			console.warn("XRapid API key or secret not set");
 			return;
@@ -70,7 +70,7 @@ function TwoFa(props: { callback: () => void })
 		const options = {
 			method: 'GET',
 			url: 'https://google-authenticator.p.rapidapi.com/validate/',
-			params: { code: code, secret: process.env.REACT_APP_XRAPID_API_SECRET },
+			params: { code: code, secret: props.secret },
 			headers: {
 				'X-RapidAPI-Key': process.env.REACT_APP_XRAPID_API_KEY,
 				'X-RapidAPI-Host': 'google-authenticator.p.rapidapi.com'
@@ -106,7 +106,7 @@ function ConnectPage()
 	const { user, setUser } = useContext(AuthContext);
 	const token = useParams().token;
 	const [connected, setConnected] = useState(false);
-	const [twoFA, setTwoFA] = useState((user ? !user.twofa : false));
+	const [twoFA, setTwoFA] = useState((user && user.twofa && user.twofa.length > 0 ? true : false));
 	const [chooseUsername, setChooseUsername] = useState(false);
 
 	if (!token)
@@ -130,12 +130,14 @@ function ConnectPage()
 		setChooseUsername(false);
 	}
 
+	console.log(connected, twoFA, chooseUsername);
+
 	return (
 		<div>
 			<LoginPage />
 			<div className='backdrop'></div>
 			{!connected && !user && !chooseUsername && <Connect token={token} callback={connect} />}
-			{connected && twoFA && <TwoFa callback={() => setTwoFA(false)} />}
+			{connected && twoFA && <TwoFa secret={user!.twofa!} callback={() => setTwoFA(false)} />}
 			{connected && !twoFA && chooseUsername && <UsernameChangeModal callback={nameChoosen} />}
 			{connected && !twoFA && !chooseUsername && <Navigate to='/' />}
 		</div>
