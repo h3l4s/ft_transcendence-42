@@ -27,7 +27,10 @@ function Connect(props: { token: string, callback: (new_user: i_user) => void })
 	useEffect(() =>
 	{
 		if (data)
+		{
+			localStorage.setItem("user", JSON.stringify(data));
 			props.callback(data);
+		}
 	}, [data, props]);
 
 	if (loading)
