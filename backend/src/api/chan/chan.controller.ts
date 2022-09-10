@@ -81,6 +81,18 @@ export class ChanController
 		return this.service.tryPwd(id, data);
 	}
 
+	@Put('pwd/:id')
+	public setPwd(@Param('id', ParseIntPipe) id: number, @Body() data: PwdDto)
+	{
+		return this.service.setPwd(id, data);
+	}
+
+	@Delete('pwd/:id')
+	public removePwd(@Param('id', ParseIntPipe) id: number)
+	{
+		return this.service.removePwd(id);
+	}
+
 	@Delete(':id')
 	public deleteChan(@Param('id', ParseIntPipe) id: number)
 	{
