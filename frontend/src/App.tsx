@@ -32,6 +32,16 @@ function App()
 	const valueUser = useMemo(() => ({ user, setUser }), [user, setUser]);
 	const valueApiUrl = useMemo(() => ({ apiUrl, setApiUrl }), [apiUrl, setApiUrl]);
 
+	if (!user && localStorage.getItem("user"))
+	{
+		console.info("JWT user:", JSON.parse(localStorage.getItem("user") as string));
+		setUser(JSON.parse(localStorage.getItem("user") as string));
+	}
+	else if (user)
+		console.info("connected:", user);
+	else
+		console.info("not connected");
+
 	return (
 		<Router>
 			<NavBar />
