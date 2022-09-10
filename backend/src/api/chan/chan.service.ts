@@ -246,6 +246,26 @@ export class ChanService
 		return chan;
 	}
 
+	public async setPwd(id: number, data: PwdDto): Promise<Chan>
+	{
+		const chan = await this.repository.findOne({ where: { id: id } });
+
+		chan.hash = hashing(data.pwd);
+		chan.type = 'protected';
+
+		return this.repository.save(chan);
+	}
+
+	public async removePwd(id: number): Promise<Chan>
+	{
+		const chan = await this.repository.findOne({ where: { id: id } });
+
+		chan.hash = null;
+		chan.type = 'public';
+
+		return this.repository.save(chan);
+	}
+
 	public deleteChan(id: number)
 	{
 		return this.repository.delete(id)

@@ -198,7 +198,7 @@ function Chat(props:
 				goBack={() => { setShowAdminMute(false); setShowOption(true); }}
 				onClose={() => { setShowAdminMute(false); setShowOption(false); }}
 				callback={props.callback} />}
-			{props.is_owner && showOwnerPwd && <PickPwdModal
+			{props.is_owner && showOwnerPwd && <PickPwdModal chan={props.chan}
 				goBack={() => { setShowOwnerPwd(false); setShowOption(true); }}
 				onClose={() => { setShowOwnerPwd(false); setShowOption(false); }}
 				callback={props.callback} />}
