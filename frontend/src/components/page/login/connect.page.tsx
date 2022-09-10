@@ -42,67 +42,61 @@ function Connect(props: { token: string, callback: (new_user: i_user) => void })
 	return (<div />);
 }
 
-async function googleAuthValidate(): boolean
-{
-	let xrapid_key = "";
-	let secret = "";
-
-	if(process.env.REACT_APP_XRAPID_API_KEY)
-	{
-		xrapid_key = process.env.REACT_APP_XRAPID_API_KEY;
-		console.log(xrapid_key);
-	}
-	if(process.env.REACT_APP_XRAPID_API_SECRET)
-	{
-		secret = process.env.REACT_APP_XRAPID_API_SECRET;
-		console.log(secret);
-	}
-	let input = document.getElementById('googleValid') as HTMLInputElement | null;
-	let code;
-	if(input){
-		code  = input.value;
-		console.log(code);
-	}
-	const options = {
-		method: 'GET',
-		url: 'https://google-authenticator.p.rapidapi.com/validate/',
-		params: {code: code, secret: secret},
-		headers: {
-		  'X-RapidAPI-Key': xrapid_key,
-		  'X-RapidAPI-Host': 'google-authenticator.p.rapidapi.com'
-		}
-	  };
-	  
-	  axios.request(options).then(function (response) {
-		  console.log(response.data);
-	  }).catch(function (error) {
-		  console.error(error);
-	  });
-}
-
-function TwoFa(props: {callback: (new_user: i_user) => void})
+function TwoFa(props: { callback: () => void })
 {
 	const [twoFA, setTwoFA] = useState("");
-
-	console.log("here");
+	const [valid, setValid] = useState(true);
 
 	function handle2FA(event: any)
 	{
 		event.preventDefault();
 		let res = event.target.value.replace(/\D/g, '');
 		res = res.replace(/(.{3})/g, '$1 ');
-		if (res.length >= 7)
+
+		if (!process.env.REACT_APP_XRAPID_API_KEY || !process.env.REACT_APP_XRAPID_API_SECRET)
 		{
-			const code = parseInt(res.replace(/ /g, ''));
-			
+			console.warn("XRapid API key or secret not set");
+			return;
 		}
+
+		setValid(true);
 		setTwoFA(res);
+
+		if (res.length < 7)
+			return;
+
+		const code = parseInt(res.replace(/ /g, ''));
+
+		const options = {
+			method: 'GET',
+			url: 'https://google-authenticator.p.rapidapi.com/validate/',
+			params: { code: code, secret: process.env.REACT_APP_XRAPID_API_SECRET },
+			headers: {
+				'X-RapidAPI-Key': process.env.REACT_APP_XRAPID_API_KEY,
+				'X-RapidAPI-Host': 'google-authenticator.p.rapidapi.com'
+			}
+		};
+		axios.request(options).then(res =>
+		{
+			console.log(res);
+			if (res.data === "True")
+				props.callback();
+			else
+				setValid(false);
+		}).catch(err => console.log(err));
+
+		setTwoFA("");
 	}
 
 	return (
-		<form className='modal--pick'>
+		<form className='modal--add--chan' style={{ display: "flex", flexDirection: "column", justifyContent: "space-around" }}>
 			<div>two-factor authentication</div>
 			<input className='form--input' type='text' required value={twoFA} onChange={handle2FA} />
+			{!valid ? (
+				<div><Error msg="invalid code" /></div>
+			) : (
+				<div />
+			)}
 		</form>
 	);
 }
@@ -112,7 +106,7 @@ function ConnectPage()
 	const { user, setUser } = useContext(AuthContext);
 	const token = useParams().token;
 	const [connected, setConnected] = useState(false);
-	const [twoFA, setTwoFA] = useState(false);
+	const [twoFA, setTwoFA] = useState((user ? !user.twofa : false));
 	const [chooseUsername, setChooseUsername] = useState(false);
 
 	if (!token)
@@ -124,11 +118,6 @@ function ConnectPage()
 
 	function connect(new_user: i_user)
 	{
-		if (!new_user.twofa)	// debug, please revert later
-		{
-			setTwoFA(true);
-			return (<div />);
-		}
 		setUser(new_user);
 		if (new_user.name && new_user.name[0] === '#')
 			setChooseUsername(true);
@@ -146,9 +135,9 @@ function ConnectPage()
 			<LoginPage />
 			<div className='backdrop'></div>
 			{!connected && !user && !chooseUsername && <Connect token={token} callback={connect} />}
-			{twoFA && <TwoFa callback={connect}/>}
-			{connected && !twoFA && !chooseUsername && <Navigate to='/' />}
+			{connected && twoFA && <TwoFa callback={() => setTwoFA(false)} />}
 			{connected && !twoFA && chooseUsername && <UsernameChangeModal callback={nameChoosen} />}
+			{connected && !twoFA && !chooseUsername && <Navigate to='/' />}
 		</div>
 	);
 }
