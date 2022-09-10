@@ -12,6 +12,7 @@ import LoginPage from "./login.page";
 import Loading from "../../request_answer_component/loading.component";
 import Error from "../../request_answer_component/error.component";
 import UsernameChangeModal from "../../modal/username.change.modal";
+import axios from "axios";
 
 function Connect(props: { token: string, callback: (new_user: i_user) => void })
 {
@@ -41,15 +42,69 @@ function Connect(props: { token: string, callback: (new_user: i_user) => void })
 	return (<div />);
 }
 
-function TwoFa()
+async function googleAuthValidate(): boolean
 {
+	let xrapid_key = "";
+	let secret = "";
+
+	if(process.env.REACT_APP_XRAPID_API_KEY)
+	{
+		xrapid_key = process.env.REACT_APP_XRAPID_API_KEY;
+		console.log(xrapid_key);
+	}
+	if(process.env.REACT_APP_XRAPID_API_SECRET)
+	{
+		secret = process.env.REACT_APP_XRAPID_API_SECRET;
+		console.log(secret);
+	}
+	let input = document.getElementById('googleValid') as HTMLInputElement | null;
+	let code;
+	if(input){
+		code  = input.value;
+		console.log(code);
+	}
+	const options = {
+		method: 'GET',
+		url: 'https://google-authenticator.p.rapidapi.com/validate/',
+		params: {code: code, secret: secret},
+		headers: {
+		  'X-RapidAPI-Key': xrapid_key,
+		  'X-RapidAPI-Host': 'google-authenticator.p.rapidapi.com'
+		}
+	  };
+	  
+	  axios.request(options).then(function (response) {
+		  console.log(response.data);
+	  }).catch(function (error) {
+		  console.error(error);
+	  });
+}
+
+function TwoFa(props: {callback: (new_user: i_user) => void})
+{
+	const [twoFA, setTwoFA] = useState("");
+
+	console.log("here");
+
+	function handle2FA(event: any)
+	{
+		event.preventDefault();
+		let res = event.target.value.replace(/\D/g, '');
+		res = res.replace(/(.{3})/g, '$1 ');
+		if (res.length >= 7)
+		{
+			const code = parseInt(res.replace(/ /g, ''));
+			
+		}
+		setTwoFA(res);
+	}
+
 	return (
-		<div className='backdrop ontop'>
-			<div className='modal--add--chan'>
-				bonjour
-			</div>
-		</div>
-	)
+		<form className='modal--pick'>
+			<div>two-factor authentication</div>
+			<input className='form--input' type='text' required value={twoFA} onChange={handle2FA} />
+		</form>
+	);
 }
 
 function ConnectPage()
@@ -69,7 +124,7 @@ function ConnectPage()
 
 	function connect(new_user: i_user)
 	{
-		if (new_user.twofa)
+		if (!new_user.twofa)	// debug, please revert later
 		{
 			setTwoFA(true);
 			return (<div />);
@@ -91,9 +146,9 @@ function ConnectPage()
 			<LoginPage />
 			<div className='backdrop'></div>
 			{!connected && !user && !chooseUsername && <Connect token={token} callback={connect} />}
-			{twoFA && <TwoFa />}
-			{connected && !chooseUsername && <Navigate to='/' />}
-			{connected && chooseUsername && <UsernameChangeModal callback={nameChoosen} />}
+			{twoFA && <TwoFa callback={connect}/>}
+			{connected && !twoFA && !chooseUsername && <Navigate to='/' />}
+			{connected && !twoFA && chooseUsername && <UsernameChangeModal callback={nameChoosen} />}
 		</div>
 	);
 }
