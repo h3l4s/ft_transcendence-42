@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: adelille <adelille@student.42.fr>          +#+  +:+       +#+         #
+#    By: jraffin <jraffin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/10 14:54:46 by adelille          #+#    #+#              #
-#    Updated: 2022/09/07 00:19:36 by adelille         ###   ########.fr        #
+#    Updated: 2022/09/10 15:45:36 by jraffin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ BACK =	./backend
 
 ENV =		.env
 BACKENV =	$(BACK)/src/common/envs/development.env
-FRONTENV =	.front.env
+SECRETENV =	.secret.env
 
 # **************************************************************************** #
 #	MAKEFILE	#
@@ -27,8 +27,8 @@ FRONTENV =	.front.env
 
 include $(ENV)
 $(eval export $(shell sed -ne 's/ *#.*$$//; /./ s/=.*$$// p' $(ENV)))
-include $(FRONTENV)
-$(eval export $(shell sed -ne 's/ *#.*$$//; /./ s/=.*$$// p' $(FRONTENV)))
+-include $(SECRETENV)
+$(eval export $(shell sed -ne 's/ *#.*$$//; /./ s/=.*$$// p' $(SECRETENV)))
 
 SHELL := bash
 
@@ -44,7 +44,7 @@ D =		$(shell tput sgr0)
 all:	$(NAME)
 
 $(NAME):
-	@[ -f $(FRONTENV) ] || echo -e "$(B)$(YEL)[WARNING]$(D)\t$(FRONTENV) not found"
+	@[ -f $(SECRETENV) ] || echo -e "$(B)$(YEL)[WARNING]$(D)\t$(SECRETENV) not found"
 	docker-compose up --force-recreate --build
 
 ip:
@@ -55,11 +55,11 @@ db:
 
 back:
 	[ -d $(BACK)/node_modules ] || npm --prefix $(BACK) install $(BACK) --legacy-peer-deps
-	npm --prefix $(BACK) run start:dev
+	export PORT=3000 && npm --prefix $(BACK) run start:dev
 
 front:
 	[ -d $(FRONT)/node_modules ] || npm --prefix $(FRONT) install $(FRONT) --legacy-peer-deps
-	npm --prefix $(FRONT) start
+	export PORT=3001 && npm --prefix $(FRONT) start
 
 stop:
 	docker-compose down
