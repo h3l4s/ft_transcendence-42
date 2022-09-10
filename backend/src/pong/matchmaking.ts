@@ -85,8 +85,8 @@ function collision(player: any, game: any, canvas_height: number, canvas_width: 
 		if (!game.score.ball_start)
 			game.ball.speed.x = -0.5;
 		else
-			game.ball.speed.x = 0.5;
-		game.ball.speed.y = 0.5;
+			game.ball.speed.x = 0.7;
+		game.ball.speed.y = 0.7;
 		return (game);
 	}
 	else
@@ -217,11 +217,11 @@ export class Matchmaking
 			this.server.to(info.clientRoom.name).emit('move-player-draw', game);
 
 		});
-		client.on('viewer', (clientRoom) =>
-		{
-			client.join(clientRoom.toString());
-			this.server.to(clientRoom.toString()).emit('start-stream');
-		});
+		// client.on('viewer', (clientRoom) =>
+		// {
+		// 	client.join(clientRoom.toString());
+		// 	this.server.to(clientRoom.toString()).emit('start-stream');
+		// });
 		client.on('want_gamelive', (room) =>
 		{
 			client.join(room.toString());
@@ -230,14 +230,13 @@ export class Matchmaking
 			}
 		});
 		client.on('finish', (clientRoom, data_match) =>
-		{
-			let tab: any[];
+		{	
 			console.table(current_match);
 			console.log("data = ", data_match);
 			let pos = current_match.indexOf(data_match.toString());
 			console.log("pos = ", pos);
-			tab = current_match.splice(pos, pos);
-			current_match = tab;
+			if (pos !== -1)
+				current_match.splice(pos, 1);
 			console.table( current_match);
 			this.server.to("0").emit('finish-match', current_match);
 		});

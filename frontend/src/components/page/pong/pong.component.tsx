@@ -29,6 +29,7 @@ function Pong(props: { map: i_map, goBack: () => void })
 	{
 		if (!user || !user.name)
 			return;
+		console.log("first appel");
 		handleCanvas(apiUrl, user.name, true, props.map, bdd_pong, 0, socket, "");
 	});
 
@@ -112,7 +113,7 @@ function LaunchGame(props: { map: i_map, nameP1: string, saloon: any, incGameLau
 	if (playbtn !== null)
 		playbtn.style.display = "none";
 
-	console.log("hello\n ca va");
+	
 
 	useEffect(() =>
 	{
@@ -136,10 +137,10 @@ function LaunchGame(props: { map: i_map, nameP1: string, saloon: any, incGameLau
 		});
 		props.socket.on('start', (data) =>
 		{
-			console.table(bdd_pong);
 			props.setInGame(true);
 			if (!user || !user.name)
 				return;
+			console.log("second appel");
 			handleCanvas(apiUrl, user.name, false, props.map, bdd_pong, props.incGameLaunch(), props.socket, data.toString());
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -173,8 +174,8 @@ function handleCanvas(apiUrl: string, username: string, init: boolean, map: i_ma
 			r: 5,
 			ratio: 1,
 			speed: {
-				x: 1,
-				y: 1
+				x: 0.7,
+				y: 0.7
 			}
 		},
 		score: {
@@ -190,12 +191,12 @@ function handleCanvas(apiUrl: string, username: string, init: boolean, map: i_ma
 	let scoreP2HTML = document.querySelector("#scoreP2HTML")! as HTMLElement;
 	let scoreP1 = 0;
 	let scoreP2 = 0;
-	scoreP1HTML.innerText = "0";
-	scoreP2HTML.innerText = "0";
 
 	draw();
+
 	if (init)
 		return;
+	
 	console.log(bdd[room]);
 	let parsing_player: string;
 	let p1name = document.querySelector("#p1-name")!;
@@ -246,7 +247,10 @@ function handleCanvas(apiUrl: string, username: string, init: boolean, map: i_ma
 	p2name.innerHTML = bdd[room].player2;
 	console.log(`p1 = ${bdd[room].player1}, p2 = ${bdd[room].player2} et parsing-player = ${parsing_player}`);
 
-	play();
+	if (game.score.p1 === 0){
+		play();
+		console.log("BBBBBBBBBBBBBBB");
+	}
 
 	function play()
 	{
@@ -254,6 +258,12 @@ function handleCanvas(apiUrl: string, username: string, init: boolean, map: i_ma
 		socket.on('returnPlay', (data) =>
 		{
 			game = data;
+			if (game.score.p1_temp === -1){
+				game.score.p2_temp++;
+				game.score.p1_temp++;
+				scoreP1HTML.innerText = game.score.p1.toString();
+				scoreP2HTML.innerText = game.score.p2.toString();
+			}
 			if (game.score.p1 !== game.score.p1_temp || game.score.p2 !== game.score.p2_temp)
 			{
 				if (game.score.p1 !== game.score.p1_temp)
@@ -267,7 +277,7 @@ function handleCanvas(apiUrl: string, username: string, init: boolean, map: i_ma
 					scoreP2HTML.innerText = game.score.p2.toString();
 				}
 			}
-			if (game.score.p1 >= 11 || game.score.p2 >= 11)
+			if (game.score.p1 >= 5 || game.score.p2 >= 5)
 			{
 				scoreP1 = 11;
 				scoreP2 = 11;
@@ -275,33 +285,10 @@ function handleCanvas(apiUrl: string, username: string, init: boolean, map: i_ma
 		});
 		if (scoreP1 >= 11 || scoreP2 >= 11)
 		{
-			let context = canvas.getContext('2d')! as CanvasRenderingContext2D;
-			if (game.score.p1 >= 11)
-			{
-				if (bdd[room].player1 === map.p1)
-				{
-					context.drawImage(win, 0, 0, canvas.width, canvas.height);
-				}
-				else
-				{
-					context.drawImage(lose, 0, 0, canvas.width, canvas.height);
-				}
-			}
-			if (game.score.p2 >= 11)
-			{
-				if (bdd[room].player2 === map.p1)
-				{
-					context.drawImage(win, 0, 0, canvas.width, canvas.height);
-				}
-				else
-				{
-					context.drawImage(lose, 0, 0, canvas.width, canvas.height);
-				}
-			}
 			socket.emit('finish', bdd[room].clientRoom, match);
-			//canvas.style.display = "none";
-			console.log(map.p1);
+			canvas.style.display = "none";
 			postResults(apiUrl, username, game.score.p1, game.score.p2, bdd[room].player1, bdd[room].player2);
+			bdd[room].clientRoom = -1;
 			return;
 		}
 		draw();

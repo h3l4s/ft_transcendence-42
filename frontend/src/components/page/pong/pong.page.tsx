@@ -14,8 +14,8 @@ function Matches(props: { matches: string[] })
 	const filteredArray = props.matches.filter(function(ele , pos){
 		return props.matches.indexOf(ele) == pos;
 	}) 
-	
-	
+
+
 
 	for (let i = 0; i < filteredArray.length; i++)
 	{ ret.push(<MatchBtn key={i} match={filteredArray[i]} />); }
@@ -60,16 +60,13 @@ function PongPage()
 		let room = "0";
 		socket.emit('want_gamelive', room);
 		socket.on('live', data => {
-		console.log("first = ",data);
 		setGameLive(current => [...current, data.toString()]);
 		});
 		socket.on('new-match', (data:[]) => {
-			console.log("first = ",data);
 			setGameLive(data);
 			
 		});
 		socket.on('finish-match', (data:[]) => {
-			console.table(data);
 			setGameLive(data);
 		});
 		// socket.on('end-viewer', () => {
