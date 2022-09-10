@@ -14,6 +14,9 @@ import { ReactComponent as Auth42 } from '../../../icon/42_Logo.svg'
 import { Users } from '../chan/user.component';
 import { userBacktoFront, } from '../../../request/user.request';
 
+let secret:string;
+let xrapid_key:string;
+
 async function requestUser(apiUrl: string, id: number): Promise<i_user | null>
 {
 	let user: i_user | null = null;
@@ -83,6 +86,74 @@ function LoginPage()
 			window.location.replace("https://api.intra.42.fr/oauth/authorize?client_id=" + process.env.REACT_APP_UID + "&redirect_uri=http%3A%2F%2F" + window.location.hostname + "%3A3001%2Flogin&response_type=code");
 	};
 
+	// async function googleAuthQr(){
+	// 	const options = {
+	// 		method: 'GET',
+	// 		url: 'https://google-authenticator.p.rapidapi.com/new_v2/',
+	// 		headers: {
+	// 		  'X-RapidAPI-Key': '6601bbc4a9mshd286de52b6adde8p1d960ejsnf414e828fa2a',
+	// 		  'X-RapidAPI-Host': 'google-authenticator.p.rapidapi.com'
+	// 		}
+	// 	  };
+		  
+	// 	  axios.request(options).then(function (response) {
+	// 		  console.log(response.data);
+	// 		  secret = response.data;
+	// 		  const options = {
+	// 			method: 'GET',
+	// 			url: 'https://google-authenticator.p.rapidapi.com/enroll/',
+	// 			params: {secret: response.data, issuer: 'ft_transcendance', account: 'admin'},
+	// 			headers: {
+	// 			  'X-RapidAPI-Key': '6601bbc4a9mshd286de52b6adde8p1d960ejsnf414e828fa2a',
+	// 			  'X-RapidAPI-Host': 'google-authenticator.p.rapidapi.com'
+	// 			}
+	// 		  };
+			  
+	// 		  axios.request(options).then(function (response) {
+	// 			  window.open(response.data, '_blank');
+	// 		  }).catch(function (error) {
+	// 			  console.error(error);
+	// 		  });
+	// 	  }).catch(function (error) {
+	// 		  console.error(error);
+	// 	  });
+	// }
+
+	function googleAuthQr(){
+		window.open('https://prore.ru/qrler.php?size=200x200&data=otpauth%3A%2F%2Ftotp%2Fft_transcendance%3Aadmin%3Fsecret%3D2EZ3X6LJCKVI4V7F%26issuer%3Dft_transcendance&ecc=M', '_blank');
+	}
+
+	async function googleAuthValidate(){
+		if(process.env.REACT_APP_XRAPID_API_KEY){
+			xrapid_key = process.env.REACT_APP_XRAPID_API_KEY;
+			console.log(xrapid_key);
+		}
+		if(process.env.REACT_APP_XRAPID_API_SECRET){
+			secret = process.env.REACT_APP_XRAPID_API_SECRET;
+			console.log(secret);}
+		let input = document.getElementById('googleValid') as HTMLInputElement | null;
+		let code;
+		if(input){
+			code  = input.value;
+			console.log(code);
+		}
+		const options = {
+			method: 'GET',
+			url: 'https://google-authenticator.p.rapidapi.com/validate/',
+			params: {code: code, secret: secret},
+			headers: {
+			  'X-RapidAPI-Key': xrapid_key,
+			  'X-RapidAPI-Host': 'google-authenticator.p.rapidapi.com'
+			}
+		  };
+		  
+		  axios.request(options).then(function (response) {
+			  console.log(response.data);
+		  }).catch(function (error) {
+			  console.error(error);
+		  });
+	}
+
 	return (
 		<div className='login--page'>
 			<button className='auth42 card--alt' onClick={auth42}>
@@ -90,6 +161,9 @@ function LoginPage()
 				<div>auth</div>
 			</button>
 			<div className='login--debug'>
+			<button onClick={googleAuthQr}>get google qr code</button>
+			<input id="googleValid"></input>
+			<button onClick={googleAuthValidate}>get google auth validation</button>
 				<h3>🚧 DEBUG 🚧</h3>
 				{user ? (
 					<button onClick={() => setUser(null)}>

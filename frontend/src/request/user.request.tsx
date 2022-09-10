@@ -10,6 +10,7 @@ function userBacktoFront(user: any)
 	const ret_user: i_user = (user ? {
 		id: user.id,
 		access_token: user.access_token,
+		twofa: user.twofa,
 		name: user.name,
 		pp: user.pp,
 		pp_name: user.pp_name,

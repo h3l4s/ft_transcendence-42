@@ -23,6 +23,7 @@ import LoginPage from './components/page/login/login.page';
 import ConnectPage from './components/page/login/connect.page';
 import ChallengePage from './components/page/pong/challenge.page';
 import PongView from './components/page/pong/pong.view';
+import axios from 'axios';
 
 function App()
 {
@@ -31,6 +32,17 @@ function App()
 
 	const valueUser = useMemo(() => ({ user, setUser }), [user, setUser]);
 	const valueApiUrl = useMemo(() => ({ apiUrl, setApiUrl }), [apiUrl, setApiUrl]);
+
+	if (!user && localStorage.getItem("user"))
+	{
+		const JWT_user = JSON.parse(localStorage.getItem("user") as string);
+		console.info("JWT user:", JWT_user);
+		axios.get(apiUrl + "/user/" + JWT_user.id).then(res => setUser(res.data)).catch(err => console.log(err));
+	}
+	else if (user)
+		console.info("connected:", user);
+	else
+		console.info("not connected");
 
 	return (
 		<Router>
