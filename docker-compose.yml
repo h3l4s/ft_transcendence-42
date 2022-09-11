@@ -21,8 +21,6 @@ services:
       - POSTGRES_USER
       - POSTGRES_PASSWORD
       - POSTGRES_DB
-    ports:
-      - "5432:5432"
 
   backend:
     build: backend
@@ -53,6 +51,8 @@ services:
       - POSTGRES_USER=$POSTGRES_USER
       - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
       - DATABASE_PORT=5432
+    env_file:
+      - .front.env
 
   frontend:
     build: frontend
@@ -70,8 +70,8 @@ services:
     environment:
       - PORT=3001
       - BASE_URL=http://localhost:3001
-      - REACT_APP_UID=$REACT_APP_UID
-      - REACT_APP_SECRET=$REACT_APP_SECRET
+    env_file:
+      - .front.env
 
   adminer:
     image: adminer:4.8.1-standalone

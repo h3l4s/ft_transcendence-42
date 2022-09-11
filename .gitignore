@@ -3,6 +3,7 @@
 # env
 frontend/*.env
 .front.env
+.secret.env
 
 # nvim
 *~

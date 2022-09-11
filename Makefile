@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: adelille <adelille@student.42.fr>          +#+  +:+       +#+         #
+#    By: jraffin <jraffin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/10 14:54:46 by adelille          #+#    #+#              #
-#    Updated: 2022/09/07 00:19:36 by adelille         ###   ########.fr        #
+#    Updated: 2022/09/11 15:19:00 by jraffin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,8 +16,7 @@ FRONT =	./frontend
 BACK =	./backend
 
 ENV =		.env
-BACKENV =	$(BACK)/src/common/envs/development.env
-FRONTENV =	.front.env
+SECRETENV =	.front.env
 
 # **************************************************************************** #
 #	MAKEFILE	#
@@ -25,10 +24,10 @@ FRONTENV =	.front.env
 #include	srcs/.env
 #export	$(shell sed 's/=.*//' srcs/.env)
 
-include $(ENV)
-$(eval export $(shell sed -ne 's/ *#.*$$//; /./ s/=.*$$// p' $(ENV)))
-include $(FRONTENV)
-$(eval export $(shell sed -ne 's/ *#.*$$//; /./ s/=.*$$// p' $(FRONTENV)))
+#include $(ENV)
+#$(eval export $(shell sed -ne 's/ *#.*$$//; /./ p' ./$(ENV)))
+#-include $(SECRETENV)
+#$(eval export $(shell sed -ne 's/ *#.*$$//; /./ s/=.*$$// p' $(SECRETENV)))
 
 SHELL := bash
 
@@ -44,25 +43,33 @@ D =		$(shell tput sgr0)
 all:	$(NAME)
 
 $(NAME):
-	@[ -f $(FRONTENV) ] || echo -e "$(B)$(YEL)[WARNING]$(D)\t$(FRONTENV) not found"
+	@[ -f $(SECRETENV) ] || echo -e "$(B)$(YEL)[WARNING]$(D)\t$(SECRETENV) not found"
 	docker-compose up --force-recreate --build
 
 ip:
 	@hostname -I | cut -d' ' -f1
 
 db:
-	docker-compose up --force-recreate --build db
+	docker-compose run -p 5432:5432 db
 
 back:
 	[ -d $(BACK)/node_modules ] || npm --prefix $(BACK) install $(BACK) --legacy-peer-deps
-	npm --prefix $(BACK) run start:dev
+	@export PORT=3000 DATABASE_HOST=localhost DATABASE_PORT=5432 $(shell sed -e 's/ *#.*$$//' ./$(ENV))	\
+	&& npm --prefix $(BACK) run start:dev
 
 front:
 	[ -d $(FRONT)/node_modules ] || npm --prefix $(FRONT) install $(FRONT) --legacy-peer-deps
-	npm --prefix $(FRONT) start
+	@export PORT=3001 $(shell sed -e 's/ *#.*$$//' ./$(SECRETENV))	\
+	&& npm --prefix $(FRONT) start
 
 stop:
+	pkill -SIGINT node 2>/dev/null || exit 0
 	docker-compose down
+
+dev: stop
+	xterm -e $(MAKE) back &
+	xterm -e $(MAKE) front &
+	xterm -e $(MAKE) db &
 
 clean:	stop
 	docker system prune --volumes -f
@@ -85,6 +92,6 @@ list:
 	@docker volume ls
 	@echo ;
 
-.PHONY: all ip db back front stop clean fclean re fre list
+.PHONY: all ip db back front stop dev clean fclean re fre list
 
 # **************************************************************************** #
