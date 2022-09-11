@@ -96,11 +96,14 @@
 	left: 0.85rem;
 	bottom: 0.85rem;
 	border: unset;
-	background-color: var(--alt-color);
+	background-color: #0008;
+	border-radius: 33%;
 	width: 3rem;
 	height: 3rem;
+	padding: -1rem;
 	color: #fff;
 	font-family: var(--alt-font);
+	font-size: 0.8rem;
 }
 
 .typewriter {

@@ -14,9 +14,6 @@ import { ReactComponent as Auth42 } from '../../../icon/42_Logo.svg'
 import { Users } from '../chan/user.component';
 import { userBacktoFront, } from '../../../request/user.request';
 
-let secret: string;
-let xrapid_key: string;
-
 async function requestUser(apiUrl: string, id: number): Promise<i_user | null>
 {
 	let user: i_user | null = null;
