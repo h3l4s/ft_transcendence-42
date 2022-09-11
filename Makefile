@@ -6,7 +6,7 @@
 #    By: jraffin <jraffin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/10 14:54:46 by adelille          #+#    #+#              #
-#    Updated: 2022/09/11 15:19:00 by jraffin          ###   ########.fr        #
+#    Updated: 2022/09/11 15:31:32 by jraffin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,7 +63,7 @@ front:
 	&& npm --prefix $(FRONT) start
 
 stop:
-	pkill -SIGINT node 2>/dev/null || exit 0
+	killall -eqv -SIGINT node || exit 0
 	docker-compose down
 
 dev: stop
