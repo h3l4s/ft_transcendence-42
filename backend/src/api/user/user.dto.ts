@@ -23,10 +23,10 @@ export class UpdateUserDto
 	@IsOptional()
 	public name: string;
 
-	@IsBoolean()
+	@IsString()
 	@IsNotEmpty()
 	@IsOptional()
-	public twofa: boolean;
+	public twofa: string;
 
 	@IsNumber()
 	@IsNotEmpty()
