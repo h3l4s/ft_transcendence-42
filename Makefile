@@ -6,7 +6,7 @@
 #    By: jraffin <jraffin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/10 14:54:46 by adelille          #+#    #+#              #
-#    Updated: 2022/09/10 18:13:02 by jraffin          ###   ########.fr        #
+#    Updated: 2022/09/11 15:19:00 by jraffin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ FRONT =	./frontend
 BACK =	./backend
 
 ENV =		.env
-SECRETENV =	.secret.env
+SECRETENV =	.front.env
 
 # **************************************************************************** #
 #	MAKEFILE	#
@@ -63,7 +63,13 @@ front:
 	&& npm --prefix $(FRONT) start
 
 stop:
+	pkill -SIGINT node 2>/dev/null || exit 0
 	docker-compose down
+
+dev: stop
+	xterm -e $(MAKE) back &
+	xterm -e $(MAKE) front &
+	xterm -e $(MAKE) db &
 
 clean:	stop
 	docker system prune --volumes -f
@@ -86,6 +92,6 @@ list:
 	@docker volume ls
 	@echo ;
 
-.PHONY: all ip db back front stop clean fclean re fre list
+.PHONY: all ip db back front stop dev clean fclean re fre list
 
 # **************************************************************************** #

@@ -52,7 +52,7 @@ services:
       - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
       - DATABASE_PORT=5432
     env_file:
-      - .secret.env
+      - .front.env
 
   frontend:
     build: frontend
@@ -71,7 +71,7 @@ services:
       - PORT=3001
       - BASE_URL=http://localhost:3001
     env_file:
-      - .secret.env
+      - .front.env
 
   adminer:
     image: adminer:4.8.1-standalone
