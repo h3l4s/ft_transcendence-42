@@ -1,8 +1,10 @@
-import { createContext } from 'react'
-import { io, Socket } from 'socket.io-client';
+import { createContext, Dispatch, SetStateAction } from 'react'
+import { Socket } from 'socket.io-client';
 
 export const StatusContext = createContext<{
-	socket: Socket;
+	socket: Socket | null;
+	setStatus: Dispatch<SetStateAction<Socket | null>>;
 }>({
-	socket: io("http://" + window.location.hostname + ":3000/user")
+	socket: null,
+	setStatus: () => { }
 });

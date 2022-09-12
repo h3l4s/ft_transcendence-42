@@ -1,7 +1,7 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import axios from 'axios';
-import { io } from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
 
 import './style/root.css'
 import './style/App.css';
@@ -32,12 +32,21 @@ function App()
 {
 	const [user, setUser] = useState<i_user | null>(null);
 	const [apiUrl, setApiUrl] = useState("http://" + window.location.hostname + ":3000");
-	const [socket] = useState(io(apiUrl + "/user"));
+	const [socket, setStatus] = useState<Socket | null>(null);
 
 	const valueUser = useMemo(() => ({ user, setUser }), [user, setUser]);
 	const valueApiUrl = useMemo(() => ({ apiUrl, setApiUrl }), [apiUrl, setApiUrl]);
-	const valueSocket = useMemo(() => ({ socket }), [socket]);
+	const valueSocket = useMemo(() => ({ socket, setStatus }), [socket, setStatus]);
 
+	useEffect(() =>
+	{
+		if (!socket)
+		{
+			setStatus(io(apiUrl + "/user"));
+			console.log("Connecting to " + apiUrl + "/user");
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	if (!user && localStorage.getItem("user"))
 	{
@@ -46,12 +55,12 @@ function App()
 		axios.get(apiUrl + "/user/" + JWT_user.id).then(res => setUser(res.data)).catch(err => console.log(err));
 	}
 	else if (user)
-	{
 		console.info("connected:", user);
-		socket.emit('updateStatus', user.id, 'online');
-	}
 	else
 		console.info("not connected");
+
+	if (socket && user)
+		socket.emit('updateStatus', user.id, 'online');
 
 	return (
 		<Router>

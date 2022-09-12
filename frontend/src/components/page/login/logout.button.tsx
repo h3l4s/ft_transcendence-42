@@ -17,7 +17,8 @@ function LogoutButton(props: { style?: React.CSSProperties })
 	function handleLogout()
 	{
 		localStorage.removeItem('user');
-		socket.emit('updateStatus', user!.id, 'offline');
+		if (socket)
+			socket.emit('updateStatus', user!.id, 'offline');
 		setUser(null);
 	}
 
