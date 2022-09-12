@@ -1,27 +1,28 @@
-import { SubscribeMessage, WebSocketGateway, OnGatewayInit, WebSocketServer } from '@nestjs/websockets';
+import { SubscribeMessage, WebSocketGateway, WebSocketServer, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { Logger } from '@nestjs/common';
 import { MsgDto } from './chan.dto';
 
 @WebSocketGateway({ namespace: '/chat', cors: { origin: '*' } })
-export class ChatGateway implements OnGatewayInit
+export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect
 {
 	@WebSocketServer() wss: Server;
 
 	private logger: Logger = new Logger('ChatGateway');
 
-	afterInit(server: any)
-	{
-		this.logger.log("server up", server);
-	}
-
 	handleConnection(client: Socket)
 	{
+		//console.log("[CHAN] client connect: " + client.id);
 		client.on('newConnection', () =>
 		{
 			console.log("[CHAN] new client: " + client.id);
 			this.wss.emit('newConnection', { userId: client.id });
 		})
+	}
+
+	handleDisconnect(client: Socket)
+	{
+		console.log("[CHAN] client disconnect: " + client.id);
 	}
 
 	@SubscribeMessage('chatToServer')

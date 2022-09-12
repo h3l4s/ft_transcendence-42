@@ -1,28 +1,19 @@
-import { SubscribeMessage, WebSocketGateway, OnGatewayInit, WebSocketServer } from '@nestjs/websockets';
+import { SubscribeMessage, WebSocketGateway, WebSocketServer, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { Logger } from '@nestjs/common';
-import { UserStatusDto } from './user.dto';
+import { UserChallengeDto, UserStatusDto } from './user.dto';
 
-@WebSocketGateway({ namespace: '/user', cors: { origin: '*' }, pingTimeout: 100 })
-export class UserGateway implements OnGatewayInit
+@WebSocketGateway({ namespace: '/status', cors: { origin: '*' } })
+export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect
 {
 	@WebSocketServer() wss: Server;
 
 	private logger: Logger = new Logger('UserGateway');
 	private db: UserStatusDto[] = [];
 
-	afterInit(server: any)
-	{
-		this.logger.log("server up", server);
-	}
-
 	handleConnection(client: Socket)
 	{
-		client.on('newConnection', () =>
-		{
-			console.log("[STATUS] new client: " + client.id);
-			this.wss.emit('newConnection', { userId: client.id });
-		})
+		console.log("[STATUS] client connected: " + client.id);
 	}
 
 	handleDisconnect(client: Socket)
@@ -38,13 +29,13 @@ export class UserGateway implements OnGatewayInit
 			}
 		}
 
-		this.wss.emit('disconnect', { userId: client.id });
+		//this.wss.emit('disconnect', { userId: client.id });
 	}
 
 	@SubscribeMessage('updateStatus')
 	handleUpdateStatus(client: Socket, status: UserStatusDto)
 	{
-		console.log("[STATUS] update status", status.id, status.status);
+		console.log("[STATUS] update", status.id, status.status);
 
 		let index = -1;
 		for (let i = 0; i < this.db.length; i++)
@@ -69,7 +60,7 @@ export class UserGateway implements OnGatewayInit
 	@SubscribeMessage('getStatus')
 	handleGetStatus(client: Socket, status: UserStatusDto)
 	{
-		console.log("[STATUS] get status", status.id);
+		console.log("[STATUS] get", status.id);
 
 		let index = -1;
 		for (let i = 0; i < this.db.length; i++)
@@ -87,8 +78,32 @@ export class UserGateway implements OnGatewayInit
 	}
 
 	@SubscribeMessage('challenge')
-	handleChallenge(client: Socket, status: UserStatusDto)
+	handleChallenge(client: Socket, status: UserChallengeDto)
 	{
-		console.log("[STATUS] challenge", status.id);
+		console.log("[STATUS] challenge", status.senderId, "->", status.receiverId);
+
+		let index = -1;
+
+		for (let i = 0; i < this.db.length; i++)
+		{
+			console.log(i, "this.db[i]", this.db[i]);
+			console.log(this.db[i].id, status.receiverId);
+			if (this.db[i].id === status.receiverId)
+			{
+				index = i;
+				break;
+			}
+		}
+		console.log(index);
+		if (index > -1 && this.db[index].status !== 'offline')
+		{
+			console.log("[STATUS] challenge sent to", this.db[index].id);
+			client.to(this.db[index].clientId).emit('challenge', status);
+		}
+		else
+		{
+			console.log("[STATUS] challenge failed");
+			console.table(this.db);
+		}
 	}
 }

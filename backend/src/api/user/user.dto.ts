@@ -96,5 +96,16 @@ export class UserStatusDto
 
 	@IsString()
 	@IsNotEmpty()
-	public status: ('online' | 'offline' | 'ingame' | 'challenged');
+	public status: ('online' | 'offline' | 'ingame');
+}
+
+export class UserChallengeDto
+{
+	@IsNumber()
+	@IsNotEmpty()
+	public senderId: number;
+
+	@IsNumber()
+	@IsNotEmpty()
+	public receiverId: number;
 }
