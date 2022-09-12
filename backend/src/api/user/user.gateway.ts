@@ -77,6 +77,14 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect
 			client.emit('isStatus', { id: status.id, status: this.db[index].status });
 	}
 
+	@SubscribeMessage('getAllStatus')
+	handleGetAllStatus(client: Socket)
+	{
+		console.log("[STATUS] get all");
+		client.emit('isAllStatus', this.db);
+	}
+
+
 	@SubscribeMessage('challenge')
 	handleChallenge(client: Socket, status: UserChallengeDto)
 	{

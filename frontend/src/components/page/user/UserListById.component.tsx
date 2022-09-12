@@ -1,6 +1,6 @@
 import i_user from "../../../interface/user.interface";
 
-import { Users } from "../chan/user.component";
+import { Users } from "./user.component";
 
 function UserListById(props: { friendsId: number[] | undefined, reqUsers: i_user[] }): JSX.Element
 {
