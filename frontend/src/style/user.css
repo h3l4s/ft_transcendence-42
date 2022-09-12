@@ -79,6 +79,7 @@
 	border: unset;
 	background-color: unset;
 	margin-left: 0.5rem;
+	transition: 0ms;
 }
 
 .btn--username--change svg {
@@ -89,6 +90,27 @@
 
 .btn--username--change svg:hover {
 	fill: var(--icon-color-hover);
+}
+
+.twofa {
+	position: absolute;
+	left: 0.85rem;
+	bottom: 0.85rem;
+	border: unset;
+	background-color: #0008;
+	border-radius: 33%;
+	width: 3rem;
+	height: 3rem;
+	padding: -1rem;
+	color: #fff;
+	font-family: var(--alt-font);
+	font-size: 0.7rem;
+	transition: 200ms;
+}
+
+.twofa:hover {
+	background-color: #0004;
+	filter: brightness(1000%);
 }
 
 .typewriter {

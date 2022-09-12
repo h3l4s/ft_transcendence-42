@@ -23,6 +23,7 @@ import Loading from '../../request_answer_component/loading.component';
 import Error from '../../request_answer_component/error.component';
 import Backdrop from '../../modal/backdrop';
 import UsernameChangeModal from '../../modal/username.change.modal';
+import { TwoFAModal } from '../../modal/user.twofa.modal';
 
 function isUserInDb(username: string, users: i_user[]): i_user | null
 {
@@ -48,7 +49,6 @@ function uploadFile(apiUrl: string, user_id: number | undefined, image: File | n
 	);
 };
 
-
 function UserPage()
 {
 	const { apiUrl } = useContext(ApiUrlContext);
@@ -57,6 +57,7 @@ function UserPage()
 	const [image, setImage] = useState<any | null>(null);
 	const [showUsernameChangeModal, setShowUsernameChangeModal] = useState(false);
 	const [userToLoad, setUserToLoad] = useState<i_user | null>(null);
+	const [showTwoFA, setShowTwoFA] = useState(false);
 	const p_username = useParams().username;
 
 	if (!userToLoad)
@@ -86,6 +87,7 @@ function UserPage()
 		setUserToLoad(user);
 		setShowUsernameChangeModal(false);
 		setUser(user);
+		setShowTwoFA(false)
 	}
 
 	return (
@@ -95,6 +97,11 @@ function UserPage()
 					<div style={{ margin: "0.5rem 0 0.5rem 0" }}>
 						<img className='img' style={{ height: "23vw", width: "23vw" }}
 							src={(image ? URL.createObjectURL(image) : userToLoad.pp_name)} alt="profile" />
+						{(!p_username || p_username === userToLoad.name)
+							&& <button className='twofa' onClick={() => setShowTwoFA(true)}
+								style={{ color: (userToLoad && userToLoad.twofa && userToLoad.twofa.length > 0 ? "#0f0" : "#fff") }}>
+								2FA
+							</button>}
 						{(!p_username || p_username === userToLoad.name)
 							&& <div className='input--file'>
 								<input type='file' style={{ zIndex: "99" }} onChange={(e) =>
@@ -134,6 +141,7 @@ function UserPage()
 			</div>
 			{(!p_username || p_username === userToLoad.name) && showUsernameChangeModal && <UsernameChangeModal callback={callback} />}
 			{(!p_username || p_username === userToLoad.name) && showUsernameChangeModal && <Backdrop onClick={() => setShowUsernameChangeModal(false)} />}
+			{showTwoFA && <TwoFAModal callback={callback} />}
 		</div >
 	);
 }

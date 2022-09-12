@@ -21,6 +21,9 @@ export class User
 	@Column({ type: 'varchar', length: 120 })
 	public access_token: string;
 
+	@Column({ type: 'varchar', length: 32, default: "" })
+	public twofa: string;
+
 	@Column({ type: 'varchar', length: 255 })
 	public name: string;
 

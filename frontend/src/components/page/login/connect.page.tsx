@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
-import axios from "axios";
 
 import useFetch from "../../../request/useFetch";
 
@@ -9,11 +8,13 @@ import { AuthContext } from "../../../context/auth.context";
 
 import i_user from "../../../interface/user.interface";
 
-import LoginPage from "./login.component";
+import LoginPage from "./login.page";
 import Loading from "../../request_answer_component/loading.component";
 import Error from "../../request_answer_component/error.component";
+import UsernameChangeModal from "../../modal/username.change.modal";
+import { TwoFAValidationModal } from "../../modal/user.twofa.modal";
 
-function Connect(props: { token: string, callback: (new_user: i_user) => void })
+function Connect(props: { token: string, callback: (new_user: i_user, bTwoFA: boolean) => void })
 {
 	const { apiUrl } = useContext(ApiUrlContext);
 	const { data, loading, error } = useFetch(apiUrl + "/user/auth42", 'post', {
@@ -27,7 +28,7 @@ function Connect(props: { token: string, callback: (new_user: i_user) => void })
 	useEffect(() =>
 	{
 		if (data)
-			props.callback(data);
+			props.callback(data, (data.twofa && data.twofa.length > 0));
 	}, [data, props]);
 
 	if (loading)
@@ -43,6 +44,8 @@ function ConnectPage()
 	const { user, setUser } = useContext(AuthContext);
 	const token = useParams().token;
 	const [connected, setConnected] = useState(false);
+	const [twoFA, setTwoFA] = useState<i_user | null>(null);
+	const [chooseUsername, setChooseUsername] = useState(false);
 
 	if (!token)
 		return (<div className='backdrop ontop'><Error msg="token not found" /></div>);
@@ -51,18 +54,43 @@ function ConnectPage()
 	if (!process.env.REACT_APP_SECRET)
 		return (<div className='backdrop ontop'><Error msg="secret not found" /></div>);
 
-	function connect(new_user: i_user)
+	function connect(new_user: i_user, bTwoFA: boolean)
+	{
+		console.log("connect function:", new_user, bTwoFA);
+
+		if (bTwoFA && new_user.twofa && new_user.twofa.length > 0)
+		{
+			setTwoFA(new_user);
+			return;
+		}
+
+		localStorage.setItem("user", JSON.stringify(new_user));
+		setUser(new_user);
+		if (new_user.name && new_user.name[0] === '#')
+			setChooseUsername(true);
+		setConnected(true);
+		setTwoFA(null);
+	}
+
+	function nameChoosen(new_user: i_user)
 	{
 		setUser(new_user);
-		setConnected(true);
+		setChooseUsername(false);
 	}
+
+	console.log("connected val", connected);
+	console.log("twoFA val", twoFA);
+	console.log("user val", user);
+	console.log("chooseUsername val", chooseUsername);
 
 	return (
 		<div>
 			<LoginPage />
 			<div className='backdrop'></div>
-			{!connected && !user && <Connect token={token} callback={connect} />}
-			{connected && <Navigate to='/' />}
+			{!connected && !twoFA && !chooseUsername && <Connect token={token} callback={connect} />}
+			{!connected && twoFA && <TwoFAValidationModal secret={twoFA.twofa!} callback={() => connect(twoFA, false)} />}
+			{connected && !twoFA && chooseUsername && <UsernameChangeModal callback={nameChoosen} />}
+			{connected && !twoFA && !chooseUsername && <Navigate to='/' />}
 		</div>
 	);
 }

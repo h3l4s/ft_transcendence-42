@@ -4,6 +4,7 @@ interface i_user
 {
 	id?: number;
 	access_token?: string;
+	twofa?: string;
 	name?: string;
 	pp?: Buffer;
 	pp_name?: string;

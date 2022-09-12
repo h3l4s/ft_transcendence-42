@@ -8,6 +8,11 @@
 	text-align: center;
 }
 
+.pong--compo {
+	height: 100vh;
+	margin-top: calc(-1 * var(--nav-h));
+}
+
 /*#bandeau {
 	width: 100%;
 	background-size: 100% auto !important;

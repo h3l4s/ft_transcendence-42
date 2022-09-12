@@ -60,7 +60,7 @@ export class UserService
 			client_secret: data.secret,
 			grant_type: "authorization_code",
 			code: data.token,
-			redirect_uri: "http://localhost:3001/login"	// might not work to redirect to localhost
+			redirect_uri: "http://localhost:3001/login"
 		}).catch(error => console.log(error));
 
 		if (!response.data || !response.data.access_token)
@@ -79,7 +79,11 @@ export class UserService
 		const new_user: User = new User();
 
 		new_user.access_token = response.data.access_token;
-		new_user.name = user_info.data.login;
+		const c = await this.repository.count({ where: { name: user_info.data.login } })
+		if (c)
+			new_user.name = "#" + user_info.data.login + "-" + c;
+		else
+			new_user.name = user_info.data.login;
 		new_user.pp_name = user_info.data.image_url;
 
 		return this.repository.save(new_user);
@@ -118,6 +122,13 @@ export class UserService
 
 		if (updateUserDto.name)
 			user.name = updateUserDto.name;
+		if (updateUserDto.twofa)
+		{
+			if (updateUserDto.twofa === 'remove')
+				user.twofa = "";
+			else
+				user.twofa = updateUserDto.twofa;
+		}
 		if (updateUserDto.xp)
 			user.xp += updateUserDto.xp;
 		if (updateUserDto.elo)
