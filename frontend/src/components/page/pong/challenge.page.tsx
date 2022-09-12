@@ -7,7 +7,7 @@ import { StatusContext } from "../../../context/status.context";
 import { useReqUser, useReqUsers } from "../../../request/user.request";
 import Error from "../../request_answer_component/error.component";
 import Loading from "../../request_answer_component/loading.component";
-import { UserBtn } from "../chan/user.component";
+import { UserBtn } from "../user/user.component";
 
 function ChallengePage()
 {

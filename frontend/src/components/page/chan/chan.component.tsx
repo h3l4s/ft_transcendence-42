@@ -15,7 +15,7 @@ import { ReactComponent as Key } from '../../../icon/icons8-key.svg'
 import { ReactComponent as Lock } from '../../../icon/lock-svgrepo-com.svg'
 
 import Chat from "./chat.component";
-import { Users } from "./user.component";
+import { Users } from "../user/user.component";
 import Backdrop from "../../modal/backdrop";
 import AddChanModal from "../../modal/chan.add.modal";
 import PromptPwdModal from "../../modal/chan.prompt.pwd.modal";

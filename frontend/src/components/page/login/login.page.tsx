@@ -11,7 +11,7 @@ import i_user from '../../../interface/user.interface';
 
 import { ReactComponent as Auth42 } from '../../../icon/42_Logo.svg'
 
-import { Users } from '../chan/user.component';
+import { Users } from '../user/user.component';
 import { userBacktoFront, } from '../../../request/user.request';
 import LogoutButton from './logout.button';
 
