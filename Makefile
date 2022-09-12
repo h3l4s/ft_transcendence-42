@@ -6,7 +6,7 @@
 #    By: jraffin <jraffin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/10 14:54:46 by adelille          #+#    #+#              #
-#    Updated: 2022/09/12 17:06:55 by jraffin          ###   ########.fr        #
+#    Updated: 2022/09/12 22:00:49 by jraffin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,9 +43,9 @@ D =		$(shell tput sgr0)
 
 all:	$(NAME)
 
-$(NAME):	hostname
+$(NAME):	stop hostname
 	@[ -f $(SECRETENV) ] || echo -e "$(B)$(YEL)[WARNING]$(D)\t$(SECRETENV) not found"
-	docker-compose up --force-recreate --build
+	docker-compose up --force-recreate --build || exit 0
 
 ip:
 	@hostname -I | cut -d' ' -f1
@@ -58,7 +58,7 @@ db:
 
 back:	hostname
 	([ -d $(BACK)/node_modules ] || npm --prefix $(BACK) install $(BACK) --legacy-peer-deps) && exit 0
-	@export PORT=3000 DATABASE_HOST=localhost DATABASE_PORT=5432 $(shell sed -e 's/ *#.*$$//' ./$(HOSTNAMEENV)) BASE_URL= $(shell sed -e 's/ *#.*$$//' ./$(ENV))	\
+	@export PORT=3000 DATABASE_HOST=localhost DATABASE_PORT=5432 $(shell sed -e 's/ *#.*$$//' ./$(HOSTNAMEENV)) BASE_URL=http://localhost:3000 $(shell sed -e 's/ *#.*$$//' ./$(ENV))	\
 	&& npm --prefix $(BACK) run start:dev
 
 front:	hostname
