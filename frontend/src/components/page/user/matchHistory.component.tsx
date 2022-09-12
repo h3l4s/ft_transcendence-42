@@ -49,14 +49,13 @@ function Match(props: { match: i_matchHistory, username: string, users: i_user[]
 
 	const date = new Date(props.match.createdAt);
 
-	//const win: boolean = props.match.won_round >= props.match.lost_round;
 	const win: boolean = props.match.winner === props.username;
 	const color = (win ? "#0B0" : "#B00")
 	const border = "4px solid " + color;
 	let opponent = -1;
 
 	for (let i = 0; i < props.users.length; i++)
-		if (props.users[i].name === (win ? props.match.loser : props.match.loser))
+		if (props.users[i].name === (win ? props.match.loser : props.match.winner))
 			opponent = i;
 	if (opponent === -1)
 		for (let i = 0; i < props.users.length; i++)
