@@ -29,6 +29,23 @@
 	filter: brightness(300%);
 }
 
+.logout {
+	background-color: #0008;
+	border: unset;
+	border-radius: 50%;
+	color: #fff;
+	fill: #fff;
+	width: 3rem;
+	height: 3rem;
+	padding: 0.5rem 0.7rem 0.5rem 0.3rem;
+	transition: 200ms;
+}
+
+.logout:hover {
+	background-color: #0004 !important;
+	filter: brightness(1000%);
+}
+
 .login--debug {
 	display: flex;
 	flex-direction: column;
@@ -48,15 +65,4 @@
 	background-color: #0008;
 	box-shadow: 0 0 0 4px #f008;
 	filter: brightness(120%);
-}
-
-.logout {
-	background-color: var(--main-color);
-	border: unset;
-	border-radius: 50%;
-	color: #fff;
-	fill: #fff;
-	width: 3rem;
-	height: 3rem;
-	padding: 0.5rem 0.7rem 0.5rem 0.3rem;
 }

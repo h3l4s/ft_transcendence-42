@@ -24,6 +24,7 @@ import Error from '../../request_answer_component/error.component';
 import Backdrop from '../../modal/backdrop';
 import UsernameChangeModal from '../../modal/username.change.modal';
 import { TwoFAModal } from '../../modal/user.twofa.modal';
+import LogoutButton from '../login/logout.button';
 
 function isUserInDb(username: string, users: i_user[]): i_user | null
 {
@@ -121,6 +122,9 @@ function UserPage()
 							</button>
 						}
 					</div>
+					{(!p_username || p_username === userToLoad.name)
+						&& <LogoutButton style={{ position: "absolute", top: "0.85rem", right: "0.85rem" }} />
+					}
 				</div>
 				<div className='card card--alt' style={{ height: "100%" }}>
 					<UserStats user={userToLoad} />
