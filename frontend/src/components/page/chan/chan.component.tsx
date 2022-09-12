@@ -87,7 +87,7 @@ function Chans(props: { socket: Socket, chans: i_chan[], users: i_user[], to_cha
 			<div>
 				<div className='card card--border card--btn card--chan' onClick={() =>
 				{
-					if (!props.obj.id)
+					if (!props.obj.id || props.obj.id === selectedChan.id)
 						return;
 					if (props.obj.type === 'protected' && !is_in_chan)
 					{
