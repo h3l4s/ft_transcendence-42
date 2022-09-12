@@ -11,8 +11,15 @@ function Matches(props: { matches: string[] })
 {
 	let ret: JSX.Element[] = [];
 
-	for (let i = 0; i < props.matches.length; i++)
-	{ ret.push(<MatchBtn key={i} match={props.matches[i]} />); }
+	const filteredArray = props.matches.filter(function (ele, pos)
+	{
+		return props.matches.indexOf(ele) == pos;
+	})
+
+
+
+	for (let i = 0; i < filteredArray.length; i++)
+	{ ret.push(<MatchBtn key={i} match={filteredArray[i]} />); }
 
 	return (
 		<div>
@@ -21,19 +28,21 @@ function Matches(props: { matches: string[] })
 	);
 }
 
-function MatchBtn(props: { match: string})
+function MatchBtn(props: { match: string })
 {
-	const[goToView, setGoToView] = useState(false);
+	const [goToView, setGoToView] = useState(false);
 
-	if (goToView){
+	if (goToView)
+	{
 		return <Navigate to={"/view/" + props.match} />;
 	}
 	return (
 		<div>
-			<button className='card card--border card--btn' style={{ marginLeft: "4px" }} onClick={() => { 
+			<button className='card card--border card--btn' style={{ marginLeft: "4px" }} onClick={() =>
+			{
 				console.log("BECIH");
 				setGoToView(true);
-				}}>
+			}}>
 				<span className='span--card--user truncate'>{props.match}</span>
 			</button>
 		</div >
@@ -42,18 +51,29 @@ function MatchBtn(props: { match: string})
 
 function PongPage()
 {
-	let i = 0;
 	const { apiUrl } = useContext(ApiUrlContext);
 	const [map, setMap] = useState<'simple' | 'hard' | 'tennis' | null>(null);
 	const [gameLive, setGameLive] = useState<string[]>([]);
-	
+
 	const socket = io(apiUrl);
+	let i = 0;
 
 	useEffect(() =>
 	{
-		socket.on('live', data => {
-			console.log(data);
+		let room = "0";
+		socket.emit('want_gamelive', room);
+		socket.on('live', data =>
+		{
 			setGameLive(current => [...current, data.toString()]);
+		});
+		socket.on('new-match', (data: []) =>
+		{
+			setGameLive(data);
+
+		});
+		socket.on('finish-match', (data: []) =>
+		{
+			setGameLive(data);
 		});
 		// socket.on('end-viewer', () => {
 		// 	setGameLive(current => [...current, data.toString()]);
@@ -61,7 +81,6 @@ function PongPage()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 	// might not store the type of map
-	
 	return (
 		<div className='pong'>
 			{!map ? (
@@ -73,7 +92,7 @@ function PongPage()
 					<div className=/*'card card--border*/'menu' /* should probably be a card */>
 						<div className=/*'card card--border*/'choice' /* should probably be a card */>
 							<div id="select">
-							<p id="select-css"> Select Mode </p>
+								<p id="select-css"> Select Mode </p>
 								<span id="choiceButton">
 									<button onClick={() => { setMap('simple') }}>
 										simple pong
@@ -87,16 +106,14 @@ function PongPage()
 								</span>
 							</div>
 						</div>
-							<div className=/*'card card--border*/'choice2' /* should probably be a card */>
-								<p id="live-game-msg">Live game</p>
-								<Matches matches={gameLive}/>
+						<div className=/*'card card--border*/'choice2' /* should probably be a card */>
+							<p id="live-game-msg">Live game</p>
+							<Matches matches={gameLive} />
 						</div>
 					</div>
 				</div>
 			) : (
-				<div>
-					<Pong map={{ type: map }} goBack={() => { setMap(null) }} />
-				</div>
+				<Navigate to={'/pong/' + map} />
 			)}
 		</div>
 	);

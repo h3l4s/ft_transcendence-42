@@ -26,6 +26,7 @@ import LoginPage from './components/page/login/login.page';
 import ConnectPage from './components/page/login/connect.page';
 import ChallengePage from './components/page/pong/challenge.page';
 import PongView from './components/page/pong/pong.view';
+import Pong from './components/page/pong/pong.component';
 
 function App()
 {
@@ -64,6 +65,7 @@ function App()
 							<Route path="/login" element={<LoginPage />} />
 							<Route path="/connect/:token" element={<ConnectPage />} />
 							<Route path="/play" element={<RequireAuth><PongPage /></RequireAuth>} />
+							<Route path="/pong/:type" element={<RequireAuth><Pong /></RequireAuth>} />
 							<Route path="/challenge/:id" element={<RequireAuth><ChallengePage /></RequireAuth>} />
 							<Route path="/chan" element={<RequireAuth><ChanPage /></RequireAuth>} />
 							<Route path="/user" element={<RequireAuth><UserPage /></RequireAuth>} />
@@ -71,10 +73,10 @@ function App()
 							<Route path="*" element={<NoMatch />} />
 						</Routes>
 					</StatusContext.Provider>
-				</AuthContext.Provider>
-			</ApiUrlContext.Provider>
+				</AuthContext.Provider >
+			</ApiUrlContext.Provider >
 			<CreateDefaultUser />
-		</Router>
+		</Router >
 	);
 }
 
