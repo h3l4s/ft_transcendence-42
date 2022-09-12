@@ -1,46 +1,85 @@
-# Getting Started with Create React App
+# ft_transcendence-42
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+ft_transcendence project at 42 school
 
-## Available Scripts
+## description
+This project is about creating a website for the mighty Pong contest!
 
-In the project directory, you can run:
+# usage
 
-### `npm start`
+### manual:
+```sh
+docker-compose up --build
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### makefile:
+```sh
+make
+```
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### dev:
+```sh
+make db
+make back
+make front
+```
 
-### `npm test`
+### ip:
+```sh
+make ip
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## access
+enter http://localhost:3001 in your search bar
 
-### `npm run build`
+click sign in then get token
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# languages
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+<div align="center">
+	<a href="https://www.typescriptlang.org/" target="blank"><img alt="TypeScript" width="100" src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg" </img></a>
+	<img alt="CSS" width="110" src="https://upload.wikimedia.org/wikipedia/commons/6/62/CSS3_logo.svg"</img>
+	<a href="https://reactjs.org/" target="blank"><img alt="React" width="110" src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" </img></a>
+	<a href="http://nestjs.com/" target="blank"><img alt="NestJS" width="100" src="https://nestjs.com/img/logo-small.svg" </img></a>
+	<a href="https://www.postgresql.org/" target="blank"><img alt="PostgreSQL" width="100" src="https://upload.wikimedia.org/wikipedia/commons/2/29/Postgresql_elephant.svg" </img></a>
+	<a href="https://typeorm.io/" target="blank"><img alt="TypeORM" width="100" src="https://avatars.githubusercontent.com/u/20165699?s=200&v=4" </img></a>
+	<a href="https://www.docker.com/" target="blank"><img alt="Docker" width="100" src="https://www.docker.com/wp-content/uploads/2022/03/vertical-logo-monochromatic.png" </img></a>
+</div>
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# features
 
-### `npm run eject`
+### security
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- password hashed in db
+- protected against SQL injections
+- server-side validation for forms and any user input
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### user account
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- login using 42 intranet OAuth
+- choose unique username
+- upload an avatar, default avatar if none
+- 2FA (two-factor authentication)
+- friends list
+- user status: online, offline, in a game
+- stats: win, lose, elo, xp, level
+- match history
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### chat
+- channels type: public, private, protected (proteced by password)
+- direct messages
+- block user (shadow mute someone from your chat UI)
+- channel owner:
+	- change channel type
+	- add/remove/change password
+	- set user as admin
+- channel admin:
+	- ban user
+	- mute user
+- challenge other to a pong game through UI
+- access profile through UI
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+### pong
+- matchmaking
+- 3 game mode
+- spectator

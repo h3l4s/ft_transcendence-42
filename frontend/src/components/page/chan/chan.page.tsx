@@ -1,21 +1,22 @@
+import { useContext, useEffect, useState } from 'react';
+import axios from 'axios';
+import { io, Socket } from 'socket.io-client'
+
 import { InitChan, useReqChans } from '../../../request/chan.request';
 import { useReqUsers } from '../../../request/user.request';
 
 import '../../../style/chan.css';
 
+import i_chan from '../../../interface/chan.interface';
+
+import { AuthContext } from '../../../context/auth.context';
+import { ApiUrlContext } from '../../../context/apiUrl.context';
+
 import Chans from './chan.component';
 import Loading from '../../request_answer_component/loading.component';
 import Error from '../../request_answer_component/error.component';
-import { useParams } from 'react-router-dom';
 
-function ToChan()
-{
-	const p_id = useParams().id;
-
-	return (<ChanPage id={(p_id ? +p_id : 1)} />);
-}
-
-function ChanPage(props: { id: number })
+function ChanReq(props: { socket: Socket, chans: i_chan[] | null, to_chan: number, callback: (newId: number, oldId: number) => void })
 {
 	const reqChans = useReqChans();
 	const reqUsers = useReqUsers();
@@ -34,7 +35,8 @@ function ChanPage(props: { id: number })
 					<InitChan />
 				) : (
 					<div>
-						<Chans chans={reqChans.reqChans} users={reqUsers.reqUsers} to_chan={props.id} />
+						<Chans socket={props.socket} chans={(props.chans ? props.chans : reqChans.reqChans)} users={reqUsers.reqUsers}
+							to_chan={props.to_chan} callback={props.callback} />
 					</div>
 				)}
 			</div>
@@ -42,4 +44,45 @@ function ChanPage(props: { id: number })
 	}
 }
 
-export { ChanPage, ToChan };
+function ChanPage()
+{
+	const { apiUrl } = useContext(ApiUrlContext);
+	const { user } = useContext(AuthContext);
+	const [selectedChan, setSelectedChan] = useState(1);
+	const [chans, setChans] = useState<i_chan[] | null>(null);
+	const [socket] = useState(io(apiUrl + "/chat"));
+
+	useEffect(() =>
+	{
+		socket.on('newClient', (data: { userId: number }) =>
+		{
+			console.log("newClient", data);
+			callback(selectedChan, selectedChan);
+		});
+		socket.emit('newConnection');
+		socket.emit('joinRoom', selectedChan);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	function callback(newId: number, oldId: number)
+	{
+		if (!user || !user.id)
+			return;
+
+		axios.put(apiUrl + "/chan/join/" + newId.toString(), { userId: user.id }).then(res =>
+		{
+			socket.emit('leaveRoom', oldId.toString());
+			socket.emit('joinRoom', newId.toString());
+
+			axios.get(apiUrl + "/chan/").then(res =>
+			{
+				setChans(res.data);
+				setSelectedChan(newId);
+			}).catch(err => console.log(err));
+		}).catch(err => console.log(err));
+	}
+
+	return (<ChanReq socket={socket} chans={chans} to_chan={selectedChan} callback={callback} />);
+}
+
+export default ChanPage;

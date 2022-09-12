@@ -1,25 +1,28 @@
-import { useContext, useEffect, useState } from 'react';
+import axios from 'axios';
+import { useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import '../../../style/chan.css';
 import '../../../style/user.css';
 
 import i_user from '../../../interface/user.interface';
-import i_matchHistory from '../../../interface/matchHistory.interface';
 
+import { ApiUrlContext } from '../../../context/apiUrl.context';
 import { AuthContext } from '../../../context/auth.context';
 
 import { ReactComponent as Friend } from '../../../icon/friend-svgrepo-com.svg'
 import { ReactComponent as Edit } from '../../../icon/write-pencil-svgrepo-com.svg'
 
 import { useReqUsers } from '../../../request/user.request';
+
 import UserStats from './userstats.component';
-import MatchHistoty from './matchHistory.component';
+import MatchHistory from './matchHistory.component';
 import UserListById from './UserListById.component';
 import NoMatch from '../nomatch.page';
 import Loading from '../../request_answer_component/loading.component';
 import Error from '../../request_answer_component/error.component';
-import axios from 'axios';
+import Backdrop from '../../modal/backdrop';
+import UsernameChangeModal from '../../modal/username.change.modal';
 
 function isUserInDb(username: string, users: i_user[]): i_user | null
 {
@@ -29,7 +32,7 @@ function isUserInDb(username: string, users: i_user[]): i_user | null
 	return (null);
 }
 
-function uploadFile(user_id: number | undefined, image: File | null)
+function uploadFile(apiUrl: string, user_id: number | undefined, image: File | null)
 {
 	if (!user_id || !image)
 		return;
@@ -39,7 +42,7 @@ function uploadFile(user_id: number | undefined, image: File | null)
 
 	console.log("formData: ", formData);
 
-	axios.put("http://localhost:3000/user/pp/" + user_id, formData).then(
+	axios.put(apiUrl + "/user/pp/" + user_id, formData).then(
 		(res) => { console.log(res); },
 		(error) => { console.log(error); }
 	);
@@ -48,25 +51,42 @@ function uploadFile(user_id: number | undefined, image: File | null)
 
 function UserPage()
 {
+	const { apiUrl } = useContext(ApiUrlContext);
+	const { user, setUser } = useContext(AuthContext);
 	const { reqUsers, loading, error } = useReqUsers();
-	const { user } = useContext(AuthContext);
 	const [image, setImage] = useState<any | null>(null);
+	const [showUsernameChangeModal, setShowUsernameChangeModal] = useState(false);
+	const [userToLoad, setUserToLoad] = useState<i_user | null>(null);
 	const p_username = useParams().username;
-	let userToLoad: i_user | null;
-	let matches: i_matchHistory[] = [];	// tmp until match history in db
 
-	if (loading)
-		return (<div className='back'><Loading /></div>);
-	else if (error)
-		return (<div className='back'><Error msg={error.message} /></div>);
-	else if (p_username)
-		userToLoad = isUserInDb(p_username, reqUsers);
-	else
-		userToLoad = user;
 	if (!userToLoad)
-		return (<NoMatch />);
+	{
+		if (loading)
+			return (<div className='back'><Loading /></div>);
+		else if (error)
+			return (<div className='back'><Error msg={error.message} /></div>);
+		else if (p_username)
+			setUserToLoad(isUserInDb(p_username, reqUsers));
+		else
+		{
+			if (!user || !user.id)
+				return (<NoMatch />);
+			for (let i = 0; i < reqUsers.length; i++)
+				if (reqUsers[i].id === user.id)
+					setUserToLoad(reqUsers[i]);
+		}
+		if (!userToLoad)
+			return (<NoMatch />);
+	}
 
 	console.log("image: ", image);
+
+	function callback(user: i_user)
+	{
+		setUserToLoad(user);
+		setShowUsernameChangeModal(false);
+		setUser(user);
+	}
 
 	return (
 		<div className='user--page' >
@@ -74,28 +94,35 @@ function UserPage()
 				<div className='card card--border user--page--pic--title' style={{ marginBottom: "2rem" }} >
 					<div style={{ margin: "0.5rem 0 0.5rem 0" }}>
 						<img className='img' style={{ height: "23vw", width: "23vw" }}
-							src={(image ? URL.createObjectURL(image) : userToLoad.profilePicPath)} alt="profile" />
+							src={(image ? URL.createObjectURL(image) : userToLoad.pp_name)} alt="profile" />
 						{(!p_username || p_username === userToLoad.name)
 							&& <div className='input--file'>
 								<input type='file' style={{ zIndex: "99" }} onChange={(e) =>
 								{
-									uploadFile((user ? user.id : undefined), (e.target.files ? e.target.files[0] : null));
+									uploadFile(apiUrl, (user ? user.id : undefined), (e.target.files ? e.target.files[0] : null));
 									setImage((e.target.files ? e.target.files[0] : null));
 								}} />
 								<Edit className='input--file--icon' />
 							</div>
 						}
 					</div>
-					<div className='user--page-title truncate'>{userToLoad.name}</div>
+					<div className='user--page-title truncate'>
+						<span style={{ marginLeft: "calc(1.6vw + 1rem)" }}>{userToLoad.name}</span>
+						{(!p_username || p_username === userToLoad.name)
+							&& <button className='btn--username--change' onClick={() => setShowUsernameChangeModal(true)}>
+								<Edit />
+							</button>
+						}
+					</div>
 				</div>
 				<div className='card card--alt' style={{ height: "100%" }}>
 					<UserStats user={userToLoad} />
 				</div>
 			</div>
-			<div className='card card--alt' style={{ width: "33vw", height: "100%", margin: "0 2rem 0 -0.3rem", overflowY: "scroll" }}>
-				<MatchHistoty matches={matches} />
+			<div className='card card--alt' style={{ width: "41vw", height: "100%", margin: "0 2rem 0 -0.3rem", overflowY: "scroll" }}>
+				<MatchHistory username={userToLoad.name} users={reqUsers} />
 			</div>
-			<div style={{ width: "33vw", margin: "-1rem 0 -2rem 0", padding: "0.3rem 0 2rem 0", overflowX: "hidden" }}>
+			<div style={{ width: "25vw", margin: "-1rem 0 -2rem 0", padding: "0.3rem 0 2rem 0", overflowX: "hidden" }}>
 				<div style={{ display: "flex", alignItems: "center", justifyContent: "center", margin: "0.7rem 1rem 0 0" }}>
 					<Friend style={{ width: "3rem", height: "3rem" }} />
 					<div style={{ margin: "0 1rem 0 1rem" }} />
@@ -105,6 +132,8 @@ function UserPage()
 				</div>
 				<UserListById friendsId={userToLoad.friendsId} reqUsers={reqUsers} />
 			</div>
+			{(!p_username || p_username === userToLoad.name) && showUsernameChangeModal && <UsernameChangeModal callback={callback} />}
+			{(!p_username || p_username === userToLoad.name) && showUsernameChangeModal && <Backdrop onClick={() => setShowUsernameChangeModal(false)} />}
 		</div >
 	);
 }

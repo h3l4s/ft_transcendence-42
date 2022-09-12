@@ -1,11 +1,14 @@
+import { useContext } from "react";
+
 import useFetch from "./useFetch";
+
+import { ApiUrlContext } from "../context/apiUrl.context";
 
 import i_chan from "../interface/chan.interface";
 
 import Error from "../components/request_answer_component/error.component";
 import Loading from "../components/request_answer_component/loading.component";
-
-import { ChanPage } from "../components/page/chan/chan.page";
+import ChanPage from "../components/page/chan/chan.page";
 
 function chanBacktoFront(chan: any)
 {
@@ -16,7 +19,7 @@ function chanBacktoFront(chan: any)
 		ownerId: chan.ownerId,
 		adminsId: chan.adminsId,
 		type: chan.type,
-		// msg
+		msg: chan.msg,
 		bannedId: chan.bannedId,
 		mutedId: chan.mutedId
 	} : {});
@@ -26,8 +29,9 @@ function chanBacktoFront(chan: any)
 
 function useReqChan(query: number | string)
 {
+	const { apiUrl } = useContext(ApiUrlContext);
 	const { data, loading, error } = useFetch(
-		"http://localhost:3000/chan/" + (typeof query === 'number' ? query : "name/" + query), 'get');
+		apiUrl + "/chan/" + (typeof query === 'number' ? query : "name/" + query), 'get');
 
 	const reqChan: i_chan = chanBacktoFront(data);
 	return ({ reqChan, loading, error });
@@ -35,7 +39,8 @@ function useReqChan(query: number | string)
 
 function useReqChans()
 {
-	const { data, loading, error } = useFetch("http://localhost:3000/chan/", 'get');
+	const { apiUrl } = useContext(ApiUrlContext);
+	const { data, loading, error } = useFetch(apiUrl + "/chan/", 'get');
 	let reqChans: i_chan[] = [];
 
 	if (!loading && !error && data)
@@ -46,7 +51,8 @@ function useReqChans()
 
 function InitChan()
 {
-	const { data, loading, error } = useFetch("http://localhost:3000/chan/init", 'get');
+	const { apiUrl } = useContext(ApiUrlContext);
+	const { data, loading, error } = useFetch(apiUrl + "/chan/init", 'get');
 
 	if (loading)
 		return (<div className='back'><Loading /></div>);
@@ -55,7 +61,7 @@ function InitChan()
 	else
 	{
 		console.log(data);
-		return (<ChanPage id={1} />);
+		return (<ChanPage />);
 	}
 }
 

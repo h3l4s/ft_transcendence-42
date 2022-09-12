@@ -154,6 +154,8 @@ input {
 }
 
 .btn--plus svg {
+	height: 2.2rem;
+	width: 2.2rem;
 	fill: var(--alt-color);
 }
 
@@ -231,9 +233,20 @@ input {
 }
 
 .card--chan {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	vertical-align: center;
+	text-align: center;
 	font-size: medium;
 	width: 85%;
 	padding: 0.5rem;
+}
+
+.card--chan svg {
+	height: 1.5rem;
+	width: 1.5rem;
 }
 
 .heart {
@@ -440,13 +453,14 @@ input {
 }
 
 .modal--pick svg {
-	fill: #fff;
 	filter: brightness(10000%);
 }
 
 .pick--user {
 	cursor: pointer;
-	background-color: #fff4;
+	background-color: #fff4 !important;
+	color: #fff;
+	width: calc(100% - 2rem);
 	border-radius: 1rem;
 	margin: 0.25rem 1rem 0 1rem;
 	padding: 0.4rem 2rem 0.4rem 0.4rem;
@@ -459,7 +473,11 @@ input {
 }
 
 .pick--user:hover {
-	background-color: #fff6;
+	background-color: #fff6 !important;
+}
+
+.pick--user svg {
+	fill: "#c00" !important;
 }
 
 .modal--add--chan {
@@ -534,4 +552,14 @@ input {
 .form--submit:hover {
 	background-color: #fff8;
 	color: var(--main-color-hover);
+}
+
+.msg {
+	max-width: 66%;
+}
+
+.msg--holder {
+	margin: 4px 0 4.2rem 0;
+	width: 100%;
+	overflow-y: scroll;
 }

@@ -6,17 +6,29 @@
 #    By: adelille <adelille@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/10 14:54:46 by adelille          #+#    #+#              #
-#    Updated: 2022/08/08 20:14:31 by adelille         ###   ########.fr        #
+#    Updated: 2022/09/07 00:19:36 by adelille         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = ft_transcendence
+NAME =	ft_transcendence
+
+FRONT =	./frontend
+BACK =	./backend
+
+ENV =		.env
+BACKENV =	$(BACK)/src/common/envs/development.env
+FRONTENV =	.front.env
 
 # **************************************************************************** #
 #	MAKEFILE	#
 
 #include	srcs/.env
 #export	$(shell sed 's/=.*//' srcs/.env)
+
+include $(ENV)
+$(eval export $(shell sed -ne 's/ *#.*$$//; /./ s/=.*$$// p' $(ENV)))
+include $(FRONTENV)
+$(eval export $(shell sed -ne 's/ *#.*$$//; /./ s/=.*$$// p' $(FRONTENV)))
 
 SHELL := bash
 
@@ -32,33 +44,47 @@ D =		$(shell tput sgr0)
 all:	$(NAME)
 
 $(NAME):
-	$(CD) docker-compose up --force-recreate --build
+	@[ -f $(FRONTENV) ] || echo -e "$(B)$(YEL)[WARNING]$(D)\t$(FRONTENV) not found"
+	docker-compose up --force-recreate --build
 
-clean:
-	$(CD) docker-compose down
+ip:
+	@hostname -I | cut -d' ' -f1
 
-fclean:
-	@$(CD) docker-compose down -v 2>/dev/null
-	@docker rm -f $(shell docker ps -aq) 2>/dev/null || true
-	@docker rmi -f $(shell docker images -q) 2>/dev/null || true
-	@docker builder prune -f
-	@docker volume prune -f
+db:
+	docker-compose up --force-recreate --build db
 
-re:	clean all
+back:
+	[ -d $(BACK)/node_modules ] || npm --prefix $(BACK) install $(BACK) --legacy-peer-deps
+	npm --prefix $(BACK) run start:dev
 
-fre: fclean all
+front:
+	[ -d $(FRONT)/node_modules ] || npm --prefix $(FRONT) install $(FRONT) --legacy-peer-deps
+	npm --prefix $(FRONT) start
+
+stop:
+	docker-compose down
+
+clean:	stop
+	docker system prune --volumes -f
+
+fclean: clean
+	docker system prune -af
+
+re:		clean all
+
+fre:	fclean all
 
 list:
-	@printf "\n\t$(B)$(GRE)container$(D)\n"
-	docker ps -a
+	@printf "\n\t$(B)$(GRE)containers$(D)\n"
+	@docker ps -a
 	@printf "\n\t$(B)$(GRE)images$(D)\n"
-	docker images -a
-	@printf "\n\t$(B)$(GRE)network$(D)\n"
-	docker network ls
-	@printf "\n\t$(B)$(GRE)volume$(D)\n"
-	docker volume ls
+	@docker images -a
+	@printf "\n\t$(B)$(GRE)networks$(D)\n"
+	@docker network ls
+	@printf "\n\t$(B)$(GRE)volumes$(D)\n"
+	@docker volume ls
 	@echo ;
 
-.PHONY: all clean fclean re fre list
+.PHONY: all ip db back front stop clean fclean re fre list
 
 # **************************************************************************** #

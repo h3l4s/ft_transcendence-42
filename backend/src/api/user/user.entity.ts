@@ -1,5 +1,17 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
+export class ColumnNumericTransformer
+{
+	to(data: number): number
+	{
+		return data;
+	}
+	from(data: string): number
+	{
+		return parseFloat(data);
+	}
+}
+
 @Entity()
 export class User
 {
@@ -18,7 +30,13 @@ export class User
 	@Column({ type: 'varchar', length: 255, default: "" })
 	public pp_name: string
 
-	@Column({ type: 'int', default: 0 })
+	@Column({
+		type: 'decimal',
+		precision: 7,
+		scale: 2,
+		transformer: new ColumnNumericTransformer(),
+		default: 0
+	})
 	public xp: number;
 
 	@Column({ type: 'int', default: 1000 })
@@ -29,12 +47,6 @@ export class User
 
 	@Column({ type: 'int', default: 0 })
 	public lose: number;
-
-	// possibly bugged because of array
-	@Column({ type: 'jsonb', nullable: true })
-	//public matchHistory?: matchHistoryDto[];
-	public matchHistory?: { tmp: number }[]
-	//
 
 	@Column({ type: 'int', array: true, nullable: true })
 	public friendsId?: number[];

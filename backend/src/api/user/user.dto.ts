@@ -1,9 +1,19 @@
-import { IsNotEmpty, IsOptional, IsString, IsNumber, IsNotEmptyObject } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, IsNumber } from 'class-validator';
 
-export class CreateUserDto
+export class Auth42Dto
 {
 	@IsString()
-	public access_token: string;
+	@IsNotEmpty()
+	public token: string;
+
+	@IsString()
+	@IsNotEmpty()
+	@IsOptional()
+	public uid?: string;
+
+	@IsString()
+	@IsNotEmpty()
+	public secret: string;
 }
 
 export class UpdateUserDto
@@ -33,11 +43,6 @@ export class UpdateUserDto
 	@IsOptional()
 	public lose: number;
 
-	@IsNotEmptyObject()
-	@IsOptional()
-	//public matchHistory: matchHistoryDto;
-	public matchHistory: { tmp: number };
-
 	@IsNumber()
 	@IsNotEmpty()
 	@IsOptional()
@@ -47,4 +52,30 @@ export class UpdateUserDto
 	@IsNotEmpty()
 	@IsOptional()
 	public mutedId: number;
+}
+
+export class UpdateUsersAfterGameDto
+{
+	@IsString()
+	@IsNotEmpty()
+	public winner: string;
+
+	@IsString()
+	@IsNotEmpty()
+	public loser: string;
+
+	@IsNumber()
+	@IsNotEmpty()
+	public scoreWinner: number;
+
+	@IsNumber()
+	@IsNotEmpty()
+	public scoreLoser: number;
+}
+
+export class ChooseUsernameDto
+{
+	@IsString()
+	@IsNotEmpty()
+	public username: string;
 }

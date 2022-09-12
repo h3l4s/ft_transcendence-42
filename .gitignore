@@ -8,7 +8,7 @@ frontend/*.env
 # nvim
 *~
 
-#vscode
+# vscode
 .vscode
 
 # compiled

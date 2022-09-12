@@ -1,13 +1,15 @@
 import { Link } from 'react-router-dom';
-import { useContext, useState } from 'react';
+import { ChangeEvent, useContext, useState } from 'react';
+
+import axios from 'axios';
 
 import '../../style/chan.css'
 
 import { AuthContext } from '../../context/auth.context';
-
-import axios from 'axios';
+import { ApiUrlContext } from '../../context/apiUrl.context';
 
 import i_user from '../../interface/user.interface';
+import i_msg from '../../interface/msg.interface';
 
 import { ReactComponent as ProfilePage } from '../../icon/profile-user-svgrepo-com.svg';
 import { ReactComponent as AddFriend } from '../../icon/add-friend-svgrepo-com.svg';
@@ -19,8 +21,10 @@ import { asyncReqUpdateUser } from '../../request/user.update.request';
 
 function ProfileModal(props: { user: i_user, onClose: () => void })
 {
+	const { apiUrl } = useContext(ApiUrlContext);
 	const { user, setUser } = useContext(AuthContext);
 	const [friend, setFriend] = useState((user && user.friendsId ? user.friendsId.includes(props.user.id!) : false));
+	const [msg, setMsg] = useState("");
 
 	const link_to_profile = "/user/" + props.user.name;
 
@@ -28,8 +32,8 @@ function ProfileModal(props: { user: i_user, onClose: () => void })
 	{
 		if (!user || !user.id)
 			return;
-		asyncReqUpdateUser("http://localhost:3000/user/" + user.id, 'put',
-			{ updateUserDto: { friendId: props.user.id! } }).then((res) =>
+		asyncReqUpdateUser(apiUrl + "/user/" + user.id, 'put',
+			{ friendId: props.user.id! }).then((res) =>
 			{
 				setFriend(state);
 				setUser(res);
@@ -38,6 +42,30 @@ function ProfileModal(props: { user: i_user, onClose: () => void })
 			{
 				console.log(err);
 			});
+	}
+
+	function msgUpdateHandle(event: ChangeEvent<HTMLInputElement>)
+	{
+		setMsg(event.target.value);
+	};
+
+	function msgSendHandle(event: React.KeyboardEvent<HTMLInputElement>)
+	{
+		if (!props.user.id || !props.user.name || !user || !user.id || !user.name)
+			return;
+		if (event.key === 'Enter' && msg.length > 0)
+		{
+			event.preventDefault();
+			const date = new Date();
+			let s_msg: i_msg = {
+				userId: user.id,
+				username: user.name,
+				msg: msg,
+				sendAt: date
+			}
+			axios.post(apiUrl + "/chan/msg/dm/" + props.user.id, s_msg).catch(err => console.log(err));
+			setMsg("");
+		}
 	}
 
 	return (
@@ -61,7 +89,7 @@ function ProfileModal(props: { user: i_user, onClose: () => void })
 				}
 			</div>
 			<div>
-				<img className='img' style={{ marginTop: "-3rem", height: "30vh", width: "30vh" }} src={props.user.profilePicPath} alt="profile" />
+				<img className='img' style={{ marginTop: "-3rem", height: "30vh", width: "30vh" }} src={props.user.pp_name} alt="profile" />
 				{user && user.name !== props.user.name && friend
 					&& <Heart className='heart' onClick={() => updateFriend(false)} />}
 			</div>
@@ -72,7 +100,9 @@ function ProfileModal(props: { user: i_user, onClose: () => void })
 				<UserStats user={props.user} />
 			</div>
 			<div>
-				{user && user.name !== props.user.name && <input className='card card--input' type='text' placeholder=' 💬' />}
+				{user && user.name !== props.user.name &&
+					<input className='card card--input' type='type' placeholder=' 💬'
+						onChange={msgUpdateHandle} value={msg} onKeyDown={msgSendHandle} />}
 			</div>
 		</div >
 	);
