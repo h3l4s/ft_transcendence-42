@@ -84,3 +84,17 @@ export class ChooseUsernameDto
 	@IsNotEmpty()
 	public username: string;
 }
+
+export class UserStatusDto
+{
+	@IsNumber()
+	@IsNotEmpty()
+	public id: number;
+
+	@IsString()
+	public clientId?: string;
+
+	@IsString()
+	@IsNotEmpty()
+	public status: ('online' | 'offline' | 'ingame' | 'challenged');
+}
