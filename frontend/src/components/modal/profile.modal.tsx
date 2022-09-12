@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ChangeEvent, useContext, useState } from 'react';
+import { ChangeEvent, useContext, useEffect, useState } from 'react';
 
 import axios from 'axios';
 
@@ -7,6 +7,7 @@ import '../../style/chan.css'
 
 import { AuthContext } from '../../context/auth.context';
 import { ApiUrlContext } from '../../context/apiUrl.context';
+import { StatusContext } from '../../context/status.context';
 
 import i_user from '../../interface/user.interface';
 import i_msg from '../../interface/msg.interface';
@@ -22,11 +23,25 @@ import { asyncReqUpdateUser } from '../../request/user.update.request';
 function ProfileModal(props: { user: i_user, onClose: () => void })
 {
 	const { apiUrl } = useContext(ApiUrlContext);
+	const { socket } = useContext(StatusContext);
 	const { user, setUser } = useContext(AuthContext);
 	const [friend, setFriend] = useState((user && user.friendsId ? user.friendsId.includes(props.user.id!) : false));
 	const [msg, setMsg] = useState("");
+	const [status, setStatus] = useState("");
 
 	const link_to_profile = "/user/" + props.user.name;
+
+	useEffect(() =>
+	{
+		if (socket)
+		{
+			socket.emit('getStatus', { id: props.user.id, status: 'online' });
+
+			socket.on('isStatus', (data: { id: string, status: string }) =>
+				setStatus(data.status));
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	function updateFriend(state: boolean)
 	{
@@ -95,6 +110,12 @@ function ProfileModal(props: { user: i_user, onClose: () => void })
 			</div>
 			<div>
 				<h2 className='truncate' style={{ paddingTop: "1rem", paddingBottom: "1rem" }}>{props.user.name}</h2>
+				<div style={{
+					position: "absolute", marginTop: "-3.25rem", right: "2rem",
+					color: (status === 'online' ? "#050" : status === 'offline' ? "#0004" : "#005")
+				}}>
+					{status}
+				</div>
 			</div>
 			<div className='card card--alt' style={{ height: "22vh" }}>
 				<UserStats user={props.user} />

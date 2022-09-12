@@ -103,7 +103,13 @@
 	padding: -1rem;
 	color: #fff;
 	font-family: var(--alt-font);
-	font-size: 0.8rem;
+	font-size: 0.7rem;
+	transition: 200ms;
+}
+
+.twofa:hover {
+	background-color: #0004;
+	filter: brightness(1000%);
 }
 
 .typewriter {

@@ -11,8 +11,9 @@ import i_user from '../../../interface/user.interface';
 
 import { ReactComponent as Auth42 } from '../../../icon/42_Logo.svg'
 
-import { Users } from '../chan/user.component';
+import { Users } from '../user/user.component';
 import { userBacktoFront, } from '../../../request/user.request';
+import LogoutButton from './logout.button';
 
 async function requestUser(apiUrl: string, id: number): Promise<i_user | null>
 {
@@ -85,10 +86,14 @@ function LoginPage()
 
 	return (
 		<div className='login--page'>
-			<button className='auth42 card--alt' onClick={auth42}>
-				<Auth42 />
-				<div>auth</div>
-			</button>
+			{!user ? (
+				<button className='auth42 card--alt' onClick={auth42}>
+					<Auth42 />
+					<div>auth</div>
+				</button>
+			) : (
+				<LogoutButton style={{ width: "10vh", height: "10vh", margin: "0 auto", padding: "1.5vh 2vh 1.5vh 1vh" }} />
+			)}
 			<div className='login--debug'>
 				<h3>🚧 DEBUG 🚧</h3>
 				{user ? (

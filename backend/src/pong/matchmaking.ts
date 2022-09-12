@@ -14,6 +14,7 @@ let joueur_tennis = [];
 let bdd = [];
 let bdd_game = [];
 let match: string;
+let current_match = [];
 
 function Move_player(game: any, mouseLocation: number, PLAYER_HEIGHT: number, canvas_height: number, who: number)
 {
@@ -84,8 +85,8 @@ function collision(player: any, game: any, canvas_height: number, canvas_width: 
 		if (!game.score.ball_start)
 			game.ball.speed.x = -0.5;
 		else
-			game.ball.speed.x = 0.5;
-		game.ball.speed.y = 0.5;
+			game.ball.speed.x = 0.7;
+		game.ball.speed.y = 0.7;
 		return (game);
 	}
 	else
@@ -140,12 +141,10 @@ export class Matchmaking
 					if (clientNb_simple % 2 === 0)
 					{
 						this.server.to(clientRoom).emit('switchFromServer', joueur_simple);
-						this.server.to(clientRoom).emit('start');
 						match = joueur_simple[0].toString() + " vs " + joueur_simple[1].toString() + " salon " + clientRoom.toString() + " simple";
-						console.log(match);
-						this.server.emit('live', match);
-						console.log(`joueur_simple = ${joueur_simple[0]}`);
-						console.log(`joueur_simple = ${joueur_simple[1]}`);
+						current_match.push(match);
+						this.server.to(clientRoom).emit('start', match);
+						this.server.to("0").emit('new-match', current_match);
 						joueur_simple.pop();
 						joueur_simple.pop();
 						match = "";
@@ -169,9 +168,9 @@ export class Matchmaking
 					if (clientNb_hard % 2 === 0)
 					{
 						this.server.to(clientRoom).emit('switchFromServer', joueur_hard);
-						this.server.to(clientRoom).emit('start');
 						match = joueur_hard[0].toString() + " vs " + joueur_hard[1].toString() + " salon " + clientRoom.toString() + " hard";
-						this.server.emit('live', match);
+						current_match.push(match);
+						this.server.to(clientRoom).emit('start', match);
 						joueur_hard.pop();
 						joueur_hard.pop();
 						match = "";
@@ -195,9 +194,9 @@ export class Matchmaking
 					if (clientNb_tennis % 2 === 0)
 					{
 						this.server.to(clientRoom).emit('switchFromServer', joueur_tennis);
-						this.server.to(clientRoom).emit('start');
-						match = joueur_tennis[0].toString() + " vs " + joueur_tennis[1].toString() + " salon " + clientRoom.toString()+ " tennis";
-						this.server.emit('live', match);
+						match = joueur_tennis[0].toString() + " vs " + joueur_tennis[1].toString() + " salon " + clientRoom.toString() + " tennis";
+						current_match.push(match);
+						this.server.to(clientRoom).emit('start', match);
 						joueur_tennis.pop();
 						joueur_tennis.pop();
 						match = "";
@@ -223,9 +222,24 @@ export class Matchmaking
 			client.join(clientRoom.toString());
 			this.server.to(clientRoom.toString()).emit('start-stream');
 		});
-		client.on('finish', (clientRoom) =>
+		client.on('want_gamelive', (room) =>
 		{
-			this.server.to(clientRoom.toString()).emit('end-viewer');
+			client.join(room.toString());
+			for (let i = 0; i < current_match.length; i++)
+			{
+				this.server.to(room.toString()).emit('live', current_match[i]);
+			}
+		});
+		client.on('finish', (clientRoom, data_match) =>
+		{
+			console.table(current_match);
+			console.log("data = ", data_match);
+			let pos = current_match.indexOf(data_match.toString());
+			console.log("pos = ", pos);
+			if (pos !== -1)
+				current_match.splice(pos, 1);
+			console.table(current_match);
+			this.server.to("0").emit('finish-match', current_match);
 		});
 	}
 
