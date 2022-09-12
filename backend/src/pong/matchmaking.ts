@@ -194,7 +194,7 @@ export class Matchmaking
 					if (clientNb_tennis % 2 === 0)
 					{
 						this.server.to(clientRoom).emit('switchFromServer', joueur_tennis);
-						match = joueur_tennis[0].toString() + " vs " + joueur_tennis[1].toString() + " salon " + clientRoom.toString()+ " tennis";
+						match = joueur_tennis[0].toString() + " vs " + joueur_tennis[1].toString() + " salon " + clientRoom.toString() + " tennis";
 						current_match.push(match);
 						this.server.to(clientRoom).emit('start', match);
 						joueur_tennis.pop();
@@ -217,27 +217,28 @@ export class Matchmaking
 			this.server.to(info.clientRoom.name).emit('move-player-draw', game);
 
 		});
-		// client.on('viewer', (clientRoom) =>
-		// {
-		// 	client.join(clientRoom.toString());
-		// 	this.server.to(clientRoom.toString()).emit('start-stream');
-		// });
+		client.on('viewer', (clientRoom) =>
+		{
+			client.join(clientRoom.toString());
+			this.server.to(clientRoom.toString()).emit('start-stream');
+		});
 		client.on('want_gamelive', (room) =>
 		{
 			client.join(room.toString());
-			for(let i = 0; i < current_match.length; i++){
+			for (let i = 0; i < current_match.length; i++)
+			{
 				this.server.to(room.toString()).emit('live', current_match[i]);
 			}
 		});
 		client.on('finish', (clientRoom, data_match) =>
-		{	
+		{
 			console.table(current_match);
 			console.log("data = ", data_match);
 			let pos = current_match.indexOf(data_match.toString());
 			console.log("pos = ", pos);
 			if (pos !== -1)
 				current_match.splice(pos, 1);
-			console.table( current_match);
+			console.table(current_match);
 			this.server.to("0").emit('finish-match', current_match);
 		});
 	}

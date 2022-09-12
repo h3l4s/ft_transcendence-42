@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { io, Socket } from 'socket.io-client';
 
@@ -15,7 +16,7 @@ import tennis from './tennis_pong.jpg'
 import Error from '../../request_answer_component/error.component';
 import { useReqUser } from '../../../request/user.request';
 
-function Pong(props: { map: i_map, goBack: () => void })
+function Pong()
 {
 	const { apiUrl } = useContext(ApiUrlContext);
 	const { user } = useContext(AuthContext);
@@ -24,22 +25,24 @@ function Pong(props: { map: i_map, goBack: () => void })
 	const [inPlay, setInPlay] = useState(false);
 	const [gameLaunch, setGameLaunch] = useState(0);
 	const [socket] = useState(io(apiUrl));
+	const type = useParams().type;
 
 	useEffect(() =>
 	{
-		if (!user || !user.name)
+		if (!user || !user.name || !type || type !== 'simple' && type !== 'hard' && type !== 'tennis')
 			return;
 		console.log("first appel");
-		handleCanvas(apiUrl, user.name, true, props.map, bdd_pong, 0, socket, "");
+		handleCanvas(apiUrl, user.name, true, type, bdd_pong, 0, socket, "");
 	});
 
 	if (!user || !user.name)
 		return (<Error msg="failed to get connected user" />);
+	else if (!type || type !== 'simple' && type !== 'hard' && type !== 'tennis')
+		return (<Error msg="failed to get type" />);
 	else if (error)
 		return (<Error msg={error.message} />);
 
-	props.map.p1 = user.name;
-	props.map.p2 = (loading ? "..." : reqUser.name);
+	const p2 = (loading ? "..." : reqUser.name);
 
 	let saloon = {
 		player1: "",
@@ -47,7 +50,6 @@ function Pong(props: { map: i_map, goBack: () => void })
 		clientRoom: ""
 	};
 
-	let nameP1 = user.name;
 	let bdd_pong: any[] = [];
 
 	// 	props.socket.on('chatToClient', (msg: i_msg) =>
@@ -56,28 +58,15 @@ function Pong(props: { map: i_map, goBack: () => void })
 	// 		setIcomingMsg(msg);
 	// 	});
 
-	function backFunction()
-	{
-		props.goBack();
-		socket.disconnect();
-	}
-
 	return (
 		<div className='pong pong--compo'>
 			<div className='pong--header'>
-				<button className='btn--back'
-					onClick={backFunction}>
-					<Back />
-				</button>
 				<h1>Pong</h1>
-				<button className='btn--back' style={{ visibility: "hidden" }}>
-					<Back />
-				</button>
 			</div>
 			<script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
 			<br />
-			[DEBUG] map chosen: {props.map.type}
-			<p className='pong--player'> <span id="p1-name">{props.map.p1}</span> vs <span id="p2-name">...</span></p>
+			[DEBUG] map chosen: {type}
+			<p className='pong--player'> <span id="p1-name">{user.name}</span> vs <span id="p2-name">...</span></p>
 			<div style={{ height: "3rem" }}>
 				{!inGame &&
 					<div style={{ display: "flex", justifyContent: "center" }}>
@@ -91,16 +80,23 @@ function Pong(props: { map: i_map, goBack: () => void })
 					<span id="scoreP1HTML" />-<span id="scoreP2HTML" />
 				</p>
 			</div>
-			{props.map.type === 'tennis' && <img id='tennis' src={tennis} alt='tennis' style={{ display: "none" }} />}
+			{type === 'tennis' && <img id='tennis' src={tennis} alt='tennis' style={{ display: "none" }} />}
 			<canvas id="canvas" height="580" width="740" />
 			<img id="win" src="https://ak7.picdn.net/shutterstock/videos/34233727/thumb/1.jpg" alt="win" />
 			<img id="lose" src="https://www.freesoundslibrary.com/wp-content/uploads/2020/07/game-lose-2-720x340.jpg" alt="lose" />
-			{inPlay && <LaunchGame map={props.map} nameP1={nameP1} saloon={saloon} incGameLaunch={() => { setGameLaunch(gameLaunch + 1); return gameLaunch; }} setInGame={setInGame} socket={socket} />}
+			{inPlay && <LaunchGame type={type} nameP1={user.name} saloon={saloon} incGameLaunch={() => { setGameLaunch(gameLaunch + 1); return gameLaunch; }} setInGame={setInGame} socket={socket} />}
 		</div >
 	);
 }
 
-function LaunchGame(props: { map: i_map, nameP1: string, saloon: any, incGameLaunch: () => number, setInGame: React.Dispatch<React.SetStateAction<boolean>>, socket: Socket })
+function LaunchGame(props: {
+	type: 'simple' | 'hard' | 'tennis',
+	nameP1: string,
+	saloon: any,
+	incGameLaunch: () => number,
+	setInGame: React.Dispatch<React.SetStateAction<boolean>>,
+	socket: Socket
+})
 {
 	const { apiUrl } = useContext(ApiUrlContext);
 	const { user } = useContext(AuthContext);
@@ -113,13 +109,13 @@ function LaunchGame(props: { map: i_map, nameP1: string, saloon: any, incGameLau
 	if (playbtn !== null)
 		playbtn.style.display = "none";
 
-	
+
 
 	useEffect(() =>
 	{
-		if (!props.map.type)
+		if (!props.type)
 			return;
-		props.socket.emit('newPlayer', props.map.type.toString());
+		props.socket.emit('newPlayer', props.type.toString());
 		props.socket.on('serverToRoom', (data: string) =>
 		{
 			console.log(`je suis ds la room data ${data}`);
@@ -141,7 +137,7 @@ function LaunchGame(props: { map: i_map, nameP1: string, saloon: any, incGameLau
 			if (!user || !user.name)
 				return;
 			console.log("second appel");
-			handleCanvas(apiUrl, user.name, false, props.map, bdd_pong, props.incGameLaunch(), props.socket, data.toString());
+			handleCanvas(apiUrl, user.name, false, props.type, bdd_pong, props.incGameLaunch(), props.socket, data.toString());
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -149,12 +145,20 @@ function LaunchGame(props: { map: i_map, nameP1: string, saloon: any, incGameLau
 	return (<div />);
 }
 
-function handleCanvas(apiUrl: string, username: string, init: boolean, map: i_map, bdd: any[] = [], room: number, socket: Socket, match:string)
+function handleCanvas(
+	apiUrl: string,
+	username: string,
+	init: boolean,
+	type: 'simple' | 'hard' | 'tennis',
+	bdd: any[] = [],
+	room: number,
+	socket: Socket,
+	match: string)
 {
 	let canvas = document.querySelector("#canvas")! as HTMLCanvasElement;
 	canvas.style.display = "block";
 	canvas.style.margin = "auto";
-	const PLAYER_HEIGHT = (map.type === 'hard' ? 50 : 100);
+	const PLAYER_HEIGHT = (type === 'hard' ? 50 : 100);
 	const PLAYER_WIDTH = 5;
 	const win = document.querySelector("#win")! as HTMLImageElement;
 	const lose = document.querySelector("#lose")! as HTMLImageElement;
@@ -196,7 +200,7 @@ function handleCanvas(apiUrl: string, username: string, init: boolean, map: i_ma
 
 	if (init)
 		return;
-	
+
 	console.log(bdd[room]);
 	let parsing_player: string;
 	let p1name = document.querySelector("#p1-name")!;
@@ -224,7 +228,7 @@ function handleCanvas(apiUrl: string, username: string, init: boolean, map: i_ma
 		// Get the mouse location in the canvas
 		var canvasLocation = canvas.getBoundingClientRect();
 		var mouseLocation = event.clientY - canvasLocation.y;
-		if (map.p1! === bdd[room].player1)
+		if (username! === bdd[room].player1)
 		{
 			info.who.player = 1;
 			info.mouseLocation.coordonne = mouseLocation;
@@ -238,7 +242,7 @@ function handleCanvas(apiUrl: string, username: string, init: boolean, map: i_ma
 		}
 	}
 
-	if (map.p1 === bdd[room].player1)
+	if (username === bdd[room].player1)
 		parsing_player = bdd[room].player2;
 	else
 		parsing_player = bdd[room].player1;
@@ -247,18 +251,20 @@ function handleCanvas(apiUrl: string, username: string, init: boolean, map: i_ma
 	p2name.innerHTML = bdd[room].player2;
 	console.log(`p1 = ${bdd[room].player1}, p2 = ${bdd[room].player2} et parsing-player = ${parsing_player}`);
 
-	if (game.score.p1 === 0){
+	if (game.score.p1 === 0)
+	{
 		play();
 		console.log("BBBBBBBBBBBBBBB");
 	}
 
 	function play()
 	{
-		socket.emit('play', game, PLAYER_WIDTH, canvas.height, canvas.width, PLAYER_HEIGHT, map.type.toString(), bdd[room].clientRoom);
+		socket.emit('play', game, PLAYER_WIDTH, canvas.height, canvas.width, PLAYER_HEIGHT, type, bdd[room].clientRoom);
 		socket.on('returnPlay', (data) =>
 		{
 			game = data;
-			if (game.score.p1_temp === -1){
+			if (game.score.p1_temp === -1)
+			{
 				game.score.p2_temp++;
 				game.score.p1_temp++;
 				scoreP1HTML.innerText = game.score.p1.toString();
@@ -302,7 +308,7 @@ function handleCanvas(apiUrl: string, username: string, init: boolean, map: i_ma
 	{
 		const img = document.querySelector("#tennis")! as HTMLImageElement;
 		let context = canvas.getContext('2d')! as CanvasRenderingContext2D;
-		if (map.type === 'simple' || map.type === 'hard')
+		if (type === 'simple' || type === 'hard')
 		{
 			// Draw field
 			context.fillStyle = 'black';
@@ -352,11 +358,11 @@ function handleCanvas(apiUrl: string, username: string, init: boolean, map: i_ma
 			{
 				game = data;
 			});
-			context.fillStyle = (map.type === 'hard' ? 'red' : 'white');
+			context.fillStyle = (type === 'hard' ? 'red' : 'white');
 			context.fillRect(5, game.player.y, PLAYER_WIDTH, PLAYER_HEIGHT);
 			context.fillRect(canvas.width - 5 - PLAYER_WIDTH, game.computer.y, PLAYER_WIDTH, PLAYER_HEIGHT);
 			context.beginPath();
-			context.fillStyle = (map.type === 'hard' ? 'red' : 'white');
+			context.fillStyle = (type === 'hard' ? 'red' : 'white');
 			context.arc(game.ball.x, game.ball.y, game.ball.r, 0, Math.PI * 2, false);
 			context.fill();
 			// Draw ball
