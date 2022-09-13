@@ -92,7 +92,7 @@ function PickUser(props: {
 					<div style={{ width: "2rem" }} />
 				)}
 			</button>
-			{isChallenged && <Navigate to={"/challenge/" + props.c_user.id} />}
+			{isChallenged && <Navigate to={"/challenge/" + user.id + "/" + props.c_user.id} />}
 			{isChallenged && <ResetChallenge />}
 		</div>
 	);
