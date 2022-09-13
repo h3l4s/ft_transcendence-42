@@ -121,6 +121,7 @@ export class Matchmaking
 	//connexion
 	handleConnection(client: Socket)
 	{
+		console.log("hey");
 		client.on('newPlayer', (type) =>
 		{
 			player++;
@@ -141,7 +142,8 @@ export class Matchmaking
 					if (clientNb_simple % 2 === 0)
 					{
 						this.server.to(clientRoom).emit('switchFromServer', joueur_simple);
-						match = joueur_simple[0].toString() + " vs " + joueur_simple[1].toString() + " salon " + clientRoom.toString() + " simple";
+						if (joueur_simple[0] !== undefined && joueur_simple[1] !== undefined)
+							match = joueur_simple[0].toString() + " vs " + joueur_simple[1].toString() + " salon " + clientRoom.toString() + " simple";
 						current_match.push(match);
 						this.server.to(clientRoom).emit('start', match);
 						this.server.to("0").emit('new-match', current_match);
@@ -168,7 +170,8 @@ export class Matchmaking
 					if (clientNb_hard % 2 === 0)
 					{
 						this.server.to(clientRoom).emit('switchFromServer', joueur_hard);
-						match = joueur_hard[0].toString() + " vs " + joueur_hard[1].toString() + " salon " + clientRoom.toString() + " hard";
+						if (joueur_hard[0] !== undefined && joueur_hard[1] !== undefined)
+							match = joueur_hard[0].toString() + " vs " + joueur_hard[1].toString() + " salon " + clientRoom.toString() + " hard";
 						current_match.push(match);
 						this.server.to(clientRoom).emit('start', match);
 						joueur_hard.pop();
@@ -194,7 +197,8 @@ export class Matchmaking
 					if (clientNb_tennis % 2 === 0)
 					{
 						this.server.to(clientRoom).emit('switchFromServer', joueur_tennis);
-						match = joueur_tennis[0].toString() + " vs " + joueur_tennis[1].toString() + " salon " + clientRoom.toString() + " tennis";
+						if (joueur_tennis[0] !== undefined && joueur_tennis[1] !== undefined)
+							match = joueur_tennis[0].toString() + " vs " + joueur_tennis[1].toString() + " salon " + clientRoom.toString() + " tennis";
 						current_match.push(match);
 						this.server.to(clientRoom).emit('start', match);
 						joueur_tennis.pop();

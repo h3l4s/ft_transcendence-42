@@ -52,7 +52,10 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect
 			this.db.push(status);
 		}
 		else
+		{
 			this.db[index] = status;
+			this.db[index].clientId = client.id;
+		}
 
 		this.wss.emit('receivedStatus', status);
 	}
