@@ -1,9 +1,20 @@
-import { Body, Controller, Get, Inject, Param, ParseIntPipe, Post, Put, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
-import { Auth42Dto, ChooseUsernameDto, UpdateUserDto, UpdateUsersAfterGameDto } from './user.dto';
+import { Body, Controller, Get, Inject, Param, ParseIntPipe, Post, Put, Res, UploadedFile, UseInterceptors, StreamableFile } from '@nestjs/common';
+import { Auth42Dto, ChooseUsernameDto, UpdateUserDto, UpdateUsersAfterGameDto, UploadDto } from './user.dto';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
+import { diskStorage } from 'multer';
+import { createReadStream } from 'graceful-fs';
+
+export const storage = {
+    storage: diskStorage({
+        destination: './uploads/profileimages',
+        filename: (req, file, cb) => {
+			cb(null, Date.now() + '_' + file.originalname);
+		  },
+    })
+}
 
 @Controller('user')
 export class UserController
@@ -73,15 +84,29 @@ export class UserController
 	}
 
 	@Put('pp/:id')
-	@UseInterceptors(FileInterceptor('file'))
-	public async uploadFile(@Param('id', ParseIntPipe) id: number, @UploadedFile() file: Express.Multer.File, @Body() data: any)
+	@UseInterceptors(FileInterceptor('file', storage))
+	public async create(@Param('id', ParseIntPipe) id: number, @Body() uploadDto: UploadDto, @UploadedFile() file: Express.Multer.File)
 	{
-		console.log(id);
-		console.log(file);
-		console.log(file.originalname);
-		console.log(data);
-		console.log("finish");
-
-		return await this.service.putPP(id, file.originalname, file.buffer);
+		return await this.service.create(file, id, file.filename, file.path);
 	}
+
+	@Get('pp/:id')
+	public async getProfilePic(@Param('id', ParseIntPipe) id: number): Promise<Express.Multer.File>
+	{
+		return await this.service.getPP(id);
+	}
+
+	@Get('photo/:id')
+    public async getUserProfilePhoto(@Param('id', ParseIntPipe) id: number,
+        @Res({ passthrough: true }) res: Response
+    ): Promise<StreamableFile> {
+
+        res.set({'Content-Type': 'image/jpeg'});
+
+		const img = await this.service.fileStream(id);
+
+        const file = createReadStream(img);
+        return new StreamableFile(file);
+    }
 }
+
