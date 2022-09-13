@@ -47,7 +47,7 @@ function ChanReq(props: { socket: Socket, chans: i_chan[] | null, to_chan: numbe
 function ChanPage()
 {
 	const { apiUrl } = useContext(ApiUrlContext);
-	const { user } = useContext(AuthContext);
+	const { user, setUser } = useContext(AuthContext);
 	const [selectedChan, setSelectedChan] = useState(1);
 	const [chans, setChans] = useState<i_chan[] | null>(null);
 	const [socket] = useState(io(apiUrl + "/chat"));
@@ -78,8 +78,12 @@ function ChanPage()
 
 			axios.get(apiUrl + "/chan/").then(res =>
 			{
-				setChans(res.data);
-				setSelectedChan(newId);
+				axios.get(apiUrl + "/user/" + user.id).then(r =>
+				{
+					setChans(res.data);
+					setSelectedChan(newId);
+					setUser(r.data);
+				}).catch(err => console.log(err));
 			}).catch(err => console.log(err));
 		}).catch(err => console.log(err));
 	}

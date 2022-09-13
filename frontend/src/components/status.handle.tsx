@@ -1,33 +1,15 @@
-import { useContext, useEffect, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
+import { ApiUrlContext } from "../context/apiUrl.context";
 import { StatusContext } from "../context/status.context";
-import { useReqUser } from "../request/user.request";
-import Error from "./request_answer_component/error.component";
-import Loading from "./request_answer_component/loading.component";
-
-function SendAlert(props: { data: any, callback: () => void })
-{
-	const { reqUser, error, loading } = useReqUser(props.data.senderId);
-	const navigate = useNavigate();
-
-	if (loading)
-		return (<div className='ontop'><Loading /></div>);
-	else if (error)
-		return (<div className='ontop'><Error msg={error.message} /></div>);
-
-	if (window.confirm('You have been challenged by ' + reqUser.name + '. Do you accept?'))
-		navigate("/challenge/" + props.data.senderId + "/" + props.data.receiverId);
-
-	props.callback();
-
-	return (<div />);
-}
 
 function StatusHandler()
 {
+	const { apiUrl } = useContext(ApiUrlContext);
 	const { socket } = useContext(StatusContext);
-	const [sendAlert, setSendAlert] = useState<any | null>(null);
+	const navigate = useNavigate();
 
 	useEffect(() =>
 	{
@@ -36,17 +18,17 @@ function StatusHandler()
 			socket.on('challenge', (data: any) =>
 			{
 				console.log("challenge", data);
-				setSendAlert(data);
+				axios.get(apiUrl + "/user/" + data.senderId).then(res =>
+				{
+					if (window.confirm('You have been challenged by ' + res.data.name + '. Do you accept?'))
+						navigate("/challenge/" + data.senderId + "/" + data.receiverId);
+				}).catch(err => console.log(err));
 			});
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	return (
-		<div>
-			{sendAlert && <SendAlert data={sendAlert} callback={() => setSendAlert(null)} />}
-		</div>
-	);
+	return (<div />);
 }
 
 export default StatusHandler;

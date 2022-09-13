@@ -37,12 +37,15 @@ function OptionModal(props: {
 
 	function handleQuit()
 	{
-		if (!props.chan.id)
-			return;
+		axios.post(apiUrl + "/chan/quit/" + props.chan.id, { userId: props.user.id }).then(res =>
+		{
+			if (!props.chan.id)
+				return;
 
-		axios.post(apiUrl + "/chan/quit/" + props.chan.id, { userId: props.user.id }).catch(err => console.log(err));
-		props.onClose();
-		props.callback(1, props.chan.id);
+			props.onClose();
+			props.callback(1, props.chan.id);
+		}
+		).catch(err => console.log(err));
 	};
 
 
