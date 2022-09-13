@@ -76,7 +76,7 @@ function UserBtn(props: { user: i_user, status?: ('online' | 'offline' | 'ingame
 				{props.status
 					&& <span style={{
 						position: "absolute", bottom: "1.2rem", left: "2.4rem", width: "0.5rem", height: "0.5rem",
-						fill: (props.status === 'online' ? "#0f0b" : props.status === 'offline' ? "#0008" : "#00fb")
+						fill: (props.status === 'online' ? "#0f0b" : props.status === 'offline' ? "#0000" : "#00fb")
 					}}>
 						<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
 							<circle cx="50" cy="50" r="50" />

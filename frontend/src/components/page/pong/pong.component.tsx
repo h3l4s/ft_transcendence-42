@@ -7,6 +7,7 @@ import './../../../style/pong.css';
 
 import { ApiUrlContext } from '../../../context/apiUrl.context';
 import { AuthContext } from '../../../context/auth.context';
+import { StatusContext } from '../../../context/status.context';
 
 import i_map from '../../../interface/map.interface'
 
@@ -20,6 +21,7 @@ function Pong()
 {
 	const { apiUrl } = useContext(ApiUrlContext);
 	const { user } = useContext(AuthContext);
+	const statusSocket = useContext(StatusContext);
 	const { reqUser, loading, error } = useReqUser(2);
 	const [inGame, setInGame] = useState(false);
 	const [inPlay, setInPlay] = useState(false);
@@ -29,15 +31,17 @@ function Pong()
 
 	useEffect(() =>
 	{
-		if (!user || !user.name || !type || type !== 'simple' && type !== 'hard' && type !== 'tennis')
+		if (!user || !user.name || !user.id
+			|| !type || (type !== 'simple' && type !== 'hard' && type !== 'tennis')
+			|| !statusSocket || !statusSocket.socket)
 			return;
 		console.log("first appel");
-		handleCanvas(apiUrl, user.name, true, type, bdd_pong, 0, socket, "");
+		handleCanvas(apiUrl, user.id, user.name, true, type, bdd_pong, 0, socket, statusSocket.socket, "");
 	});
 
 	if (!user || !user.name)
 		return (<Error msg="failed to get connected user" />);
-	else if (!type || type !== 'simple' && type !== 'hard' && type !== 'tennis')
+	else if (!type || (type !== 'simple' && type !== 'hard' && type !== 'tennis'))
 		return (<Error msg="failed to get type" />);
 	else if (error)
 		return (<Error msg={error.message} />);
@@ -100,6 +104,7 @@ function LaunchGame(props: {
 {
 	const { apiUrl } = useContext(ApiUrlContext);
 	const { user } = useContext(AuthContext);
+	const { socket } = useContext(StatusContext);
 
 	props.socket.connect();
 	let client_Room: string;
@@ -134,10 +139,10 @@ function LaunchGame(props: {
 		props.socket.on('start', (data) =>
 		{
 			props.setInGame(true);
-			if (!user || !user.name)
+			if (!user || !user.name || !user.id || !socket)
 				return;
 			console.log("second appel");
-			handleCanvas(apiUrl, user.name, false, props.type, bdd_pong, props.incGameLaunch(), props.socket, data.toString());
+			handleCanvas(apiUrl, user.id, user.name, false, props.type, bdd_pong, props.incGameLaunch(), props.socket, socket, data.toString());
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -147,12 +152,14 @@ function LaunchGame(props: {
 
 function handleCanvas(
 	apiUrl: string,
+	id: number,
 	username: string,
 	init: boolean,
 	type: 'simple' | 'hard' | 'tennis',
 	bdd: any[] = [],
 	room: number,
 	socket: Socket,
+	statusSocket: Socket,
 	match: string)
 {
 	let canvas = document.querySelector("#canvas")! as HTMLCanvasElement;
@@ -265,6 +272,7 @@ function handleCanvas(
 			game = data;
 			if (game.score.p1_temp === -1)
 			{
+				statusSocket.emit('updateStatus', { id: id, status: 'ingame' });
 				game.score.p2_temp++;
 				game.score.p1_temp++;
 				scoreP1HTML.innerText = game.score.p1.toString();
@@ -292,6 +300,7 @@ function handleCanvas(
 		if (scoreP1 >= 11 || scoreP2 >= 11)
 		{
 			socket.emit('finish', bdd[room].clientRoom, match);
+			statusSocket.emit('updateStatus', { id: id, status: 'online' });
 			canvas.style.display = "none";
 			postResults(apiUrl, username, game.score.p1, game.score.p2, bdd[room].player1, bdd[room].player2);
 			bdd[room].clientRoom = -1;

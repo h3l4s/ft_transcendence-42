@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import axios from 'axios';
 
 import './style/root.css'
@@ -27,6 +27,7 @@ import PongView from './components/page/pong/pong.view';
 import Pong from './components/page/pong/pong.component';
 import { io, Socket } from 'socket.io-client';
 import { StatusContext } from './context/status.context';
+import StatusHandler from './components/status.handle';
 
 function App()
 {
@@ -37,19 +38,6 @@ function App()
 	const valueUser = useMemo(() => ({ user, setUser }), [user, setUser]);
 	const valueApiUrl = useMemo(() => ({ apiUrl, setApiUrl }), [apiUrl, setApiUrl]);
 	const valueSocket = useMemo(() => ({ socket, setSocket }), [socket, setSocket]);
-
-	useEffect(() =>
-	{
-		if (socket)
-		{
-			socket.on('challenge', (data: any) =>
-			{
-				console.log("challenge", data);
-				window.alert("challenge" + data);
-			});
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
 
 	if (!user && localStorage.getItem("user"))
 	{
@@ -67,31 +55,30 @@ function App()
 		console.info("not connected");
 
 	return (
-		<div>
-			<Router>
-				<NavBar />
-				<ApiUrlContext.Provider value={valueApiUrl}>
-					<AuthContext.Provider value={valueUser}>
-						<StatusContext.Provider value={valueSocket}>
-							<Routes>
-								<Route path="/" element={<Home />} />
-								<Route path="/view/:id" element={<RequireAuth><PongView goBack={() => { }} /></RequireAuth>} />
-								<Route path="/login" element={<LoginPage />} />
-								<Route path="/connect/:token" element={<ConnectPage />} />
-								<Route path="/play" element={<RequireAuth><PongPage /></RequireAuth>} />
-								<Route path="/pong/:type" element={<RequireAuth><Pong /></RequireAuth>} />
-								<Route path="/challenge/:id" element={<RequireAuth><ChallengePage /></RequireAuth>} />
-								<Route path="/chan" element={<RequireAuth><ChanPage /></RequireAuth>} />
-								<Route path="/user" element={<RequireAuth><UserPage /></RequireAuth>} />
-								<Route path="/user/:username" element={<UserPage />} />
-								<Route path="*" element={<NoMatch />} />
-							</Routes>
-						</StatusContext.Provider>
-					</AuthContext.Provider >
-				</ApiUrlContext.Provider >
-				<CreateDefaultUser />
-			</Router >
-		</div>
+		<Router>
+			<NavBar />
+			<ApiUrlContext.Provider value={valueApiUrl}>
+				<AuthContext.Provider value={valueUser}>
+					<StatusContext.Provider value={valueSocket}>
+						<StatusHandler />
+						<Routes>
+							<Route path="/" element={<Home />} />
+							<Route path="/view/:id" element={<RequireAuth><PongView goBack={() => { }} /></RequireAuth>} />
+							<Route path="/login" element={<LoginPage />} />
+							<Route path="/connect/:token" element={<ConnectPage />} />
+							<Route path="/play" element={<RequireAuth><PongPage /></RequireAuth>} />
+							<Route path="/pong/:type" element={<RequireAuth><Pong /></RequireAuth>} />
+							<Route path="/challenge/:senderId/:receiverId" element={<RequireAuth><ChallengePage /></RequireAuth>} />
+							<Route path="/chan" element={<RequireAuth><ChanPage /></RequireAuth>} />
+							<Route path="/user" element={<RequireAuth><UserPage /></RequireAuth>} />
+							<Route path="/user/:username" element={<UserPage />} />
+							<Route path="*" element={<NoMatch />} />
+						</Routes>
+					</StatusContext.Provider>
+				</AuthContext.Provider >
+			</ApiUrlContext.Provider >
+			<CreateDefaultUser />
+		</Router >
 	);
 }
 
