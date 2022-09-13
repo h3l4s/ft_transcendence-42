@@ -78,10 +78,7 @@ function LoginPage()
 	function auth42()
 	{
 		console.log("UID", process.env.REACT_APP_UID);
-		if (!process.env.REACT_APP_UID)
-			window.location.replace("https://api.intra.42.fr/oauth/authorize?client_id=cbd1064bd58ef5065a103fbd35e3b251f506b89d0f101660714907581d0c9bd9&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Flogin&response_type=code");
-		else
-			window.location.replace("https://api.intra.42.fr/oauth/authorize?client_id=" + process.env.REACT_APP_UID + "&redirect_uri=http%3A%2F%2F" + window.location.hostname + "%3A3001%2Flogin&response_type=code");
+		window.location.replace("https://api.intra.42.fr/oauth/authorize?client_id=" + process.env.REACT_APP_UID + "&redirect_uri=http%3A%2F%2F" + encodeURI(process.env.REACT_APP_SERVER_HOSTNAME!) + "%3A3001%2Flogin&response_type=code");
 	};
 
 	return (
