@@ -13,12 +13,12 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect
 
 	handleConnection(client: Socket)
 	{
-		console.log("[STATUS] client connected: " + client.id);
+		//console.log("[STATUS] client connected: " + client.id);
 	}
 
 	handleDisconnect(client: Socket)
 	{
-		console.log("[STATUS] client disconnected: " + client.id);
+		//console.log("[STATUS] client disconnected: " + client.id);
 
 		for (let i = 0; i < this.db.length; i++)
 		{
@@ -35,7 +35,7 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect
 	@SubscribeMessage('updateStatus')
 	handleUpdateStatus(client: Socket, status: UserStatusDto)
 	{
-		console.log("[STATUS] update", status.id, status.status);
+		//console.log("[STATUS] update", status.id, status.status);
 
 		let index = -1;
 		for (let i = 0; i < this.db.length; i++)
@@ -83,7 +83,7 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect
 	@SubscribeMessage('getAllStatus')
 	handleGetAllStatus(client: Socket)
 	{
-		console.log("[STATUS] get all");
+		//console.log("[STATUS] get all");
 		client.emit('isAllStatus', this.db);
 	}
 
@@ -91,14 +91,14 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect
 	@SubscribeMessage('challenge')
 	handleChallenge(client: Socket, status: UserChallengeDto)
 	{
-		console.log("[STATUS] challenge", status.senderId, "->", status.receiverId);
+		//console.log("[STATUS] challenge", status.senderId, "->", status.receiverId);
 
 		let index = -1;
 
 		for (let i = 0; i < this.db.length; i++)
 		{
-			console.log(i, "this.db[i]", this.db[i]);
-			console.log(this.db[i].id, status.receiverId);
+			//console.log(i, "this.db[i]", this.db[i]);
+			//console.log(this.db[i].id, status.receiverId);
 			if (this.db[i].id === status.receiverId)
 			{
 				index = i;
@@ -108,13 +108,13 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect
 		console.log(index);
 		if (index > -1 && this.db[index].status !== 'offline')
 		{
-			console.log("[STATUS] challenge sent to", this.db[index].id);
+			//console.log("[STATUS] challenge sent to", this.db[index].id);
 			client.to(this.db[index].clientId).emit('challenge', status);
 		}
 		else
 		{
-			console.log("[STATUS] challenge failed");
-			console.table(this.db);
+			//console.log("[STATUS] challenge failed");
+			//console.table(this.db);
 		}
 	}
 }

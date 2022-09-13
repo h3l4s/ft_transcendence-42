@@ -8,6 +8,7 @@ let player = 0;
 let clientNb_simple = 0;
 let clientNb_hard = 100;
 let clientNb_tennis = 50;
+let clientNb_challenge = 500;
 let joueur_simple = [];
 let joueur_hard = [];
 let joueur_tennis = [];
@@ -245,6 +246,21 @@ export class Matchmaking
 			console.table(current_match);
 			this.server.to("0").emit('finish-match', current_match);
 		});
+		client.on('challengeMatch', () =>
+		{
+			clientNb_challenge++;
+			client.join(Math.round(clientNb_challenge / 2).toString());
+			client.emit('challengeServerToRoom', Math.round(clientNb_challenge / 2).toString());
+			client.on('challengeJoinRoom', (clientRoom) =>
+			{
+				console.log("clientroom = "+clientRoom);
+				//console.log("clientNb_challenge = "+clientNb_challenge);
+				if (clientNb_challenge % 2 === 0)
+				{
+					this.server.to(clientRoom.toString()).emit('startChallenge', clientRoom);
+				}
+			});
+		});
 	}
 
 	handleDisconnect(client: Socket)
@@ -265,7 +281,7 @@ export class Matchmaking
 				clientNb_tennis--;
 				joueur_tennis.pop();
 			}
-			else
+			else if (bdd[pos - 2] < 150)
 			{
 				clientNb_hard--;
 				joueur_hard.pop();
