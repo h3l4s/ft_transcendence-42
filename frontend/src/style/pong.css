@@ -10,7 +10,6 @@
 
 .pong--compo {
 	height: 100vh;
-	margin-top: calc(-1 * var(--nav-h));
 }
 
 /*#bandeau {
@@ -89,7 +88,7 @@
 .menu {
 	display: flex;
 	justify-content: space-around;
-} 
+}
 
 
 #select {
