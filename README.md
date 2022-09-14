@@ -35,9 +35,10 @@ make hostname
 ```
 
 ## access
-enter http://localhost:3001 in your search bar
 
-click sign in then get token
+enter `http://localhost:3001` in your search bar
+
+you can also access the website at `http://`[HOSTNAME]`:3001`
 
 # languages
 
