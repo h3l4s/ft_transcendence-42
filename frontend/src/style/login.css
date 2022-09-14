@@ -30,9 +30,9 @@
 }
 
 .logout {
-	background-color: #0008;
+	background-color: var(--main-color);
 	border: unset;
-	border-radius: 5%;
+	border-radius: 2%;
 	color: white;
 	fill: #fff;
 	transition: 200ms;
@@ -43,8 +43,7 @@
 }
 
 .logout:hover {
-	background-color: #0004 !important;
-	filter: brightness(1000%);
+	background-color: rgba(174, 255, 52, .5) !important;
 	color: var(--main-color);
 }
 
