@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import axios from 'axios';
+import { io, Socket } from 'socket.io-client';
 
 import './style/root.css'
 import './style/App.css';
@@ -10,6 +11,7 @@ import i_user from './interface/user.interface';
 
 import { AuthContext } from './context/auth.context';
 import { ApiUrlContext } from './context/apiUrl.context';
+import { StatusContext } from './context/status.context';
 
 import NavBar from './components/navbar.component';
 import NoMatch from './components/page/nomatch.page';
@@ -25,8 +27,6 @@ import ConnectPage from './components/page/login/connect.page';
 import ChallengePage from './components/page/pong/challenge.page';
 import PongView from './components/page/pong/pong.view';
 import Pong from './components/page/pong/pong.component';
-import { io, Socket } from 'socket.io-client';
-import { StatusContext } from './context/status.context';
 import StatusHandler from './components/status.handle';
 
 function App()
@@ -56,23 +56,22 @@ function App()
 
 	return (
 		<Router>
-			<NavBar />
 			<ApiUrlContext.Provider value={valueApiUrl}>
 				<AuthContext.Provider value={valueUser}>
 					<StatusContext.Provider value={valueSocket}>
 						<StatusHandler />
 						<Routes>
-							<Route path="/" element={<Home />} />
-							<Route path="/view/:id" element={<RequireAuth><PongView goBack={() => { }} /></RequireAuth>} />
-							<Route path="/login" element={<LoginPage />} />
-							<Route path="/connect/:token" element={<ConnectPage />} />
-							<Route path="/play" element={<RequireAuth><PongPage /></RequireAuth>} />
+							<Route path="/" element={<><NavBar /><Home /></>} />
+							<Route path="/view/:id" element={<RequireAuth><><NavBar /><PongView goBack={() => { }} /></></RequireAuth>} />
+							<Route path="/login" element={<><NavBar /><LoginPage /></>} />
+							<Route path="/connect/:token" element={<><NavBar /><ConnectPage /></>} />
+							<Route path="/play" element={<RequireAuth><><NavBar /><PongPage /></></RequireAuth>} />
 							<Route path="/pong/:type" element={<RequireAuth><Pong /></RequireAuth>} />
 							<Route path="/challenge/:senderId/:receiverId" element={<RequireAuth><ChallengePage /></RequireAuth>} />
-							<Route path="/chan" element={<RequireAuth><ChanPage /></RequireAuth>} />
-							<Route path="/user" element={<RequireAuth><UserPage /></RequireAuth>} />
-							<Route path="/user/:username" element={<UserPage />} />
-							<Route path="*" element={<NoMatch />} />
+							<Route path="/chan" element={<RequireAuth><><NavBar /><ChanPage /></></RequireAuth>} />
+							<Route path="/user" element={<RequireAuth><><NavBar /><UserPage /></></RequireAuth>} />
+							<Route path="/user/:username" element={<><NavBar /><UserPage /></>} />
+							<Route path="*" element={<><NavBar /><NoMatch /></>} />
 						</Routes>
 					</StatusContext.Provider>
 				</AuthContext.Provider >

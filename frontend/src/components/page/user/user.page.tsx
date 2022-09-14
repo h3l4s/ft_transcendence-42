@@ -13,7 +13,7 @@ import { AuthContext } from '../../../context/auth.context';
 import { ReactComponent as Friend } from '../../../icon/friend-svgrepo-com.svg'
 import { ReactComponent as Edit } from '../../../icon/write-pencil-svgrepo-com.svg'
 
-import { useReqUsers } from '../../../request/user.request';
+import { useReqUsersWithDefault } from '../../../request/user.request';
 
 import UserStats from './userstats.component';
 import MatchHistory from './matchHistory.component';
@@ -51,7 +51,7 @@ function UserPage()
 {
 	const { apiUrl } = useContext(ApiUrlContext);
 	const { user, setUser } = useContext(AuthContext);
-	const { reqUsers, loading, error } = useReqUsers();
+	const { reqUsers, loading, error } = useReqUsersWithDefault();
 	const [image, setImage] = useState<any | null>(null);
 	const [showUsernameChangeModal, setShowUsernameChangeModal] = useState(false);
 	const [userToLoad, setUserToLoad] = useState<i_user | null>(null);
@@ -60,12 +60,14 @@ function UserPage()
 
 	if (!userToLoad)
 	{
+		let res: i_user | null = null;
+
 		if (loading)
 			return (<div className='back'><Loading /></div>);
 		else if (error)
 			return (<div className='back'><Error msg={error.message} /></div>);
 		else if (p_username)
-			setUserToLoad(isUserInDb(p_username, reqUsers));
+			res = isUserInDb(p_username, reqUsers);
 		else
 		{
 			if (!user || !user.id)
@@ -74,8 +76,11 @@ function UserPage()
 				if (reqUsers[i].id === user.id)
 					setUserToLoad(reqUsers[i]);
 		}
-		if (!userToLoad)
+
+		if (!res)
 			return (<NoMatch />);
+		setUserToLoad(res);
+		return (<div />);
 	}
 
 	console.log("image: ", image);
@@ -95,12 +100,12 @@ function UserPage()
 					<div style={{ margin: "0.5rem 0 0.5rem 0" }}>
 						<img className='img' style={{ height: "23vw", width: "23vw" }}
 							src={(image ? URL.createObjectURL(image) : apiUrl + "/user/photo/" + userToLoad.id)} alt="profile" />
-						{(!p_username || p_username === userToLoad.name)
+						{(!p_username || (user && p_username === user.name))
 							&& <button className='twofa' onClick={() => setShowTwoFA(true)}
 								style={{ color: (userToLoad && userToLoad.twofa && userToLoad.twofa.length > 0 ? "#0f0" : "#fff") }}>
 								2FA
 							</button>}
-						{(!p_username || p_username === userToLoad.name)
+						{(!p_username || (user && p_username === user.name))
 							&& <div className='input--file'>
 								<input type='file' style={{ zIndex: "99" }} onChange={(e) =>
 								{
@@ -113,13 +118,13 @@ function UserPage()
 					</div>
 					<div className='user--page-title truncate'>
 						<span style={{ marginLeft: "calc(1.6vw + 1rem)" }}>{userToLoad.name}</span>
-						{(!p_username || p_username === userToLoad.name)
+						{(!p_username || (user && p_username === user.name))
 							&& <button className='btn--username--change' onClick={() => setShowUsernameChangeModal(true)}>
 								<Edit />
 							</button>
 						}
 					</div>
-					{(!p_username || p_username === userToLoad.name)
+					{(!p_username || (user && p_username === user.name))
 						&& <LogoutButton style={{ position: "absolute", top: "0.85rem", right: "0.85rem" }} />
 					}
 				</div>
@@ -140,8 +145,8 @@ function UserPage()
 				</div>
 				<UserListById friendsId={userToLoad.friendsId} reqUsers={reqUsers} />
 			</div>
-			{(!p_username || p_username === userToLoad.name) && showUsernameChangeModal && <UsernameChangeModal callback={callback} />}
-			{(!p_username || p_username === userToLoad.name) && showUsernameChangeModal && <Backdrop onClick={() => setShowUsernameChangeModal(false)} />}
+			{(!p_username || (user && p_username === user.name)) && showUsernameChangeModal && <UsernameChangeModal callback={callback} />}
+			{(!p_username || (user && p_username === user.name)) && showUsernameChangeModal && <Backdrop onClick={() => setShowUsernameChangeModal(false)} />}
 			{showTwoFA && <TwoFAModal callback={callback} />}
 		</div >
 	);
