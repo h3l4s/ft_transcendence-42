@@ -68,3 +68,10 @@ body {
 .homeBut:hover{
 	color: blue;
 }
+
+@media screen and (max-width: 600px) {
+	.nav{
+		gap: 0.1;
+		font-size: .9rem;
+	}
+  }
