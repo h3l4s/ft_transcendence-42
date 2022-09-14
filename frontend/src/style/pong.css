@@ -86,17 +86,6 @@
 	line-height: 60px;
 }
 
-/*#all {
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: cover;
-	min-height: 100vh;
-	font-family: OCR A Std;
-	background-color: #4682B4;
-}*/
-
-/* choice probably should be a card */
-
 .menu {
 	display: flex;
 	justify-content: space-around;
@@ -149,19 +138,19 @@
 /* need more var, and maybe even use an already coded btn css */
 .choice button {
 	cursor: pointer;
-	color: #000;
-	font-size: 25px;
-	background-color: #008000;
+	color: white;
+	font-family: minitel;
+	font-size: 1.5rem;
+	background-color: var(--main-color);
 	border: outset;
 	border-color: #555;
 	text-align: center;
 	text-decoration: none;
-	width: auto;
-	padding: 0 1rem;
 }
 
 .choice button:hover {
-	color: white;
+	color: black;
+	background: rgba(170, 255, 43, .5);
 }
 
 .pong--player {
