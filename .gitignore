@@ -29,6 +29,9 @@ backend/package-lock.json
 # production
 /build
 
+# pp
+backend/uploads/profileimages/*
+
 # misc
 .DS_Store
 .env.local

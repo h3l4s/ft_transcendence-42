@@ -86,7 +86,7 @@ function PickUser(props: {
 		<div>
 			<button className='pick--user' onClick={request}>
 				<img className='img' style={{ height: "3rem", width: "3rem" }}
-					src={props.c_user.pp_name} alt="profile" />
+					src={apiUrl + "/user/photo/" + props.c_user.id} alt="profile" />
 				<div className='truncate' style={{ color: "#fff", marginTop: "0.75rem" }}>
 					{props.c_user.name}
 				</div>

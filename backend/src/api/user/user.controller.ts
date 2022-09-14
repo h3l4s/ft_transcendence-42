@@ -8,12 +8,13 @@ import { diskStorage } from 'multer';
 import { createReadStream } from 'graceful-fs';
 
 export const storage = {
-    storage: diskStorage({
-        destination: './uploads/profileimages',
-        filename: (req, file, cb) => {
+	storage: diskStorage({
+		destination: './uploads/profileimages',
+		filename: (req, file, cb) =>
+		{
 			cb(null, Date.now() + '_' + file.originalname);
-		  },
-    })
+		},
+	})
 }
 
 @Controller('user')
@@ -83,10 +84,11 @@ export class UserController
 		return this.service.updateUsersAfterGame(data);
 	}
 
-	@Put('pp/:id')
+	@Post('pp/:id')
 	@UseInterceptors(FileInterceptor('file', storage))
-	public async create(@Param('id', ParseIntPipe) id: number, @Body() uploadDto: UploadDto, @UploadedFile() file: Express.Multer.File)
+	public async create(@Param('id', ParseIntPipe) id: number, @UploadedFile() file: Express.Multer.File)
 	{
+		console.log(id, file);
 		return await this.service.create(file, id, file.filename, file.path);
 	}
 
@@ -97,16 +99,17 @@ export class UserController
 	}
 
 	@Get('photo/:id')
-    public async getUserProfilePhoto(@Param('id', ParseIntPipe) id: number,
-        @Res({ passthrough: true }) res: Response
-    ): Promise<StreamableFile> {
+	public async getUserProfilePhoto(@Param('id', ParseIntPipe) id: number,
+		@Res({ passthrough: true }) res: Response
+	): Promise<StreamableFile>
+	{
 
-        res.set({'Content-Type': 'image/jpeg'});
+		res.set({ 'Content-Type': 'image/jpeg' });
 
 		const img = await this.service.fileStream(id);
 
-        const file = createReadStream(img);
-        return new StreamableFile(file);
-    }
+		const file = createReadStream(img);
+		return new StreamableFile(file);
+	}
 }
 

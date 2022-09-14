@@ -224,14 +224,17 @@ export class UserService
 
 	public async getPP(id: number)
 	{
-		console.log("path = " + (await this.repository.findOne({ where: { id: id } })).pp_path);
-		return await (await this.repository.findOne({ where: { id: id } })).pp;
+		const user: User = await this.repository.findOne({ where: { id: id } });
+
+		console.log("path = " + user.pp_path);
+
+		return user.pp;
 	}
 
 	public async fileStream(id: number) 
 	{
 		const user: User = await this.repository.findOne({ where: { id: id } });
-		
+
 		return await join(process.cwd(), user.pp_path);
 	}
 }
