@@ -19,8 +19,6 @@ function Home()
 				</div>
 			</div>
 			<br />
-			<div style={{ color: "red" }}>🚧 WIP 🚧</div>
-			<TestBackend />
 		</div >
 	);
 }
