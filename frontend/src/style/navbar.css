@@ -7,14 +7,15 @@ body {
 }
 
 .nav {
-	background-color: #000;
+	background-color: var(--main-color);
 	color: #fff;
 	height: var(--nav-h);
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	gap: 2rem;
-	padding: 0.75rem 1rem;
+	font-family: monospace;
+	font-weight: 800;
 }
 
 .nav svg {
@@ -39,4 +40,31 @@ body {
 	display: absolute;
 	left: 50%;
 	transform: translate(calc(3.5rem + -50%));
+}
+
+.homeBut, .playBut, .chatBut, .profileBut{
+	color: white;
+	text-decoration: none;
+}
+
+.homeBut{
+	background: yellow;
+	color: black;
+}
+
+.profileBut{
+	background: blue;
+}
+
+.playBut:hover, .chatBut:hover{
+	background: grey;
+	color: white;
+}
+
+.profileBut:hover{
+	color: red;
+}
+
+.homeBut:hover{
+	color: blue;
 }
