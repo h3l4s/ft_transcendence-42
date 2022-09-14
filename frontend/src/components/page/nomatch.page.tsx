@@ -4,7 +4,7 @@ function NoMatch() {
 			<div style={{ color: "greenyellow", fontSize: "10rem" }}>
 				404
 			</div>
-			<div style={{ marginTop: "-1rem" }}>Page not found</div>
+			<div style={{ marginTop: "-1rem"}}>Page not found</div>
 
 			<svg style={{ marginTop: "1rem" }} version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 				width="900px" height="50%" viewBox="0 0 900 615" enableBackground="new 0 0 900 615" xmlSpace="preserve">
