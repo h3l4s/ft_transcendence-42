@@ -29,6 +29,11 @@ make front
 make ip
 ```
 
+### hostname:
+```sh
+make hostname
+```
+
 ## access
 enter http://localhost:3001 in your search bar
 
