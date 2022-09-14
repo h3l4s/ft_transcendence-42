@@ -6,6 +6,7 @@ import { Readable } from 'stream';
 import { Not, Repository } from 'typeorm';
 import { Auth42Dto, UpdateUserDto, UpdateUsersAfterGameDto } from './user.dto';
 import { User } from './user.entity';
+import { join } from 'path';
 
 @Injectable()
 export class UserService
@@ -209,22 +210,31 @@ export class UserService
 		return this.repository.delete(id)
 	}
 
-	public async getPP(id: number)//: Promise<StreamableFile>
-	{
-		const user: User = await this.repository.findOne({ where: { id: id } });
-
-		// very unsure about this working
-
-		return new StreamableFile(Readable.from(user.pp));
-	}
-
-	public async putPP(id: number, name: string, buffer: Buffer)
+	public async create(file: Express.Multer.File, id: number, name: string, path: string)
 	{
 		const user: User = await this.repository.findOne({ where: { id: id } });
 
 		user.pp_name = name;
-		user.pp = buffer;
+		user.pp_path = path;
+		user.pp = file;
+		console.log(user.pp_name + user.pp_path + user.pp);
 
 		return await this.repository.save(user);
+	}
+
+	public async getPP(id: number)
+	{
+		const user: User = await this.repository.findOne({ where: { id: id } });
+
+		console.log("path = " + user.pp_path);
+
+		return user.pp;
+	}
+
+	public async fileStream(id: number) 
+	{
+		const user: User = await this.repository.findOne({ where: { id: id } });
+
+		return await join(process.cwd(), user.pp_path);
 	}
 }

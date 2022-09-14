@@ -40,14 +40,11 @@ function uploadFile(apiUrl: string, user_id: number | undefined, image: File | n
 		return;
 
 	const formData = new FormData();
-	formData.append("pp", image, image.name);
+	formData.append('file', image, image.name);
 
 	console.log("formData: ", formData);
 
-	axios.put(apiUrl + "/user/pp/" + user_id, formData).then(
-		(res) => { console.log(res); },
-		(error) => { console.log(error); }
-	);
+	axios.post(apiUrl + "/user/pp/" + user_id, formData).catch((err) => console.log(err));
 };
 
 function UserPage()
@@ -97,7 +94,7 @@ function UserPage()
 				<div className='card card--border user--page--pic--title' style={{ marginBottom: "2rem" }} >
 					<div style={{ margin: "0.5rem 0 0.5rem 0" }}>
 						<img className='img' style={{ height: "23vw", width: "23vw" }}
-							src={(image ? URL.createObjectURL(image) : userToLoad.pp_name)} alt="profile" />
+							src={(image ? URL.createObjectURL(image) : apiUrl + "/user/photo/" + userToLoad.id)} alt="profile" />
 						{(!p_username || p_username === userToLoad.name)
 							&& <button className='twofa' onClick={() => setShowTwoFA(true)}
 								style={{ color: (userToLoad && userToLoad.twofa && userToLoad.twofa.length > 0 ? "#0f0" : "#fff") }}>
