@@ -73,9 +73,8 @@ function ChallengePage()
 					<span id="scoreP1HTML" />-<span id="scoreP2HTML" />
 				</p>
 			</div>
+			<h6 id="result"></h6>
 			<canvas id="canvas" height="580" width="740" />
-			<img id="win" src="https://ak7.picdn.net/shutterstock/videos/34233727/thumb/1.jpg" alt="win" />
-			<img id="lose" src="https://www.freesoundslibrary.com/wp-content/uploads/2020/07/game-lose-2-720x340.jpg" alt="lose" />
 			{inPlay && <LaunchGame socketGame ={socketGame} player1={senderUser.reqUser.name} player2={receiverUser.reqUser.name} incGameLaunch={() => { setGameLaunch(gameLaunch + 1); return gameLaunch; }} setInGame={setInGame} socket={socket} />}
 		</div >
 	);
@@ -93,30 +92,24 @@ function LaunchGame(props: {
 	const { apiUrl } = useContext(ApiUrlContext);
 	const { user } = useContext(AuthContext);
 	const statusSocket = useContext(StatusContext);
-	const [inPlay, setInPlay] = useState(false);
-	const [inGame, setInGame] = useState(false);
 
 	let playbtn = document.querySelector("#lets-go")! as HTMLElement;
 	if (playbtn !== null)
 		playbtn.style.display = "none";
 
 	let clientRoom: string;
-
 	useEffect(() =>
 	{
-		props.socketGame.emit('challengeMatch');
-		props.socketGame.on('challengeServerToRoom', (data:string) =>
-		{
-			clientRoom = data;
-			props.socketGame.emit('challengeJoinRoom', clientRoom);
-		});
-		props.socketGame.on('startChallenge', (data) =>
+		if (!props.player1 || !props.player2)
+				return;
+		props.socketGame.emit('challengeMatch', props.player1 + "/" + props.player2);
+		props.socketGame.on('startChallenge', () =>
 		{
 			props.setInGame(true);
 			console.log("je suis ds la room " +clientRoom);
 			if (!user || !user.name || !user.id || !statusSocket.socket || !props.player1 || !props.player2)
 				return;
-			handleCanvas(apiUrl, user.id, props.player1, props.player2, false, data, props.socketGame, statusSocket.socket, user.name);
+			handleCanvas(apiUrl, user.id, props.player1, props.player2, false, props.player1 + "/" + props.player2, props.socketGame, statusSocket.socket, user.name);
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -140,10 +133,7 @@ function handleCanvas(
 	canvas.style.margin = "auto";
 	const PLAYER_HEIGHT = 100;
 	const PLAYER_WIDTH = 5;
-	const win = document.querySelector("#win")! as HTMLImageElement;
-	const lose = document.querySelector("#lose")! as HTMLImageElement;
-	lose.style.display = "none";
-	win.style.display = "none";
+	let result = document.querySelector("#result")! as HTMLCanvasElement;
 
 	let game = {
 		player: {
@@ -182,8 +172,6 @@ function handleCanvas(
 		return;
 	console.log("ok bb " +clientRoom);
 	let parsing_player: string;
-	//let p1name = document.querySelector("#p1-name")!;
-	//let p2name = document.querySelector("#p2-name")!;
 	let info = {
 		player: {
 			height: PLAYER_HEIGHT
@@ -204,7 +192,6 @@ function handleCanvas(
 
 	function Move_player(event: any)
 	{
-		// Get the mouse location in the canvas
 		var canvasLocation = canvas.getBoundingClientRect();
 		var mouseLocation = event.clientY - canvasLocation.y;
 		if (username! === player1)
@@ -230,9 +217,7 @@ function handleCanvas(
 	//p2name.innerHTML = player2;
 	//console.log(`p1 = ${player1}, p2 = ${player2} et parsing-player = ${parsing_player}`);
 
-	console.log("AAAAAAAAAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBB");
 	play();
-	console.log("AAAAAAAAAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBB");
 
 	function play()
 	{
@@ -272,6 +257,44 @@ function handleCanvas(
 			//socket.emit('finish', clientRoom);
 			statusSocket.emit('updateStatus', { id: id, status: 'online' });
 			canvas.style.display = "none";
+			if (game.score.p1 >= 5)
+			{
+				if (player1 === username)
+				{
+					result.innerHTML = "you won !"
+					result.style.color = "black";
+					result.style.fontSize = "6rem";
+					result.style.fontFamily = "minitel";
+					result.style.paddingTop = "12rem";
+				}
+				else
+				{
+					result.innerHTML = "you lose !"
+					result.style.color = "black";
+					result.style.fontSize = "6rem";
+					result.style.fontFamily = "minitel";
+					result.style.paddingTop = "12rem";
+				}
+			}
+			if (game.score.p2 >= 5)
+			{
+				if (player2 === username)
+				{
+					result.innerHTML = "you won !"
+					result.style.color = "black";
+					result.style.fontSize = "6rem";
+					result.style.fontFamily = "minitel";
+					result.style.paddingTop = "12rem";
+				}
+				else
+				{
+					result.innerHTML = "you lose !"
+					result.style.color = "black";
+					result.style.fontSize = "6rem";
+					result.style.fontFamily = "minitel";
+					result.style.paddingTop = "12rem";
+				}
+			}
 			//postResults(apiUrl, username, game.score.p1, game.score.p2, player1, player2);
 			clientRoom = '-1';
 			return;

@@ -15,10 +15,10 @@ function SendAlert(props: { data: any, callback: () => void })
 		return (<div className='ontop'><Loading /></div>);
 	else if (error)
 		return (<div className='ontop'><Error msg={error.message} /></div>);
-
-	if (window.confirm('You have been challenged by ' + reqUser.name + '. Do you accept?'))
-		navigate("/challenge/" + props.data.senderId + "/" + props.data.receiverId);
-
+	console.log("TEST");
+	if (window.confirm('You have been challenged by ' + reqUser.name + '. Do you accept?')){
+		navigate("/challenge/" + props.data.senderId + "/" + props.data.receiverId + "/" );
+	}
 	props.callback();
 
 	return (<div />);

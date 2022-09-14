@@ -1,6 +1,7 @@
 import { IoAdapter } from "@nestjs/platform-socket.io";
 import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { Console } from "console";
+import { checkPrime } from "crypto";
 import { Server, Socket } from 'socket.io';
 //import i_map from '../../../frontend/src/interface/map.interface'
 
@@ -16,6 +17,7 @@ let bdd = [];
 let bdd_game = [];
 let match: string;
 let current_match = [];
+let challenge = [];
 
 function Move_player(game: any, mouseLocation: number, PLAYER_HEIGHT: number, canvas_height: number, who: number)
 {
@@ -246,20 +248,17 @@ export class Matchmaking
 			console.table(current_match);
 			this.server.to("0").emit('finish-match', current_match);
 		});
-		client.on('challengeMatch', () =>
+		client.on('challengeMatch', (clientRoom) =>
 		{
-			clientNb_challenge++;
-			client.join(Math.round(clientNb_challenge / 2).toString());
-			client.emit('challengeServerToRoom', Math.round(clientNb_challenge / 2).toString());
-			client.on('challengeJoinRoom', (clientRoom) =>
-			{
-				console.log("clientroom = "+clientRoom);
-				//console.log("clientNb_challenge = "+clientNb_challenge);
-				if (clientNb_challenge % 2 === 0)
-				{
-					this.server.to(clientRoom.toString()).emit('startChallenge', clientRoom);
-				}
-			});
+			let count = 0;
+			challenge.push(clientRoom);
+			client.join(clientRoom);
+			for(var i = 0; i< challenge.length; i++) { 
+				if(challenge[i] === clientRoom)
+					count++;
+			}
+			if (count !== 0 && count % 2 === 0)
+				this.server.to(clientRoom).emit('startChallenge' );	
 		});
 	}
 

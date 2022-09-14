@@ -85,9 +85,8 @@ function Pong()
 				</p>
 			</div>
 			{type === 'tennis' && <img id='tennis' src={tennis} alt='tennis' style={{ display: "none" }} />}
+			<h6 id="result"></h6>
 			<canvas id="canvas" height="580" width="740" />
-			<img id="win" src="https://ak7.picdn.net/shutterstock/videos/34233727/thumb/1.jpg" alt="win" />
-			<img id="lose" src="https://www.freesoundslibrary.com/wp-content/uploads/2020/07/game-lose-2-720x340.jpg" alt="lose" />
 			{inPlay && <LaunchGame type={type} nameP1={user.name} saloon={saloon} incGameLaunch={() => { setGameLaunch(gameLaunch + 1); return gameLaunch; }} setInGame={setInGame} socket={socket} />}
 		</div >
 	);
@@ -169,8 +168,7 @@ function handleCanvas(
 	const PLAYER_WIDTH = 5;
 	const win = document.querySelector("#win")! as HTMLImageElement;
 	const lose = document.querySelector("#lose")! as HTMLImageElement;
-	lose.style.display = "none";
-	win.style.display = "none";
+	let result = document.querySelector("#result")! as HTMLCanvasElement;
 
 	let game = {
 		player: {
@@ -302,6 +300,44 @@ function handleCanvas(
 			socket.emit('finish', bdd[room].clientRoom, match);
 			statusSocket.emit('updateStatus', { id: id, status: 'online' });
 			canvas.style.display = "none";
+			if (game.score.p1 >= 5)
+			{
+				if (bdd[room].player1 === username)
+				{
+					result.innerHTML = "you won !"
+					result.style.color = "black";
+					result.style.fontSize = "6rem";
+					result.style.fontFamily = "minitel";
+					result.style.paddingTop = "12rem";
+				}
+				else
+				{
+					result.innerHTML = "you lose !"
+					result.style.color = "black";
+					result.style.fontSize = "6rem";
+					result.style.fontFamily = "minitel";
+					result.style.paddingTop = "12rem";
+				}
+			}
+			if (game.score.p2 >= 5)
+			{
+				if (bdd[room].player2 === username)
+				{
+					result.innerHTML = "you won !"
+					result.style.color = "black";
+					result.style.fontSize = "6rem";
+					result.style.fontFamily = "minitel";
+					result.style.paddingTop = "12rem";
+				}
+				else
+				{
+					result.innerHTML = "you lose !"
+					result.style.color = "black";
+					result.style.fontSize = "6rem";
+					result.style.fontFamily = "minitel";
+					result.style.paddingTop = "12rem";
+				}
+			}
 			postResults(apiUrl, username, game.score.p1, game.score.p2, bdd[room].player1, bdd[room].player2);
 			bdd[room].clientRoom = -1;
 			return;
