@@ -40,7 +40,6 @@ function MatchBtn(props: { match: string })
 		<div>
 			<button className='card card--border card--btn' style={{ marginLeft: "4px" }} onClick={() =>
 			{
-				console.log("BECIH");
 				setGoToView(true);
 			}}>
 				<span className='span--card--user truncate'>{props.match}</span>
@@ -87,7 +86,6 @@ function PongPage()
 				<div>
 					<div style={{ height: "3rem" }} />
 					<div style={{ display: "flex", justifyContent: "center" }}>
-						<p className='to-play'>If you want to play to a simple pong please use the map 1.</p>
 					</div>
 					<div className=/*'card card--border*/'menu' /* should probably be a card */>
 						<div className=/*'card card--border*/'choice' /* should probably be a card */>
@@ -95,19 +93,19 @@ function PongPage()
 								<p id="select-css"> Select Mode </p>
 								<span id="choiceButton">
 									<button onClick={() => { setMap('simple') }}>
-										simple pong
+										Easy Mode Pong
 									</button>
 									<button onClick={() => { setMap('hard') }}>
-										hard pong
+										Hard Mode Pong
 									</button>
 									<button onClick={() => { setMap('tennis') }}>
-										tennis pong
+										Tennis Twisted Pong
 									</button>
 								</span>
 							</div>
 						</div>
 						<div className=/*'card card--border*/'choice2' /* should probably be a card */>
-							<p id="live-game-msg">Live game</p>
+							<p id="live-game-msg">Live Game</p>
 							<Matches matches={gameLive} />
 						</div>
 					</div>

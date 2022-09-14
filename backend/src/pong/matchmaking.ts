@@ -121,12 +121,9 @@ export class Matchmaking
 	//connexion
 	handleConnection(client: Socket)
 	{
-		console.log("hey");
 		client.on('newPlayer', (type) =>
 		{
 			player++;
-			//console.log("New client connected: "+client.id);
-			//console.log("type: "+type);
 			if (type === "simple")
 			{
 				clientNb_simple++;
@@ -161,7 +158,6 @@ export class Matchmaking
 				client.emit('serverToRoom', Math.round(clientNb_hard / 2).toString());
 				client.on('joinRoom', (clientRoom, nameP1) =>
 				{
-					//console.log(nameP1);
 					if (nameP1 !== joueur_hard[0] && joueur_hard[1] === undefined)
 					{
 						joueur_hard.push(nameP1);
@@ -188,7 +184,6 @@ export class Matchmaking
 				client.emit('serverToRoom', Math.round(clientNb_tennis / 2).toString());
 				client.on('joinRoom', (clientRoom, nameP1) =>
 				{
-					//console.log(nameP1);
 					if (nameP1 !== joueur_tennis[0] && joueur_tennis[1] === undefined)
 					{
 						joueur_tennis.push(nameP1);

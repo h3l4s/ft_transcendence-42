@@ -157,12 +157,6 @@ function viewCanvas(socket: Socket, player1: string, player2: string, type: stri
 		function drawMovingPart()
 		{
 
-			// Draw players
-			// socket.emit('bdd[room].player2-go', game.player.y);
-			// socket.on('bdd[room].player2-go', (data)=>{
-			// 		game.computer.y = data;
-			// 		console.log(data);
-			// });
 			context.fillStyle = (type === "hard" ? 'red' : 'white');
 			context.fillRect(5, game.player.y, PLAYER_WIDTH, PLAYER_HEIGHT);
 			context.fillRect(canvas.width - 5 - PLAYER_WIDTH, game.computer.y, PLAYER_WIDTH, PLAYER_HEIGHT);

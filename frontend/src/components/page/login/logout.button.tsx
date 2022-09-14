@@ -4,8 +4,6 @@ import { Navigate } from 'react-router-dom';
 import { AuthContext } from '../../../context/auth.context';
 import { StatusContext } from '../../../context/status.context';
 
-import { ReactComponent as Logout } from '../../../icon/logout-svgrepo-com.svg'
-
 function LogoutButton(props: { style?: React.CSSProperties })
 {
 	const { user, setUser } = useContext(AuthContext);
@@ -24,7 +22,7 @@ function LogoutButton(props: { style?: React.CSSProperties })
 
 	return (
 		<button className='logout' style={props.style} onClick={handleLogout}>
-			<Logout />
+			log-out
 		</button>
 	);
 }
