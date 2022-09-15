@@ -168,3 +168,22 @@
 	display: flex;
 	justify-content: center;
 }
+
+@media screen and (max-width: 650px){
+	.menu{
+		width: 100% !important;
+	}
+	#select{
+		width: 220px;
+	}
+	#select-css{
+		font-size: 1rem !important;
+	}
+	#choiceButton button{
+		font-size: 1rem;
+	}
+	#live-game-msg {
+		font-size: 1rem;
+	}
+
+}

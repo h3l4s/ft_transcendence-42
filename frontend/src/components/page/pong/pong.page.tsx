@@ -89,7 +89,7 @@ function PongPage()
 					</div>
 					<div className=/*'card card--border*/'menu' /* should probably be a card */>
 						<div className=/*'card card--border*/'choice' /* should probably be a card */>
-							<div id="select" className="card--border">
+							<div id="select" className="card card--border">
 								<p id="select-css"> Select Mode </p>
 								<span id="choiceButton">
 									<button className="card--border" onClick={() => { setMap('simple') }}>
