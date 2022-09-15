@@ -19,7 +19,6 @@
 	margin: 0;
 	line-height: 70px;
 	background: #A9A9A9;
-	box-shadow: 15px 15px 12px #555;
 }*/
 
 #canvas {
@@ -39,7 +38,8 @@
 	margin: 0;
 	/*color: #000; should change the color*/
 	background: #A9A9A9;
-	box-shadow: 15px 15px 12px #555;
+	box-shadow: 0 0.6em 3px 0 rgb(0 0 0 / 50%);
+	/*might delete that shadow*/
 	text-align: center;
 	/*font-size: 400%;*/
 	font-family: OCR A Std;
@@ -79,7 +79,6 @@
 	padding: 0 1.5rem;
 	background-size: 100% auto !important;
 	text-align: center;
-	box-shadow: 15px 15px 12px #555;
 	border-width: medium;
 	background: #778899;
 	line-height: 60px;
@@ -92,15 +91,15 @@
 
 
 #select {
+	height: 80vh;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-around;
 	align-items: center;
 	background: silver;
-	box-shadow: 15px 15px 12px #555;
+	box-shadow: 0 0 0 4px silver, 1em 1em 3px 0 rgb(0 0 0 / 50%);
 	margin-top: 3rem;
 	padding: 2rem;
-
 }
 
 #select-css {
@@ -113,9 +112,6 @@
 }
 
 #choiceButton {
-	height: 60vh;
-	width: 30vh;
-
 	display: flex;
 	flex-direction: column;
 	justify-content: space-around;
@@ -124,14 +120,13 @@
 
 .choice2 {
 	height: 60vh;
-	width: 30vh;
+	width: 40vw;
 
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	margin-top: 3rem;
 	padding: 2rem;
-
 }
 
 #live-game-msg {
@@ -139,21 +134,27 @@
 	color: rgb(66, 66, 66);
 }
 
+.choice {
+	width: 40vw;
+	margin: 0;
+}
+
 /* need more var, and maybe even use an already coded btn css */
 .choice button {
 	cursor: pointer;
 	color: white;
-	font-family: minitel;
-	font-size: 1.5rem;
+	font-family: var(--alt-font);
+	font-size: 1.25rem;
 	background-color: var(--main-color);
-	border: outset;
-	border-color: #555;
 	text-align: center;
 	text-decoration: none;
+	padding: 0.5rem;
+	box-shadow: 0 0 0 4px var(--main-color), 0.6em 0.6em 3px 0 rgb(0 0 0 / 50%);
 }
 
 .choice button:hover {
-	background: rgba(170, 255, 43, .5);
+	background: #67c61a;
+	box-shadow: 0 0 0 4px #67c61a, 0.6em 0.6em 3px 0 rgb(0 0 0 / 50%);
 }
 
 .pong--player {
@@ -169,19 +170,23 @@
 	justify-content: center;
 }
 
-@media screen and (max-width: 650px){
-	.menu{
+@media screen and (max-width: 650px) {
+	.menu {
 		width: 100% !important;
 	}
-	#select{
+
+	#select {
 		width: 220px;
 	}
-	#select-css{
+
+	#select-css {
 		font-size: 1rem !important;
 	}
-	#choiceButton button{
+
+	#choiceButton button {
 		font-size: 1rem;
 	}
+
 	#live-game-msg {
 		font-size: 1rem;
 	}

@@ -55,7 +55,6 @@ function PongPage()
 	const [gameLive, setGameLive] = useState<string[]>([]);
 
 	const socket = io(apiUrl);
-	let i = 0;
 
 	useEffect(() =>
 	{
@@ -79,29 +78,24 @@ function PongPage()
 		// });
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-	// might not store the type of map
+
 	return (
 		<div className='pong'>
 			{!map ? (
 				<div>
-					<div style={{ height: "3rem" }} />
-					<div style={{ display: "flex", justifyContent: "center" }}>
-					</div>
 					<div className=/*'card card--border*/'menu' /* should probably be a card */>
 						<div className=/*'card card--border*/'choice' /* should probably be a card */>
-							<div id="select" className="card card--border">
-								<p id="select-css"> Select Mode </p>
-								<span id="choiceButton">
-									<button className="card--border" onClick={() => { setMap('simple') }}>
-										Easy Mode Pong
-									</button>
-									<button className="card--border" onClick={() => { setMap('hard') }}>
-										Hard Mode Pong
-									</button>
-									<button className="card--border" onClick={() => { setMap('tennis') }}>
-										Tennis Twisted Pong
-									</button>
-								</span>
+							<div id="select" className='card card--border'>
+								<p id="select-css">Select Mode</p>
+								<button className='card--border' onClick={() => { setMap('simple') }}>
+									Easy Mode Pong
+								</button>
+								<button className='card--border' onClick={() => { setMap('hard') }}>
+									Hard Mode Pong
+								</button>
+								<button className='card--border' onClick={() => { setMap('tennis') }}>
+									Tennis Twisted Pong
+								</button>
 							</div>
 						</div>
 						<div className=/*'card card--border*/'choice2' /* should probably be a card */>

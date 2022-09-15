@@ -13,9 +13,8 @@ body {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	padding: 0.75rem 1rem;
 	gap: 2rem;
-	font-family: minitel;
-	font-weight: 800;
 }
 
 .nav svg {
@@ -42,36 +41,40 @@ body {
 	transform: translate(calc(3.5rem + -50%));
 }
 
-.homeBut, .playBut, .chatBut, .profileBut{
+.homeBut,
+.playBut,
+.chatBut,
+.profileBut {
 	color: white;
 	text-decoration: none;
 }
 
-.homeBut{
+.homeBut {
 	background: yellow;
 	color: black;
 }
 
-.profileBut{
+.profileBut {
 	background: blue;
 }
 
-.playBut:hover, .chatBut:hover{
+.playBut:hover,
+.chatBut:hover {
 	background: grey;
 	color: white;
 }
 
-.profileBut:hover{
+.profileBut:hover {
 	color: red;
 }
 
-.homeBut:hover{
+.homeBut:hover {
 	color: blue;
 }
 
 @media screen and (max-width: 600px) {
-	.nav{
+	.nav {
 		gap: 0.1;
 		font-size: .9rem;
 	}
-  }
+}
