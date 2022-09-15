@@ -22,11 +22,11 @@
 	--main-color-hover: greenyellow;
 	--alt-color: green;
 	--alt-color-hover: var(--main-color);
-	--icon-color: #32CD32;
+	--icon-color: #ffffff;
 	--icon-color-hover: greenyellow;
 	--color-number: #7070ff;
 	--background-color: #96c471;
-	--nav-h: 2rem;
+	--nav-h: 3.4rem;
 	background-color: var(--background-color);
 }
 

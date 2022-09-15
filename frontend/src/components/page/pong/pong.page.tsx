@@ -89,16 +89,16 @@ function PongPage()
 					</div>
 					<div className=/*'card card--border*/'menu' /* should probably be a card */>
 						<div className=/*'card card--border*/'choice' /* should probably be a card */>
-							<div id="select">
+							<div id="select" className="card--border">
 								<p id="select-css"> Select Mode </p>
 								<span id="choiceButton">
-									<button onClick={() => { setMap('simple') }}>
+									<button className="card--border" onClick={() => { setMap('simple') }}>
 										Easy Mode Pong
 									</button>
-									<button onClick={() => { setMap('hard') }}>
+									<button className="card--border" onClick={() => { setMap('hard') }}>
 										Hard Mode Pong
 									</button>
-									<button onClick={() => { setMap('tennis') }}>
+									<button className="card--border" onClick={() => { setMap('tennis') }}>
 										Tennis Twisted Pong
 									</button>
 								</span>

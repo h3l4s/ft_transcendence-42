@@ -106,7 +106,10 @@
 #select-css {
 	font-size: 1.5rem;
 	font-family: minitel;
-	color: var(--main-color)
+	color: var(--main-color);
+	text-decoration: underline;
+	font-size: 2rem;
+	color: rgb(66, 66, 66);
 }
 
 #choiceButton {
@@ -133,7 +136,7 @@
 
 #live-game-msg {
 	font-size: 2rem;
-	color: var(--main-color)
+	color: rgb(66, 66, 66);
 }
 
 /* need more var, and maybe even use an already coded btn css */
@@ -150,7 +153,6 @@
 }
 
 .choice button:hover {
-	color: black;
 	background: rgba(170, 255, 43, .5);
 }
 
