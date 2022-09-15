@@ -125,7 +125,7 @@ function UserPage()
 						}
 					</div>
 					{(!p_username || (user && p_username === user.name))
-						&& <LogoutButton style={{ position: "absolute", top: "0.85rem", right: "0.85rem" }} />
+						&& <LogoutButton icon={true} style={{ position: "absolute", top: "0.85rem", right: "0rem" }} />
 					}
 				</div>
 				<div className='card card--alt' style={{ height: "100%" }}>

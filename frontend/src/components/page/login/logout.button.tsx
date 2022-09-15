@@ -4,7 +4,9 @@ import { Navigate } from 'react-router-dom';
 import { AuthContext } from '../../../context/auth.context';
 import { StatusContext } from '../../../context/status.context';
 
-function LogoutButton(props: { style?: React.CSSProperties })
+import { ReactComponent as Logout } from '../../../icon/noun-exit-3706736.svg'
+
+function LogoutButton(props: { icon: boolean, style?: React.CSSProperties })
 {
 	const { user, setUser } = useContext(AuthContext);
 	const { socket } = useContext(StatusContext);
@@ -19,6 +21,13 @@ function LogoutButton(props: { style?: React.CSSProperties })
 			socket.emit('updateStatus', { id: user!.id, status: 'offline' });
 		setUser(null);
 	}
+
+	if (props.icon)
+		return (
+			<button className='logout--icon' style={props.style} onClick={handleLogout}>
+				<Logout />
+			</button>
+		);
 
 	return (
 		<button className='logout' style={props.style} onClick={handleLogout}>

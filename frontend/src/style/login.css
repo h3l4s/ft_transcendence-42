@@ -47,6 +47,24 @@
 	color: var(--main-color);
 }
 
+.logout--icon {
+	background-color: unset;
+	border: unset;
+	border-radius: 2%;
+	fill: #fff;
+	transition: 200ms;
+}
+
+.logout--icon:hover {
+	fill: var(--main-color-hover);
+	fill: rgb(235, 47, 47);
+}
+
+.logout--icon svg {
+	width: 3rem;
+	height: 3rem;
+}
+
 .login--debug {
 	display: flex;
 	flex-direction: column;

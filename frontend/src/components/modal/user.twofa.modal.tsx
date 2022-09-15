@@ -53,6 +53,10 @@ function TwoFAModal(props: { callback: (user: i_user) => void })
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	if (user && user.twofa && user.twofa.length > 0)
+		return (<div />);
+
+
 	function handleSubmit(e: React.FormEvent<HTMLFormElement>)
 	{
 		e.preventDefault();
