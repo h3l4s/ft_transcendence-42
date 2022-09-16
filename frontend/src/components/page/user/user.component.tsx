@@ -4,16 +4,11 @@ import { ApiUrlContext } from "../../../context/apiUrl.context";
 import { StatusContext } from "../../../context/status.context";
 
 import i_user from "../../../interface/user.interface";
+import i_status from "../../../interface/status.interface";
 
 import Backdrop from "../../modal/backdrop";
 import ProfileModal from "../../modal/profile.modal";
 import Loading from "../../request_answer_component/loading.component";
-
-interface i_status
-{
-	id: number;
-	status: ('online' | 'offline' | 'ingame');
-}
 
 function Users(props: { users: i_user[] })
 {

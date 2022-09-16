@@ -3,10 +3,12 @@ import axios from "axios";
 import { Socket } from "socket.io-client";
 
 import { ApiUrlContext } from "../../../context/apiUrl.context";
+import { StatusContext } from "../../../context/status.context";
 
 import i_user from "../../../interface/user.interface";
 import i_chan from "../../../interface/chan.interface";
 import i_msg from "../../../interface/msg.interface";
+import i_status from "../../../interface/status.interface";
 
 import { ReactComponent as Option } from '../../../icon/single-select-svgrepo-com.svg'
 
@@ -47,21 +49,15 @@ function userNotAdmin(admins_id: number[] | undefined, users: i_user[]): i_user[
 
 }
 
-function userNotInGame(users: i_user[]): i_user[]
+function userOnline(status: i_status[], users: i_user[]): i_user[]
 {
-	if (socket)
-	{
-		socket.emit('getStatus', { id: props.user.id, status: 'online' });
-
-		socket.on('isStatus', (data: { id: string, status: string }) =>
-			setStatus(data.status));
-	}
 	let ret: i_user[] = [];
 
-	for (let i = 0; i < users.length; i++)
+	for (let u = 0; u < users.length; u++)
 	{
-		if (users[i].id && !users_id.includes(users[i].id!))
-			ret.push(users[i]);
+		for (let s = 0; s < status.length; s++)
+			if (users[u].id === status[s].id && status[s].status === 'online')
+				ret.push(users[u]);
 	}
 
 	return (ret);
@@ -89,10 +85,12 @@ function Chat(props:
 	})
 {
 	const { apiUrl } = useContext(ApiUrlContext);
+	const { socket } = useContext(StatusContext);
 	const [msg, setMsg] = useState("");
 	let msgs = (props.chan.msg ? props.chan.msg : []);
 	const [msgsSocket, setMsgsSocket] = useState<i_msg[]>([]);
 	const [incomingMsg, setIcomingMsg] = useState<i_msg | null>(null);
+	const [status, setStatus] = useState<i_status[]>([]);
 
 	const [showOption, setShowOption] = useState(false);
 	const [showAdd, setShowAdd] = useState(false);
@@ -133,6 +131,14 @@ function Chat(props:
 
 	useEffect(() =>
 	{
+		if (socket)
+		{
+			socket.emit('getAllStatus');
+
+			socket.on('isAllStatus', (data: i_status[]) =>
+				setStatus(data));
+		}
+
 		props.socket.on('chatToClient', (msg: i_msg) =>
 		{
 			console.log("received at:", msg.chanId, msg);
@@ -204,7 +210,7 @@ function Chat(props:
 				goBack={() => { setShowAdd(false); setShowOption(true); }}
 				onClose={() => { setShowAdd(false); setShowOption(false); }}
 				callback={callback} />}
-			{showChallenge && <PickUserModal chan={props.chan} users={props.users} type='challenge'
+			{showChallenge && <PickUserModal chan={props.chan} users={userOnline(status, props.users)} type='challenge'
 				goBack={() => { setShowChallenge(false); setShowOption(true); }}
 				onClose={() => { setShowChallenge(false); setShowOption(false); }}
 				callback={callback} />}
