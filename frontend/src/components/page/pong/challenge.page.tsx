@@ -36,7 +36,7 @@ function ChallengePage()
 	{
 		console.log("first appel");
 		if (!user || !user.name || !user.id || !statusSocket.socket || !senderUser.reqUser.name || !receiverUser.reqUser.name)
-				return;
+			return;
 		handleCanvas(apiUrl, user.id, senderUser.reqUser.name, receiverUser.reqUser.name, true, "a", socketGame, statusSocket.socket, user.name);
 	});
 
@@ -75,13 +75,13 @@ function ChallengePage()
 			</div>
 			<h6 id="result"></h6>
 			<canvas id="canvas" height="580" width="740" />
-			{inPlay && <LaunchGame socketGame ={socketGame} player1={senderUser.reqUser.name} player2={receiverUser.reqUser.name} incGameLaunch={() => { setGameLaunch(gameLaunch + 1); return gameLaunch; }} setInGame={setInGame} socket={socket} />}
+			{inPlay && <LaunchGame socketGame={socketGame} player1={senderUser.reqUser.name} player2={receiverUser.reqUser.name} incGameLaunch={() => { setGameLaunch(gameLaunch + 1); return gameLaunch; }} setInGame={setInGame} socket={socket} />}
 		</div >
 	);
 }
 
 function LaunchGame(props: {
-	socketGame : Socket,
+	socketGame: Socket,
 	player1: string | undefined,
 	player2: string | undefined,
 	incGameLaunch: () => number,
@@ -101,12 +101,12 @@ function LaunchGame(props: {
 	useEffect(() =>
 	{
 		if (!props.player1 || !props.player2)
-				return;
+			return;
 		props.socketGame.emit('challengeMatch', props.player1 + "/" + props.player2);
 		props.socketGame.on('startChallenge', () =>
 		{
 			props.setInGame(true);
-			console.log("je suis ds la room " +clientRoom);
+			console.log("je suis ds la room " + clientRoom);
 			if (!user || !user.name || !user.id || !statusSocket.socket || !props.player1 || !props.player2)
 				return;
 			handleCanvas(apiUrl, user.id, props.player1, props.player2, false, props.player1 + "/" + props.player2, props.socketGame, statusSocket.socket, user.name);
@@ -117,15 +117,16 @@ function LaunchGame(props: {
 	return (<div />);
 }
 
-while(1){
-setTimeout(function(){ console.log("Hello"); }, 3000);
+while (1)
+{
+	setTimeout(function () { console.log("Hello"); }, 3000);
 }
 
 function handleCanvas(
 	apiUrl: string,
 	id: number,
-	player1: string, 
-	player2:string,
+	player1: string,
+	player2: string,
 	init: boolean,
 	clientRoom: string,
 	socket: Socket,
@@ -174,7 +175,7 @@ function handleCanvas(
 	console.log("here");
 	if (init)
 		return;
-	console.log("ok bb " +clientRoom);
+	console.log("ok bb " + clientRoom);
 	let parsing_player: string;
 	let info = {
 		player: {
@@ -225,7 +226,7 @@ function handleCanvas(
 
 	function play()
 	{
-		socket.emit('play', game, PLAYER_WIDTH, canvas.height, canvas.width, PLAYER_HEIGHT, "simple" ,clientRoom);
+		socket.emit('play', game, PLAYER_WIDTH, canvas.height, canvas.width, PLAYER_HEIGHT, "simple", clientRoom);
 		socket.on('returnPlay', (data) =>
 		{
 			game = data;
@@ -315,16 +316,16 @@ function handleCanvas(
 		const img = document.querySelector("#tennis")! as HTMLImageElement;
 		let context = canvas.getContext('2d')! as CanvasRenderingContext2D;
 
-			// Draw field
-			context.fillStyle = 'black';
-			context.fillRect(0, 0, canvas.width, canvas.height);
-			// Draw middle line
-			context.strokeStyle = 'white';
-			context.beginPath();
-			context.moveTo(canvas.width / 2, 0);
-			context.lineTo(canvas.width / 2, canvas.height);
-			context.stroke();
-	
+		// Draw field
+		context.fillStyle = 'black';
+		context.fillRect(0, 0, canvas.width, canvas.height);
+		// Draw middle line
+		context.strokeStyle = 'white';
+		context.beginPath();
+		context.moveTo(canvas.width / 2, 0);
+		context.lineTo(canvas.width / 2, canvas.height);
+		context.stroke();
+
 
 		function drawMovingPart()
 		{

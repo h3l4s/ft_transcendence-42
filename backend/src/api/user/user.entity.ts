@@ -27,8 +27,11 @@ export class User
 	@Column({ type: 'varchar', length: 255 })
 	public name: string;
 
+	@Column({ type: 'varchar', nullable: true, default: "uploads/profileimages/default.png" })
+	public pp_path?: string;
+
 	@Column({ type: 'bytea', nullable: true, default: null })
-	public pp?: Buffer;
+	public pp?: Express.Multer.File;
 
 	@Column({ type: 'varchar', length: 255, default: "" })
 	public pp_name: string

@@ -9,6 +9,12 @@ import { ReactComponent as Profile } from '../icon/contact-svgrepo-com.svg'
 
 function NavBar()
 {
+	const path = window.location.pathname.split('/')[1];
+	console.log(path);
+
+	if (path === 'pong' || path === 'challenge')
+		return (<div />);
+
 	return (
 		<nav className='nav'>
 			<Link to='/'><Home /></Link>
@@ -23,6 +29,20 @@ function NavBar()
 			</ul>
 		</nav>
 	);
+	// return (
+	// 	<nav className='nav'>
+	// 		<Link to='/' className="homeBut">home</Link>
+	// 		<Link to='/play' className='nav--middle playBut'>play</Link>
+	// 		<ul>
+	// 			<li>
+	// 				<Link to='/chan' className="chatBut">chat</Link>
+	// 			</li>
+	// 			<li>
+	// 				<Link to='/user' className="profileBut">profile</Link>
+	// 			</li>
+	// 		</ul>
+	// 	</nav>
+	// );
 }
 
 export default NavBar;

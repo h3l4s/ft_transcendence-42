@@ -89,7 +89,7 @@ function LoginPage()
 					<div>auth</div>
 				</button>
 			) : (
-				<LogoutButton style={{ width: "10vh", height: "10vh", margin: "0 auto", padding: "1.5vh 2vh 1.5vh 1vh" }} />
+				<LogoutButton icon={false} style={{ width: "10vh", height: "10vh", margin: "0 auto", padding: "1.5vh 2vh 1.5vh 1vh" }} />
 			)}
 			<div className='login--debug'>
 				<h3>🚧 DEBUG 🚧</h3>

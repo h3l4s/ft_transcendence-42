@@ -15,8 +15,12 @@ import { ApiUrlContext } from '../../../context/apiUrl.context';
 import Chans from './chan.component';
 import Loading from '../../request_answer_component/loading.component';
 import Error from '../../request_answer_component/error.component';
+import i_user from '../../../interface/user.interface';
 
-function ChanReq(props: { socket: Socket, chans: i_chan[] | null, to_chan: number, callback: (newId: number, oldId: number) => void })
+function ChanReq(props: {
+	socket: Socket, chans: i_chan[] | null, users: i_user[] | null,
+	to_chan: number, callback: (newId: number, oldId: number) => void
+})
 {
 	const reqChans = useReqChans();
 	const reqUsers = useReqUsers();
@@ -35,7 +39,9 @@ function ChanReq(props: { socket: Socket, chans: i_chan[] | null, to_chan: numbe
 					<InitChan />
 				) : (
 					<div>
-						<Chans socket={props.socket} chans={(props.chans ? props.chans : reqChans.reqChans)} users={reqUsers.reqUsers}
+						<Chans socket={props.socket}
+							chans={(props.chans ? props.chans : reqChans.reqChans)}
+							users={(props.users ? props.users : reqUsers.reqUsers)}
 							to_chan={props.to_chan} callback={props.callback} />
 					</div>
 				)}
@@ -47,9 +53,10 @@ function ChanReq(props: { socket: Socket, chans: i_chan[] | null, to_chan: numbe
 function ChanPage()
 {
 	const { apiUrl } = useContext(ApiUrlContext);
-	const { user } = useContext(AuthContext);
+	const { user, setUser } = useContext(AuthContext);
 	const [selectedChan, setSelectedChan] = useState(1);
 	const [chans, setChans] = useState<i_chan[] | null>(null);
+	const [users, setUsers] = useState<i_user[] | null>(null);
 	const [socket] = useState(io(apiUrl + "/chat"));
 
 	useEffect(() =>
@@ -76,15 +83,23 @@ function ChanPage()
 			socket.emit('leaveRoom', oldId.toString());
 			socket.emit('joinRoom', newId.toString());
 
-			axios.get(apiUrl + "/chan/").then(res =>
+			axios.get(apiUrl + "/chan/").then(chans =>
 			{
-				setChans(res.data);
-				setSelectedChan(newId);
+				axios.get(apiUrl + "/user/" + user.id).then(user =>
+				{
+					axios.get(apiUrl + "/user/").then(users =>
+					{
+						setChans(chans.data);
+						setSelectedChan(newId);
+						setUser(user.data);
+						setUsers(users.data);
+					}).catch(err => console.log(err));
+				}).catch(err => console.log(err));
 			}).catch(err => console.log(err));
 		}).catch(err => console.log(err));
 	}
 
-	return (<ChanReq socket={socket} chans={chans} to_chan={selectedChan} callback={callback} />);
+	return (<ChanReq socket={socket} chans={chans} users={users} to_chan={selectedChan} callback={callback} />);
 }
 
 export default ChanPage;

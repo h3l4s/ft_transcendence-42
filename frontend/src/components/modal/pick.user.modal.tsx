@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios, { AxiosResponse } from "axios";
 
 import { ApiUrlContext } from "../../context/apiUrl.context";
@@ -32,12 +32,16 @@ function PickUser(props: {
 
 	function ResetChallenge()
 	{
-		if (!props.chan.id)
-			return (<div />);
+		useEffect(() =>
+		{
+			if (!props.chan.id)
+				return;
 
-		setIsChallenged(false);
-		props.onClose();
-		props.callback(props.chan.id, props.chan.id);
+			setIsChallenged(false);
+			props.onClose();
+			props.callback(props.chan.id, props.chan.id);
+			// eslint-disable-next-line react-hooks/exhaustive-deps
+		}, []);
 
 		return (<div />);
 	}
@@ -82,7 +86,7 @@ function PickUser(props: {
 		<div>
 			<button className='pick--user' onClick={request}>
 				<img className='img' style={{ height: "3rem", width: "3rem" }}
-					src={props.c_user.pp_name} alt="profile" />
+					src={apiUrl + "/user/photo/" + props.c_user.id} alt="profile" />
 				<div className='truncate' style={{ color: "#fff", marginTop: "0.75rem" }}>
 					{props.c_user.name}
 				</div>

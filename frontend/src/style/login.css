@@ -30,20 +30,39 @@
 }
 
 .logout {
-	background-color: #0008;
+	background-color: var(--main-color);
 	border: unset;
-	border-radius: 50%;
-	color: #fff;
+	border-radius: 2%;
+	color: white;
 	fill: #fff;
-	width: 3rem;
-	height: 3rem;
-	padding: 0.5rem 0.7rem 0.5rem 0.3rem;
 	transition: 200ms;
+	font-family: minitel;
+	width: 15rem !important;
+	font-size: 1.5rem;
+	padding: 0 !important;
 }
 
 .logout:hover {
-	background-color: #0004 !important;
-	filter: brightness(1000%);
+	background-color: rgba(174, 255, 52, .5) !important;
+	color: var(--main-color);
+}
+
+.logout--icon {
+	background-color: unset;
+	border: unset;
+	border-radius: 2%;
+	fill: #fff;
+	transition: 200ms;
+}
+
+.logout--icon:hover {
+	fill: var(--main-color-hover);
+	fill: rgb(235, 47, 47);
+}
+
+.logout--icon svg {
+	width: 3rem;
+	height: 3rem;
 }
 
 .login--debug {

@@ -29,10 +29,16 @@ make front
 make ip
 ```
 
-## access
-enter http://localhost:3001 in your search bar
+### hostname:
+```sh
+make hostname
+```
 
-click sign in then get token
+## access
+
+enter `http://localhost:3001` in your search bar
+
+you can also access the website at `http://`[HOSTNAME]`:3001`
 
 # languages
 

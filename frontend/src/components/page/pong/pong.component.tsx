@@ -9,9 +9,6 @@ import { ApiUrlContext } from '../../../context/apiUrl.context';
 import { AuthContext } from '../../../context/auth.context';
 import { StatusContext } from '../../../context/status.context';
 
-import i_map from '../../../interface/map.interface'
-
-import { ReactComponent as Back } from '../../../icon/left-svgrepo-com.svg'
 import tennis from './tennis_pong.jpg'
 
 import Error from '../../request_answer_component/error.component';
@@ -26,8 +23,9 @@ function Pong()
 	const [inGame, setInGame] = useState(false);
 	const [inPlay, setInPlay] = useState(false);
 	const [gameLaunch, setGameLaunch] = useState(0);
-	const [socket] = useState(io(apiUrl));
+	const [socket] = useState(io(apiUrl + '/pong'));
 	const type = useParams().type;
+	console.log("load Pong");
 
 	useEffect(() =>
 	{
@@ -55,12 +53,6 @@ function Pong()
 	};
 
 	let bdd_pong: any[] = [];
-
-	// 	props.socket.on('chatToClient', (msg: i_msg) =>
-	// 	{
-	// 		console.log("received at:", msg.chanId, msg);
-	// 		setIcomingMsg(msg);
-	// 	});
 
 	return (
 		<div className='pong pong--compo'>
@@ -122,7 +114,6 @@ function LaunchGame(props: {
 		props.socket.emit('newPlayer', props.type.toString());
 		props.socket.on('serverToRoom', (data: string) =>
 		{
-			console.log(`je suis ds la room data ${data}`);
 			client_Room = data;
 			props.socket.emit('joinRoom', client_Room, props.nameP1, window.innerWidth / 2);
 		});
@@ -258,7 +249,6 @@ function handleCanvas(
 	if (game.score.p1 === 0)
 	{
 		play();
-		console.log("BBBBBBBBBBBBBBB");
 	}
 
 	function play()
@@ -381,7 +371,6 @@ function handleCanvas(
 			}
 			catch (e)
 			{
-				//console.log(e);
 				//window.location.href = '/youlose';
 				game.score.p2 = 11;
 				return;
@@ -390,14 +379,6 @@ function handleCanvas(
 
 		function drawMovingPart()
 		{
-
-			// Draw players
-			// socket.emit('bdd[room].player2-go', game.player.y);
-			// socket.on('bdd[room].player2-go', (data)=>{
-			// 		game.computer.y = data;
-			// 		console.log(data);
-			// });
-
 			socket.on('move-player-draw', (data) =>
 			{
 				game = data;

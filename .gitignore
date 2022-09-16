@@ -3,6 +3,7 @@
 # env
 frontend/*.env
 .front.env
+.hostname.env
 .secret.env
 .hostname.env
 
@@ -28,6 +29,9 @@ backend/package-lock.json
 
 # production
 /build
+
+# pp
+backend/uploads/profileimages/*
 
 # misc
 .DS_Store

@@ -45,6 +45,7 @@ function MatchHistoryArray(props: { matches: i_matchHistory[], username: string,
 
 function Match(props: { match: i_matchHistory, username: string, users: i_user[] })
 {
+	const { apiUrl } = useContext(ApiUrlContext);
 	const [showProfile, setShowProfile] = useState(false);
 
 	const date = new Date(props.match.createdAt);
@@ -96,7 +97,7 @@ function Match(props: { match: i_matchHistory, username: string, users: i_user[]
 					<span className='card--alt--glow card--alt--glow' style={{ marginRight: "1rem" }}>{(win ? props.match.loser : props.match.winner)}</span>
 					<img className='img'
 						style={{ width: "3rem", height: "3rem" }}
-						src={props.users[opponent].pp_name} alt="profile" />
+						src={apiUrl + "/user/photo/" + props.users[opponent].id} alt="profile" />
 				</div>
 			</div>
 			<div>
