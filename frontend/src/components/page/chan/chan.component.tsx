@@ -15,7 +15,7 @@ import { ReactComponent as Key } from '../../../icon/icons8-key.svg'
 import { ReactComponent as Lock } from '../../../icon/lock-svgrepo-com.svg'
 
 import Chat from "./chat.component";
-import { Users } from "./user.component";
+import { Users } from "../user/user.component";
 import Backdrop from "../../modal/backdrop";
 import AddChanModal from "../../modal/chan.add.modal";
 import PromptPwdModal from "../../modal/chan.prompt.pwd.modal";
@@ -87,7 +87,7 @@ function Chans(props: { socket: Socket, chans: i_chan[], users: i_user[], to_cha
 			<div>
 				<div className='card card--border card--btn card--chan' onClick={() =>
 				{
-					if (!props.obj.id)
+					if (!props.obj.id || props.obj.id === selectedChan.id)
 						return;
 					if (props.obj.type === 'protected' && !is_in_chan)
 					{

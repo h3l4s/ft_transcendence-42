@@ -1,6 +1,7 @@
 import { IoAdapter } from "@nestjs/platform-socket.io";
 import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { Console } from "console";
+import { checkPrime } from "crypto";
 import { Server, Socket } from 'socket.io';
 //import i_map from '../../../frontend/src/interface/map.interface'
 
@@ -8,6 +9,7 @@ let player = 0;
 let clientNb_simple = 0;
 let clientNb_hard = 100;
 let clientNb_tennis = 50;
+let clientNb_challenge = 500;
 let joueur_simple = [];
 let joueur_hard = [];
 let joueur_tennis = [];
@@ -15,6 +17,7 @@ let bdd = [];
 let bdd_game = [];
 let match: string;
 let current_match = [];
+let challenge = [];
 
 function Move_player(game: any, mouseLocation: number, PLAYER_HEIGHT: number, canvas_height: number, who: number)
 {
@@ -121,6 +124,7 @@ export class Matchmaking
 	//connexion
 	handleConnection(client: Socket)
 	{
+		console.log("hey");
 		client.on('newPlayer', (type) =>
 		{
 			player++;
@@ -141,7 +145,8 @@ export class Matchmaking
 					if (clientNb_simple % 2 === 0)
 					{
 						this.server.to(clientRoom).emit('switchFromServer', joueur_simple);
-						match = joueur_simple[0].toString() + " vs " + joueur_simple[1].toString() + " salon " + clientRoom.toString() + " simple";
+						if (joueur_simple[0] !== undefined && joueur_simple[1] !== undefined)
+							match = joueur_simple[0].toString() + " vs " + joueur_simple[1].toString() + " salon " + clientRoom.toString() + " simple";
 						current_match.push(match);
 						this.server.to(clientRoom).emit('start', match);
 						this.server.to("0").emit('new-match', current_match);
@@ -168,7 +173,8 @@ export class Matchmaking
 					if (clientNb_hard % 2 === 0)
 					{
 						this.server.to(clientRoom).emit('switchFromServer', joueur_hard);
-						match = joueur_hard[0].toString() + " vs " + joueur_hard[1].toString() + " salon " + clientRoom.toString() + " hard";
+						if (joueur_hard[0] !== undefined && joueur_hard[1] !== undefined)
+							match = joueur_hard[0].toString() + " vs " + joueur_hard[1].toString() + " salon " + clientRoom.toString() + " hard";
 						current_match.push(match);
 						this.server.to(clientRoom).emit('start', match);
 						joueur_hard.pop();
@@ -194,7 +200,8 @@ export class Matchmaking
 					if (clientNb_tennis % 2 === 0)
 					{
 						this.server.to(clientRoom).emit('switchFromServer', joueur_tennis);
-						match = joueur_tennis[0].toString() + " vs " + joueur_tennis[1].toString() + " salon " + clientRoom.toString() + " tennis";
+						if (joueur_tennis[0] !== undefined && joueur_tennis[1] !== undefined)
+							match = joueur_tennis[0].toString() + " vs " + joueur_tennis[1].toString() + " salon " + clientRoom.toString() + " tennis";
 						current_match.push(match);
 						this.server.to(clientRoom).emit('start', match);
 						joueur_tennis.pop();
@@ -241,6 +248,18 @@ export class Matchmaking
 			console.table(current_match);
 			this.server.to("0").emit('finish-match', current_match);
 		});
+		client.on('challengeMatch', (clientRoom) =>
+		{
+			let count = 0;
+			challenge.push(clientRoom);
+			client.join(clientRoom);
+			for(var i = 0; i< challenge.length; i++) { 
+				if(challenge[i] === clientRoom)
+					count++;
+			}
+			if (count !== 0 && count % 2 === 0)
+				this.server.to(clientRoom).emit('startChallenge' );	
+		});
 	}
 
 	handleDisconnect(client: Socket)
@@ -261,7 +280,7 @@ export class Matchmaking
 				clientNb_tennis--;
 				joueur_tennis.pop();
 			}
-			else
+			else if (bdd[pos - 2] < 150)
 			{
 				clientNb_hard--;
 				joueur_hard.pop();
