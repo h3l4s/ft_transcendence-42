@@ -153,7 +153,7 @@ function Chans(props: { socket: Socket, chans: i_chan[], users: i_user[], to_cha
 					callback={props.callback} />}
 			</div>
 
-			<div className='split split--chan split--right'>
+			<div className='split split--chan split--right' style={{ height: "calc(100vh - var(--nav-h)", overflowY: "scroll" }}>
 				<Users users={users_in_chan} />
 			</div >
 
