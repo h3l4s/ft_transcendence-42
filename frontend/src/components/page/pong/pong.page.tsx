@@ -53,9 +53,9 @@ function PongPage()
 	const [map, setMap] = useState<'simple' | 'hard' | 'tennis' | null>(null);
 	const [gameLive, setGameLive] = useState<string[]>([]);
 
-	//const socket = io(apiUrl);
+	const socket = io(apiUrl);
 
-	/*useEffect(() =>
+	useEffect(() =>
 	{
 		let room = "0";
 		socket.emit('want_gamelive', room);
@@ -76,7 +76,7 @@ function PongPage()
 		// 	setGameLive(current => [...current, data.toString()]);
 		// });
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);*/
+	}, []);
 
 	return (
 		<div className='pong'>

@@ -134,15 +134,15 @@ function LaunchGame(props: {
 	return (<div />);
 }
 
-// window.onpopstate = () =>
-// {
-// 	const socket = io('http://' + window.location.hostname + ':3000/pong');
-// 	const path = window.location.pathname.split('/')[0];
-// 	const JWT = JSON.parse(localStorage.getItem('user') as string);
+window.onpopstate = () =>
+{
+	const socket = io('http://' + window.location.hostname + ':3000/pong');
+	const path = window.location.pathname.split('/')[0];
+	const JWT = JSON.parse(localStorage.getItem('user') as string);
 
-// 	if (JWT && path !== 'pong' && path !== 'challenge')
-// 		socket.emit('kill', JSON.parse(localStorage.getItem("user") as string).name);
-// };
+	if (JWT && path !== 'pong' && path !== 'challenge')
+		socket.emit('kill', JSON.parse(localStorage.getItem("user") as string).name);
+};
 
 function handleCanvas(
 	apiUrl: string,
