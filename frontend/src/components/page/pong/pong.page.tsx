@@ -1,10 +1,9 @@
 import { useState, useContext, useEffect } from 'react'
-import { Link, Navigate } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
+import { io } from 'socket.io-client';
 
 import './../../../style/pong.css';
-import Pong from './pong.component';
-import PongView from './pong.view';
-import { io } from 'socket.io-client';
+
 import { ApiUrlContext } from '../../../context/apiUrl.context';
 
 function Matches(props: { matches: string[] })
@@ -13,7 +12,7 @@ function Matches(props: { matches: string[] })
 
 	const filteredArray = props.matches.filter(function (ele, pos)
 	{
-		return props.matches.indexOf(ele) == pos;
+		return props.matches.indexOf(ele) === pos;
 	})
 
 
@@ -54,9 +53,9 @@ function PongPage()
 	const [map, setMap] = useState<'simple' | 'hard' | 'tennis' | null>(null);
 	const [gameLive, setGameLive] = useState<string[]>([]);
 
-	const socket = io(apiUrl);
+	//const socket = io(apiUrl);
 
-	useEffect(() =>
+	/*useEffect(() =>
 	{
 		let room = "0";
 		socket.emit('want_gamelive', room);
@@ -77,7 +76,7 @@ function PongPage()
 		// 	setGameLive(current => [...current, data.toString()]);
 		// });
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, []);*/
 
 	return (
 		<div className='pong'>
