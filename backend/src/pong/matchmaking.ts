@@ -237,8 +237,6 @@ export class Matchmaking implements OnGatewayConnection, OnGatewayDisconnect
 		client.on('play', (game, PLAYER_WIDTH, canvas_height, canvas_width, PLAYER_HEIGHT, type, clientRoom) =>
 		{
 			game = Move_ball(game, PLAYER_WIDTH, canvas_height, canvas_width, PLAYER_HEIGHT, type);
-			if (game.sendPing)
-				this.server.to(clientRoom).emit('ping', game);
 			this.server.to(clientRoom).emit('returnPlay', game);
 
 		});
@@ -285,6 +283,10 @@ export class Matchmaking implements OnGatewayConnection, OnGatewayDisconnect
 			if (count !== 0 && count % 2 === 0)
 				this.server.to(clientRoom).emit('startChallenge');
 		});
+		client.on('ping', (clientRoom) =>
+		{
+			this.server.to(clientRoom.toString()).emit('pong');
+		});
 	}
 
 	handleDisconnect(client: Socket)
@@ -320,5 +322,11 @@ export class Matchmaking implements OnGatewayConnection, OnGatewayDisconnect
 
 		this.server.to(this.bdd[pos - 2]).emit('disconnection', this.bdd[pos - 1]);
 		player--;
+	}
+
+	@SubscribeMessage('kill')
+	handleKill(client: Socket, data: number)
+	{
+		console.log("kill", data);
 	}
 }

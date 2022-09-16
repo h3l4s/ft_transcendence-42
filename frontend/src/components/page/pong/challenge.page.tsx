@@ -117,11 +117,6 @@ function LaunchGame(props: {
 	return (<div />);
 }
 
-while (1)
-{
-	setTimeout(function () { console.log("Hello"); }, 3000);
-}
-
 function handleCanvas(
 	apiUrl: string,
 	id: number,

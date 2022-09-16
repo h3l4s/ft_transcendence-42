@@ -140,6 +140,16 @@ function LaunchGame(props: {
 	return (<div />);
 }
 
+window.onpopstate = () =>
+{
+	const socket = io('http://' + window.location.hostname + ':3000/pong');
+	const path = window.location.pathname.split('/')[0];
+	const JWT = JSON.parse(localStorage.getItem('user') as string);
+
+	if (JWT && path !== 'pong' && path !== 'challenge')
+		socket.emit('kill', parseInt(JSON.parse(localStorage.getItem("user") as string).id));
+};
+
 function handleCanvas(
 	apiUrl: string,
 	id: number,
@@ -253,6 +263,7 @@ function handleCanvas(
 
 	function play()
 	{
+
 		socket.emit('play', game, PLAYER_WIDTH, canvas.height, canvas.width, PLAYER_HEIGHT, type, bdd[room].clientRoom);
 		socket.on('returnPlay', (data) =>
 		{
