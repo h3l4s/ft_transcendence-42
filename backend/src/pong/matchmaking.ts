@@ -275,11 +275,15 @@ export class Matchmaking implements OnGatewayConnection, OnGatewayDisconnect
 			let count = 0;
 			challenge.push(clientRoom);
 			client.join(clientRoom);
+			console.log("papa");
+			console.table(challenge);
+			console.log("clientRoom = ", clientRoom);
 			for (var i = 0; i < challenge.length; i++)
 			{
 				if (challenge[i] === clientRoom)
 					count++;
 			}
+			console.log("count = ", count);
 			if (count !== 0 && count % 2 === 0)
 				this.server.to(clientRoom).emit('startChallenge');
 		});
@@ -297,8 +301,8 @@ export class Matchmaking implements OnGatewayConnection, OnGatewayDisconnect
 		let pos = this.bdd.indexOf(client.id);
 		let restart_room = bdd_game.indexOf(this.bdd[pos - 2]);
 
-		console.log(`client disconnected : ${this.bdd[pos - 2]}`);
-		console.log(`status of the room : ${restart_room}`);
+		// console.log(`client disconnected : ${this.bdd[pos - 2]}`);
+		// console.log(`status of the room : ${restart_room}`);
 
 		if (restart_room === -1)
 		{
@@ -325,8 +329,38 @@ export class Matchmaking implements OnGatewayConnection, OnGatewayDisconnect
 	}
 
 	@SubscribeMessage('kill')
-	handleKill(client: Socket, data: number)
+	handleKill(client: Socket, data: string)
 	{
 		console.log("kill", data);
+		console.log("[PONG] client disconnected", client.id);
+		console.table(this.bdd);
+
+		let pos = this.bdd.indexOf(data);
+		let restart_room = bdd_game.indexOf(this.bdd[pos - 1]);
+
+		console.log(`client disconnected : ${this.bdd[pos + 1]}`);
+
+		if (restart_room === -1)
+		{
+			if (this.bdd[pos - 1] < 25)
+			{
+				clientNb_simple--;
+				joueur_simple.pop();
+			}
+			else if (this.bdd[pos - 1] < 50)
+			{
+				clientNb_tennis--;
+				joueur_tennis.pop();
+			}
+			else if (this.bdd[pos - 1] < 150)
+			{
+				clientNb_hard--;
+				joueur_hard.pop();
+			}
+			return;
+		}
+
+		this.server.to(this.bdd[pos - 1]).emit('disconnection', this.bdd[pos - 1]);
+		player--;
 	}
 }

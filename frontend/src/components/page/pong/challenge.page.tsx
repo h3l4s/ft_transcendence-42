@@ -56,10 +56,6 @@ function ChallengePage()
 
 	return (
 		<div className='pong pong--compo'>
-			<div className='pong--header'>
-				<h1>Pong</h1>
-			</div>
-			<script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
 			<div style={{ height: "3rem" }}>
 				{!inGame &&
 					<div style={{ display: "flex", justifyContent: "center" }}>
@@ -93,6 +89,7 @@ function LaunchGame(props: {
 	const { user } = useContext(AuthContext);
 	const statusSocket = useContext(StatusContext);
 
+
 	let playbtn = document.querySelector("#lets-go")! as HTMLElement;
 	if (playbtn !== null)
 		playbtn.style.display = "none";
@@ -105,10 +102,13 @@ function LaunchGame(props: {
 		props.socketGame.emit('challengeMatch', props.player1 + "/" + props.player2);
 		props.socketGame.on('startChallenge', () =>
 		{
-			props.setInGame(true);
+			console.log("eeeeee");
+
 			console.log("je suis ds la room " + clientRoom);
 			if (!user || !user.name || !user.id || !statusSocket.socket || !props.player1 || !props.player2)
 				return;
+			console.log(props.player1 + "/" + props.player2);
+			props.setInGame(true);
 			handleCanvas(apiUrl, user.id, props.player1, props.player2, false, props.player1 + "/" + props.player2, props.socketGame, statusSocket.socket, user.name);
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -128,6 +128,7 @@ function handleCanvas(
 	statusSocket: Socket,
 	username: string)
 {
+	console.log(clientRoom);
 	let canvas = document.querySelector("#canvas")! as HTMLCanvasElement;
 	canvas.style.display = "block";
 	canvas.style.margin = "auto";

@@ -56,12 +56,6 @@ function Pong()
 
 	return (
 		<div className='pong pong--compo'>
-			<div className='pong--header'>
-				<h1>Pong</h1>
-			</div>
-			<script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
-			<br />
-			[DEBUG] map chosen: {type}
 			<p className='pong--player'> <span id="p1-name">{user.name}</span> vs <span id="p2-name">...</span></p>
 			<div style={{ height: "3rem" }}>
 				{!inGame &&
@@ -140,15 +134,15 @@ function LaunchGame(props: {
 	return (<div />);
 }
 
-window.onpopstate = () =>
-{
-	const socket = io('http://' + window.location.hostname + ':3000/pong');
-	const path = window.location.pathname.split('/')[0];
-	const JWT = JSON.parse(localStorage.getItem('user') as string);
+// window.onpopstate = () =>
+// {
+// 	const socket = io('http://' + window.location.hostname + ':3000/pong');
+// 	const path = window.location.pathname.split('/')[0];
+// 	const JWT = JSON.parse(localStorage.getItem('user') as string);
 
-	if (JWT && path !== 'pong' && path !== 'challenge')
-		socket.emit('kill', parseInt(JSON.parse(localStorage.getItem("user") as string).id));
-};
+// 	if (JWT && path !== 'pong' && path !== 'challenge')
+// 		socket.emit('kill', JSON.parse(localStorage.getItem("user") as string).name);
+// };
 
 function handleCanvas(
 	apiUrl: string,

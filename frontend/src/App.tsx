@@ -67,7 +67,7 @@ function App()
 							<Route path="/connect/:token" element={<><NavBar /><ConnectPage /></>} />
 							<Route path="/play" element={<RequireAuth><><NavBar /><PongPage /></></RequireAuth>} />
 							<Route path="/pong/:type" element={<RequireAuth><Pong /></RequireAuth>} />
-							<Route path="/challenge/:senderId/:receiverId" element={<RequireAuth><ChallengePage /></RequireAuth>} />
+							<Route path="/challenge/:senderId/:receiverId" element={<ChallengePage />} />
 							<Route path="/chan" element={<RequireAuth><><NavBar /><ChanPage /></></RequireAuth>} />
 							<Route path="/user" element={<RequireAuth><><NavBar /><UserPage /></></RequireAuth>} />
 							<Route path="/user/:username" element={<><NavBar /><UserPage /></>} />

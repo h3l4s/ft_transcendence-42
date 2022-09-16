@@ -28,23 +28,6 @@
 	max-height: 580px;
 }
 
-.pong--header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	vertical-align: center;
-	/*height: 74px;*/
-	height: 5rem;
-	margin: 0;
-	/*color: #000; should change the color*/
-	background: #A9A9A9;
-	box-shadow: 0 0.6em 3px 0 rgb(0 0 0 / 50%);
-	/*might delete that shadow*/
-	text-align: center;
-	/*font-size: 400%;*/
-	font-family: OCR A Std;
-}
-
 .btn--back {
 	background-color: unset;
 	border: unset;
@@ -58,11 +41,13 @@
 .pong--btn--play {
 	display: flex;
 	justify-content: center;
-	background-color: #fff8;
+	background-color: rgba(0, 160, 13, 0.533);
 	border: unset;
+	color: white;
 	border-radius: 1rem;
 	font-size: 1.5rem;
-	font-family: OCR A Std;
+	padding: 0.3rem 0.5rem;
+	font-family: var(--alt-font);
 	transition: 300ms;
 }
 
@@ -160,7 +145,7 @@
 .pong--player {
 	text-align: center;
 	font-size: 30px;
-	font-family: OCR A Std;
+	font-family: var(--alt-font);
 }
 
 #score {
