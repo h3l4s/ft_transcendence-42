@@ -53,7 +53,9 @@ function PongView(props: { goBack: () => void })
 			</div>
 			<p className='pong--player'> <span id="p1-name"></span> vs <span id="p2-name"></span></p>
 			<div id="score">
-				<span id="scoreP1HTML" />-<span id="scoreP2HTML" />
+				<span id="scoreP1HTML" style={{ fontFamily: "var(--alt-font)" }} />
+				-
+				<span id="scoreP2HTML" style={{ fontFamily: "var(--alt-font)" }} />
 			</div>
 			<canvas id="canvas" height="580" width="740" />
 		</div >

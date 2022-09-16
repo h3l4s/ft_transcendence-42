@@ -41,7 +41,7 @@ function MatchBtn(props: { match: string })
 			{
 				setGoToView(true);
 			}}>
-				<span className='span--card--user truncate'>{props.match}</span>
+				<span className='match--text truncate'>{props.match}</span>
 			</button>
 		</div >
 	);

@@ -47,6 +47,26 @@ function userNotAdmin(admins_id: number[] | undefined, users: i_user[]): i_user[
 
 }
 
+function userNotInGame(users: i_user[]): i_user[]
+{
+	if (socket)
+	{
+		socket.emit('getStatus', { id: props.user.id, status: 'online' });
+
+		socket.on('isStatus', (data: { id: string, status: string }) =>
+			setStatus(data.status));
+	}
+	let ret: i_user[] = [];
+
+	for (let i = 0; i < users.length; i++)
+	{
+		if (users[i].id && !users_id.includes(users[i].id!))
+			ret.push(users[i]);
+	}
+
+	return (ret);
+}
+
 function get_direct_chan_name(users: i_user[])
 {
 	if (users.length !== 2 || !users[0].id || !users[1].id)

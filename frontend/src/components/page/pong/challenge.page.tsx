@@ -258,43 +258,16 @@ function handleCanvas(
 			//socket.emit('finish', clientRoom);
 			statusSocket.emit('updateStatus', { id: id, status: 'online' });
 			canvas.style.display = "none";
-			if (game.score.p1 >= 5)
+			if (game.score.p1 >= 5 || game.score.p2 >= 5)
 			{
-				if (player1 === username)
-				{
+				if ((game.score.p1 >= 5 && player1 === username) || (game.score.p2 >= 5 && player2 === username))
 					result.innerHTML = "you won !"
-					result.style.color = "black";
-					result.style.fontSize = "6rem";
-					result.style.fontFamily = "minitel";
-					result.style.paddingTop = "12rem";
-				}
 				else
-				{
 					result.innerHTML = "you lose !"
-					result.style.color = "black";
-					result.style.fontSize = "6rem";
-					result.style.fontFamily = "minitel";
-					result.style.paddingTop = "12rem";
-				}
-			}
-			if (game.score.p2 >= 5)
-			{
-				if (player2 === username)
-				{
-					result.innerHTML = "you won !"
-					result.style.color = "black";
-					result.style.fontSize = "6rem";
-					result.style.fontFamily = "minitel";
-					result.style.paddingTop = "12rem";
-				}
-				else
-				{
-					result.innerHTML = "you lose !"
-					result.style.color = "black";
-					result.style.fontSize = "6rem";
-					result.style.fontFamily = "minitel";
-					result.style.paddingTop = "12rem";
-				}
+				result.style.color = "black";
+				result.style.fontSize = "6rem";
+				result.style.fontFamily = "minitel";
+				result.style.paddingTop = "12rem";
 			}
 			//postResults(apiUrl, username, game.score.p1, game.score.p2, player1, player2);
 			clientRoom = '-1';
