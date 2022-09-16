@@ -4,6 +4,7 @@
 frontend/*.env
 .front.env
 .secret.env
+.hostname.env
 
 # nvim
 *~
