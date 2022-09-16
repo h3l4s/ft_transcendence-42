@@ -140,7 +140,7 @@ function PickUserModal(props: {
 				<button style={{ position: "absolute", top: "1rem", left: "1rem" }} onClick={() => props.goBack()}><Back /></button>
 				<span style={{ fontSize: "1.5rem", fontWeight: "bolder" }}>{props.type}</span>
 			</div>
-			<div style={{ marginTop: "1rem", overflowY: "scroll" }}>
+			<div style={{ height: "80%", marginTop: "1rem", overflowY: "scroll" }}>
 				<PickUsers users={props.users} chan={props.chan} type={props.type}
 					onClose={props.onClose} callback={props.callback} />
 			</div>
