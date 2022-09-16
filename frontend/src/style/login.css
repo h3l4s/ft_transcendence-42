@@ -1,0 +1,68 @@
+.login--page {
+	background-color: var(--background-color);
+	height: calc(100vh - var(--nav-h));
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	text-align: center;
+}
+
+.auth42 {
+	display: flex;
+	color: #fff;
+	font-family: var(--alt-font);
+	font-size: 5vh;
+	width: 42vh;
+	flex-direction: row;
+	justify-content: space-around;
+	align-items: center;
+	margin: 0 auto;
+	transition: 200ms;
+}
+
+.auth42 svg {
+	width: 15vh;
+	height: 15vh;
+}
+
+.auth42:hover {
+	filter: brightness(300%);
+}
+
+.logout {
+	background-color: #0008;
+	border: unset;
+	border-radius: 50%;
+	color: #fff;
+	fill: #fff;
+	width: 3rem;
+	height: 3rem;
+	padding: 0.5rem 0.7rem 0.5rem 0.3rem;
+	transition: 200ms;
+}
+
+.logout:hover {
+	background-color: #0004 !important;
+	filter: brightness(1000%);
+}
+
+.login--debug {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+}
+
+.login--debug button {
+	border: #f008 solid 4px;
+	background-color: #0008;
+	box-shadow: 0 0 0 4px #0008;
+	color: #fff;
+	margin: 0.5rem 0;
+}
+
+.login--debug button:hover {
+	background-color: #0008;
+	box-shadow: 0 0 0 4px #f008;
+	filter: brightness(120%);
+}
