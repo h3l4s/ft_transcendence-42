@@ -181,7 +181,6 @@ function handleCanvas(
 			x: canvas.width / 2,
 			y: canvas.height / 2,
 			r: 5,
-			ratio: 1,
 			speed: {
 				x: 0.7,
 				y: 0.7

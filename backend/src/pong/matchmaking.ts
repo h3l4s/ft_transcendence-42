@@ -19,6 +19,33 @@ let match: string;
 let current_match = [];
 let challenge = [];
 
+interface i_game
+{
+	player: {
+		y: number;
+	};
+	computer: {
+		y: number;
+	};
+	ball: {
+		x: number;
+		y: number;
+		r: number;
+		speed: {
+			x: number;
+			y: number;
+		}
+	},
+	score: {
+		p1_temp: number;
+		p2_temp: number;
+		p1: number;
+		p2: number;
+		ball_start: boolean;
+	}
+	sendPing: boolean;
+}
+
 function Move_player(game: any, mouseLocation: number, PLAYER_HEIGHT: number, canvas_height: number, who: number)
 {
 	// Get the mouse location in the canvas
@@ -44,7 +71,7 @@ function Move_player(game: any, mouseLocation: number, PLAYER_HEIGHT: number, ca
 	return (game);
 }
 
-function Move_ball(game: any, PLAYER_WIDTH: number, canvas_height: number, canvas_width: number, PLAYER_HEIGHT: number, type: string)
+function Move_ball(game: i_game, PLAYER_WIDTH: number, canvas_height: number, canvas_width: number, PLAYER_HEIGHT: number, type: string)
 {
 	// Rebounds on top and bottom
 	if (game.ball.y > canvas_height || game.ball.y < 0)
@@ -62,7 +89,7 @@ function Move_ball(game: any, PLAYER_WIDTH: number, canvas_height: number, canva
 	return (game);
 }
 
-function collision(player: any, game: any, canvas_height: number, canvas_width: number, PLAYER_HEIGHT: number, type: string)
+function collision(player: any, game: i_game, canvas_height: number, canvas_width: number, PLAYER_HEIGHT: number, type: string)
 {
 	// The player does not hit the ball
 	if (game.ball.y < player.y || game.ball.y > player.y + PLAYER_HEIGHT)
@@ -72,11 +99,13 @@ function collision(player: any, game: any, canvas_height: number, canvas_width: 
 		{
 			game.score.ball_start = false;
 			game.score.p1++
+			game.sendPing = true;
 		}
 		else
 		{
 			game.score.ball_start = true;
 			game.score.p2++
+			game.sendPing = true;
 		}
 		game.ball.x = canvas_width / 2;
 		game.ball.y = canvas_height / 2;
@@ -101,7 +130,7 @@ function collision(player: any, game: any, canvas_height: number, canvas_width: 
 	return (game);
 }
 
-function Angle_Direction(playerPosition: any, game: any, PLAYER_HEIGHT: number,)
+function Angle_Direction(playerPosition: any, game: i_game, PLAYER_HEIGHT: number,)
 {
 	var impact = game.ball.y - playerPosition - PLAYER_HEIGHT / 2;
 	var ratio = 100 / (PLAYER_HEIGHT / 2);
@@ -215,6 +244,8 @@ export class Matchmaking
 		client.on('play', (game, PLAYER_WIDTH, canvas_height, canvas_width, PLAYER_HEIGHT, type, clientRoom) =>
 		{
 			game = Move_ball(game, PLAYER_WIDTH, canvas_height, canvas_width, PLAYER_HEIGHT, type);
+			if (game.sendPing)
+				this.server.to(clientRoom).emit('ping', game);
 			this.server.to(clientRoom).emit('returnPlay', game);
 
 		});
@@ -253,12 +284,13 @@ export class Matchmaking
 			let count = 0;
 			challenge.push(clientRoom);
 			client.join(clientRoom);
-			for(var i = 0; i< challenge.length; i++) { 
-				if(challenge[i] === clientRoom)
+			for (var i = 0; i < challenge.length; i++)
+			{
+				if (challenge[i] === clientRoom)
 					count++;
 			}
 			if (count !== 0 && count % 2 === 0)
-				this.server.to(clientRoom).emit('startChallenge' );	
+				this.server.to(clientRoom).emit('startChallenge');
 		});
 	}
 
