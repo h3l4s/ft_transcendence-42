@@ -109,3 +109,8 @@ export class UserChallengeDto
 	@IsNotEmpty()
 	public receiverId: number;
 }
+
+export class UploadDto
+{
+	file?: any;
+}

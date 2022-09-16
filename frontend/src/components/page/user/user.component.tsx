@@ -1,9 +1,6 @@
 import { useContext, useEffect, useState } from "react";
-<<<<<<< HEAD
-=======
 
 import { ApiUrlContext } from "../../../context/apiUrl.context";
->>>>>>> pong-socket
 import { StatusContext } from "../../../context/status.context";
 
 import i_user from "../../../interface/user.interface";
@@ -67,10 +64,7 @@ function Users(props: { users: i_user[] })
 
 function UserBtn(props: { user: i_user, status?: ('online' | 'offline' | 'ingame') })
 {
-<<<<<<< HEAD
-=======
 	const { apiUrl } = useContext(ApiUrlContext);
->>>>>>> pong-socket
 	const [showProfile, setShowProfile] = useState(false);
 
 	function resetAllStateHandle(): void
@@ -81,11 +75,7 @@ function UserBtn(props: { user: i_user, status?: ('online' | 'offline' | 'ingame
 	return (
 		<div>
 			<button className='card card--border card--btn' style={{ marginLeft: "4px" }} onClick={() => { setShowProfile(true) }}>
-<<<<<<< HEAD
-				<img className='img img--card--user' src={props.user.pp_name} alt="profile" />
-=======
 				<img className='img img--card--user' src={apiUrl + "/user/photo/" + props.user.id} alt="profile" />
->>>>>>> pong-socket
 				{props.status
 					&& <span style={{
 						position: "absolute", bottom: "1.2rem", left: "2.4rem", width: "0.5rem", height: "0.5rem",

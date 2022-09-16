@@ -124,13 +124,8 @@ function UserPage()
 							</button>
 						}
 					</div>
-<<<<<<< HEAD
-					{(!p_username || p_username === userToLoad.name)
-						&& <LogoutButton style={{ position: "absolute", top: "0.85rem", right: "0.85rem" }} />
-=======
 					{(!p_username || (user && p_username === user.name))
 						&& <LogoutButton icon={true} style={{ position: "absolute", top: "0.85rem", right: "0rem" }} />
->>>>>>> pong-socket
 					}
 				</div>
 				<div className='card card--alt' style={{ height: "100%" }}>
