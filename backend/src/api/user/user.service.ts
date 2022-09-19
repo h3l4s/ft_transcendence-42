@@ -83,7 +83,7 @@ export class UserService
 			new_user.name = "#" + user_info.data.login + "-" + c;
 		else
 			new_user.name = user_info.data.login;
-		new_user.pp_path = user_info.data.image_url;
+		//new_user.pp_path = user_info.data.image_url;
 
 		return this.repository.save(new_user);
 	}

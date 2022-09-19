@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Socket } from "socket.io-client";
 
 import { ApiUrlContext } from "../../context/apiUrl.context";
 import { useContext } from "react";
@@ -47,7 +48,6 @@ function OptionModal(props: {
 		}
 		).catch(err => console.log(err));
 	};
-
 
 	return (
 		<div onMouseLeave={props.onClose} className='modal--option'>

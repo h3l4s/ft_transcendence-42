@@ -112,8 +112,9 @@ function Chans(props: { socket: Socket, chans: i_chan[], users: i_user[], to_cha
 
 	for (let i = props.chans.length - 1; i >= 0; i--)
 	{
-		if (props.chans[i].type === 'public' || props.chans[i].type === 'protected'
+		if ((props.chans[i].type === 'public' || props.chans[i].type === 'protected'
 			|| (props.chans[i].usersId && user && user.id && props.chans[i].usersId!.includes(user.id)))
+			&& (props.chans[i].bannedId && user && user.id && !props.chans[i].bannedId!.includes(user.id)))
 			visibleChans.push(props.chans[i]);
 	}
 
