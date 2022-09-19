@@ -33,6 +33,7 @@ package-lock.json
 
 # pp
 backend/uploads/profileimages/*
+!backend/uploads/profileimages/default.png
 
 # misc
 .DS_Store
