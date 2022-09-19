@@ -105,7 +105,6 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect
 				break;
 			}
 		}
-		console.log(index);
 		if (index > -1 && this.db[index].status !== 'offline')
 		{
 			//console.log("[STATUS] challenge sent to", this.db[index].id);

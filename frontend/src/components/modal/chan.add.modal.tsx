@@ -38,10 +38,7 @@ function SumbitAddChan(props: {
 	else if (error)
 		return (<div style={{ textAlign: "center" }}><Error msg={error.message} /></div>);
 	else
-	{
-		console.log(data);
 		return (<div />);
-	}
 }
 
 function AddChanModal(props: { user_id: number, callback: (chan: i_chan) => void })

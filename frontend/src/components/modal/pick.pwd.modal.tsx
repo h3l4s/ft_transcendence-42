@@ -18,7 +18,7 @@ function PickPwdModal(props: { chan: i_chan, goBack: () => void, onClose: () => 
 		if (props.chan.id)
 			props.callback(props.chan.id, props.chan.id);
 		else
-			console.log("can't find chan id");
+			console.warn("can't find chan id");
 		setChoose(true);
 		setPwd("");
 	}
