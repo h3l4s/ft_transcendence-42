@@ -45,4 +45,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect
 		client.leave(room);
 		client.emit('leftRoom', room);
 	}
+
+	@SubscribeMessage('requestUpdate')
+	handleUpdateRequest(client: Socket)
+	{
+		this.wss.emit('update');
+	}
 }

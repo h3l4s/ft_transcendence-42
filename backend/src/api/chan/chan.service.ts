@@ -142,7 +142,12 @@ export class ChanService
 		if (data.bannedId)
 		{
 			if (!chan.bannedId.includes(data.bannedId))
+			{
 				chan.bannedId.push(data.bannedId);
+				const index = chan.usersId.indexOf(data.bannedId);
+				if (index > -1)
+					chan.usersId.splice(index, 1);
+			}
 			else
 			{
 				const index = chan.bannedId.indexOf(data.bannedId);
@@ -172,7 +177,7 @@ export class ChanService
 		if (!data.userId)
 			return chan;
 
-		if (!chan.usersId.includes(data.userId))
+		if (!chan.usersId.includes(data.userId) && !chan.bannedId.includes(data.userId))
 			chan.usersId.push(data.userId);
 
 		return await this.repository.save(chan);
@@ -199,7 +204,8 @@ export class ChanService
 	{
 		const chan = await this.repository.findOne({ where: { id: id } });
 
-		chan.msg.push(data);
+		if (!chan.bannedId.includes(data.userId))
+			chan.msg.push(data);
 
 		return this.repository.save(chan);
 	}

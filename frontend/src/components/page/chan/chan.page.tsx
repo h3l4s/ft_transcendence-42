@@ -66,6 +66,11 @@ function ChanPage()
 			console.log("newClient", data);
 			callback(selectedChan, selectedChan);
 		});
+		socket.on('update', () =>
+		{
+			console.log("update requested");
+			callback(selectedChan, selectedChan);
+		});
 		socket.emit('newConnection');
 		socket.emit('joinRoom', selectedChan);
 		// eslint-disable-next-line react-hooks/exhaustive-deps

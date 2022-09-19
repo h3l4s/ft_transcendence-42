@@ -21,8 +21,6 @@ export class UserService
 			id: 1,
 			access_token: "none",
 			name: "default",
-			pp: null,
-			pp_name: "",
 			xp: -1,
 			elo: -1,
 			win: -1,
@@ -85,7 +83,7 @@ export class UserService
 			new_user.name = "#" + user_info.data.login + "-" + c;
 		else
 			new_user.name = user_info.data.login;
-		new_user.pp_name = user_info.data.image_url;
+		//new_user.pp_path = user_info.data.image_url;
 
 		return this.repository.save(new_user);
 	}
@@ -234,10 +232,9 @@ export class UserService
 	{
 		const user: User = await this.repository.findOne({ where: { id: id } });
 
-		user.pp_name = name;
 		user.pp_path = path;
 		user.pp = file;
-		console.log(user.pp_name + user.pp_path + user.pp);
+		console.log(name, user.pp_path, user.pp);
 
 		return await this.repository.save(user);
 	}

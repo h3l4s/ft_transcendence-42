@@ -33,9 +33,6 @@ export class User
 	@Column({ type: 'bytea', nullable: true, default: null })
 	public pp?: Express.Multer.File;
 
-	@Column({ type: 'varchar', length: 255, default: "" })
-	public pp_name: string
-
 	@Column({
 		type: 'decimal',
 		precision: 7,
