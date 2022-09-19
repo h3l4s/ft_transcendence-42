@@ -13,7 +13,7 @@ function userBacktoFront(user: any)
 		twofa: user.twofa,
 		name: user.name,
 		pp: user.pp,
-		pp_name: user.pp_name,
+		pp_path: user.pp_path,
 		xp: user.xp,
 		elo: user.elo,
 		win: user.win,

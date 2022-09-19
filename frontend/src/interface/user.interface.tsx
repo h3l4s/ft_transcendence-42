@@ -7,7 +7,7 @@ interface i_user
 	twofa?: string;
 	name?: string;
 	pp?: Buffer;
-	pp_name?: string;
+	pp_path?: string;
 	xp?: number;
 	elo?: number;
 	win?: number;
