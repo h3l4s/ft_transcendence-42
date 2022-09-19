@@ -266,6 +266,9 @@ function handleCanvas(
 		console.log("BBBBBBBBBBBBBBB");
 	}
 
+	let deconnection1 = false;
+	let deconnection2 = false;
+
 	function play()
 	{
 		socket.emit('play', game, PLAYER_WIDTH, canvas.height, canvas.width, PLAYER_HEIGHT, type, bdd[room].clientRoom);
@@ -342,6 +345,12 @@ function handleCanvas(
 					result.style.paddingTop = "12rem";
 				}
 			}
+			if (deconnection1 === true)
+				game.score.p2 = 11;
+			if (deconnection2 === true)
+				game.score.p1 = 11;	
+			console.log("game score2 = " +game.score.p2)
+			console.log("game score = " +game.score.p1)
 			postResults(apiUrl, username, game.score.p1, game.score.p2, bdd[room].player1, bdd[room].player2);
 			bdd[room].clientRoom = -1;
 			return;
@@ -351,7 +360,6 @@ function handleCanvas(
 	}
 
 	canvas.addEventListener('mousemove', Move_player);
-
 
 	function draw()
 	{
@@ -426,16 +434,22 @@ function handleCanvas(
 		if (data === bdd[room].player1)
 		{
 			console.log("je suis ici");
-			scoreP1HTML.innerText = "11";
-			scoreP1 = 11;
-			game.score.p1 = 11;
+			scoreP2HTML.innerText = "11";
+			scoreP2 = 11;
+			game.score.p2 = 11;
+			deconnection1 = true;
+			console.log("score 2= " +game.score.p2)
+			console.log("score= " +game.score.p1)
 		}
 		else
 		{
 			console.log("beaute");
-			scoreP2HTML.innerText = "11";
-			scoreP2 = 11;
-			game.score.p2 = 11;
+			scoreP1HTML.innerText = "11";
+			scoreP1 = 11;
+			game.score.p1 = 11;
+			deconnection2 = true;
+			console.log("score 2= " +game.score.p2)
+			console.log("score= " +game.score.p1)
 		}
 	});
 }
@@ -443,9 +457,10 @@ function handleCanvas(
 function postResults(apiUrl: string, username: string, scoreP1: number, scoreP2: number, player1: string, player2: string)
 {
 	// only the winner will post the match to the api
+	console.log("end of match",username, player1, scoreP1, player2, scoreP2);
 	if ((scoreP1 > scoreP2 && player1 === username) || (scoreP2 > scoreP1 && player2 === username))
 	{
-		console.log("end of match", player1, scoreP1, player2, scoreP2);
+		
 		const match_stats = {
 			winner: player1,
 			loser: player2,
@@ -457,4 +472,4 @@ function postResults(apiUrl: string, username: string, scoreP1: number, scoreP2:
 	}
 }
 
-export default Pong;
+export {Pong, postResults};

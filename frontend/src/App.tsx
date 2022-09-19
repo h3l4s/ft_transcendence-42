@@ -26,7 +26,7 @@ import LoginPage from './components/page/login/login.page';
 import ConnectPage from './components/page/login/connect.page';
 import ChallengePage from './components/page/pong/challenge.page';
 import PongView from './components/page/pong/pong.view';
-import Pong from './components/page/pong/pong.component';
+import {Pong} from './components/page/pong/pong.component';
 import StatusHandler from './components/status.handle';
 
 function App()

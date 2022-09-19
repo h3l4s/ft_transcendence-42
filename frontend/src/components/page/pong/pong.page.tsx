@@ -2,7 +2,7 @@ import { useState, useContext, useEffect } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 
 import './../../../style/pong.css';
-import Pong from './pong.component';
+import {Pong} from './pong.component';
 import PongView from './pong.view';
 import { io } from 'socket.io-client';
 import { ApiUrlContext } from '../../../context/apiUrl.context';
