@@ -7,6 +7,8 @@ import { ApiUrlContext } from '../../../context/apiUrl.context';
 import { ReactComponent as Back } from '../../../icon/left-svgrepo-com.svg';
 import { useLocation } from "react-router-dom"
 import PongPage from './pong.page';
+import tennis from './tennis_pong.jpg';
+import { exit } from 'process';
 
 function goodPath(path: string)
 {
@@ -39,22 +41,13 @@ function PongView(props: { goBack: () => void })
 
 	return (
 		<div className='pong'>
-			<div className='pong--header'>
-				<button className='btn--back'
-					onClick={() => <PongPage />}>
-					<Back />
-				</button>
-				<h1>Pong</h1>
-				<button className='btn--back' style={{ visibility: "hidden" }}>
-					<Back />
-				</button>
-			</div>
 			<p className='pong--player'> <span id="p1-name"></span> vs <span id="p2-name"></span></p>
 			<div id="score">
 				<span id="scoreP1HTML" style={{ fontFamily: "var(--alt-font)" }} />
 				-
 				<span id="scoreP2HTML" style={{ fontFamily: "var(--alt-font)" }} />
 			</div>
+			<img id='tennis' src={tennis} alt='tennis' style={{ display: "none" }} />
 			<canvas id="canvas" height="580" width="740" />
 		</div >
 	);
@@ -124,26 +117,25 @@ function viewCanvas(socket: Socket, player1: string, player2: string, type: stri
 				scoreP2HTML.innerText = game.score.p2.toString();
 			}
 		}
-		play();
+		draw();
 	});
+
 	socket.on('move-player-draw', (data) =>
 	{
 		game = data;
-		play();
+		draw();
 	});
 
-	function play()
-	{
-
-		draw();
-		setTimeout(play, 1000 / 200);
-	}
+	
 
 	function draw()
 	{
+		const path = window.location.pathname.split('/')[1];
+			if (path !== "view")
+				socket.close();
 		const img = document.querySelector("#tennis")! as HTMLImageElement;
 		let context = canvas.getContext('2d')! as CanvasRenderingContext2D;
-
+		console.log(type);
 		if (type === 'simple' || type === 'hard')
 		{
 			// Draw field
@@ -158,7 +150,9 @@ function viewCanvas(socket: Socket, player1: string, player2: string, type: stri
 		}
 		else
 		{
-			context.drawImage(img, 0, 0, canvas.width, canvas.height);
+			if (path === "view")
+				context.drawImage(img, 0, 0, canvas.width, canvas.height);
+	
 		}
 		function drawMovingPart()
 		{

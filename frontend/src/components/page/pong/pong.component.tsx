@@ -147,7 +147,7 @@ window.addEventListener('popstate', () =>
 {
 	console.log("AAAAAAAAAAAAAAAAAAAAaaaa");
 	const socket = io('http://' + window.location.hostname + ':3000/pong');
-	const path = window.location.pathname.split('/')[0];
+	const path = window.location.pathname.split('/')[1];
 	const JWT = JSON.parse(localStorage.getItem('user') as string);
 
 	if (JWT && path !== 'pong' && path !== 'challenge')
@@ -428,13 +428,13 @@ function postResults(apiUrl: string, username: string, scoreP1: number, scoreP2:
 	{
 
 		const match_stats = {
-			p1: player1,
-			p2: player2,
+			P1: player1,
+			P2: player2,
 			scoreP1: scoreP1,
 			scoreP2: scoreP2
 		}
-		axios.post(apiUrl + "/user/match", match_stats);
-		axios.post(apiUrl + "/pong/match", match_stats);
+		axios.post(apiUrl + "/user/match", match_stats).catch(err => console.log(err));
+		axios.post(apiUrl + "/pong/match", match_stats).catch(err => console.log(err));
 	}
 }
 
