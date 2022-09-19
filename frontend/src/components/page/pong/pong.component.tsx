@@ -65,7 +65,7 @@ function Pong()
 	return (
 		<div className='pong pong--compo'>
 			<p className='pong--player'> <span id="p1-name">{user.name}</span> vs <span id="p2-name">...</span></p>
-			<button className='pong--btn--home' onClick={() => {navigate("/play"); socket.emit('kill', JSON.parse(localStorage.getItem("user") as string).name);}}>
+			<button className='pong--btn--home' onClick={() => {navigate("/play"); socket.emit('kill', user.name);}}>
 							<span id="goBack">home</span>
 						</button>
 			<div style={{ height: "3rem" }}>
