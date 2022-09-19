@@ -43,7 +43,7 @@ function MatchBtn(props: { match: string })
 				console.log("BECIH");
 				setGoToView(true);
 			}}>
-				<span className='span--card--user truncate'>{props.match}</span>
+				<span className='match--text truncate'>{props.match}</span>
 			</button>
 		</div >
 	);
