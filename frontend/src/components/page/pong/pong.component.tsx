@@ -26,7 +26,7 @@ function Pong()
 	const [inGame, setInGame] = useState(false);
 	const [inPlay, setInPlay] = useState(false);
 	const [gameLaunch, setGameLaunch] = useState(0);
-	const [socket] = useState(io(apiUrl));
+	const [socket] = useState(io(apiUrl + '/pong'));
 	const type = useParams().type;
 
 	useEffect(() =>
@@ -35,6 +35,7 @@ function Pong()
 			|| !type || (type !== 'simple' && type !== 'hard' && type !== 'tennis')
 			|| !statusSocket || !statusSocket.socket)
 			return;
+		console.log("first appel");
 		handleCanvas(apiUrl, user.id, user.name, true, type, bdd_pong, 0, socket, statusSocket.socket, "");
 	});
 
@@ -55,14 +56,14 @@ function Pong()
 
 	let bdd_pong: any[] = [];
 
+	// 	props.socket.on('chatToClient', (msg: i_msg) =>
+	// 	{
+	// 		console.log("received at:", msg.chanId, msg);
+	// 		setIcomingMsg(msg);
+	// 	});
+
 	return (
 		<div className='pong pong--compo'>
-			<div className='pong--header'>
-				<h1>Pong</h1>
-			</div>
-			<script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
-			<br />
-			[DEBUG] map chosen: {type}
 			<p className='pong--player'> <span id="p1-name">{user.name}</span> vs <span id="p2-name">...</span></p>
 			<div style={{ height: "3rem" }}>
 				{!inGame &&
@@ -78,9 +79,8 @@ function Pong()
 				</p>
 			</div>
 			{type === 'tennis' && <img id='tennis' src={tennis} alt='tennis' style={{ display: "none" }} />}
+			<h6 id="result"></h6>
 			<canvas id="canvas" height="580" width="740" />
-			<img id="win" src="https://ak7.picdn.net/shutterstock/videos/34233727/thumb/1.jpg" alt="win" />
-			<img id="lose" src="https://www.freesoundslibrary.com/wp-content/uploads/2020/07/game-lose-2-720x340.jpg" alt="lose" />
 			{inPlay && <LaunchGame type={type} nameP1={user.name} saloon={saloon} incGameLaunch={() => { setGameLaunch(gameLaunch + 1); return gameLaunch; }} setInGame={setInGame} socket={socket} />}
 		</div >
 	);
@@ -116,6 +116,7 @@ function LaunchGame(props: {
 		props.socket.emit('newPlayer', props.type.toString());
 		props.socket.on('serverToRoom', (data: string) =>
 		{
+			console.log(`je suis ds la room data ${data}`);
 			client_Room = data;
 			props.socket.emit('joinRoom', client_Room, props.nameP1, window.innerWidth / 2);
 		});
@@ -133,6 +134,7 @@ function LaunchGame(props: {
 			props.setInGame(true);
 			if (!user || !user.name || !user.id || !socket)
 				return;
+			console.log("second appel");
 			handleCanvas(apiUrl, user.id, user.name, false, props.type, bdd_pong, props.incGameLaunch(), props.socket, socket, data.toString());
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -140,6 +142,17 @@ function LaunchGame(props: {
 
 	return (<div />);
 }
+
+window.addEventListener('popstate', () =>
+{
+	console.log("AAAAAAAAAAAAAAAAAAAAaaaa");
+	const socket = io('http://' + window.location.hostname + ':3000/pong');
+	const path = window.location.pathname.split('/')[0];
+	const JWT = JSON.parse(localStorage.getItem('user') as string);
+
+	if (JWT && path !== 'pong' && path !== 'challenge')
+		socket.emit('kill', JSON.parse(localStorage.getItem("user") as string).name);
+});
 
 function handleCanvas(
 	apiUrl: string,
@@ -160,8 +173,7 @@ function handleCanvas(
 	const PLAYER_WIDTH = 5;
 	const win = document.querySelector("#win")! as HTMLImageElement;
 	const lose = document.querySelector("#lose")! as HTMLImageElement;
-	lose.style.display = "none";
-	win.style.display = "none";
+	let result = document.querySelector("#result")! as HTMLCanvasElement;
 
 	let game = {
 		player: {
@@ -252,7 +264,11 @@ function handleCanvas(
 	if (game.score.p1 === 0)
 	{
 		play();
+		console.log("BBBBBBBBBBBBBBB");
 	}
+
+	let deconnection1 = false;
+	let deconnection2 = false;
 
 	function play()
 	{
@@ -292,6 +308,15 @@ function handleCanvas(
 			socket.emit('finish', bdd[room].clientRoom, match);
 			statusSocket.emit('updateStatus', { id: id, status: 'online' });
 			canvas.style.display = "none";
+			if ((game.score.p1 > game.score.p2 && bdd[room].player1 === username)
+				|| (game.score.p2 > game.score.p1 && bdd[room].player2 === username))
+				result.innerHTML = "you won !"
+			else
+				result.innerHTML = "you lost !"
+			result.style.color = "black";
+			result.style.fontSize = "6rem";
+			result.style.fontFamily = "minitel";
+			result.style.paddingTop = "12rem";
 			postResults(apiUrl, username, game.score.p1, game.score.p2, bdd[room].player1, bdd[room].player2);
 			bdd[room].clientRoom = -1;
 			return;
@@ -301,7 +326,6 @@ function handleCanvas(
 	}
 
 	canvas.addEventListener('mousemove', Move_player);
-
 
 	function draw()
 	{
@@ -336,6 +360,7 @@ function handleCanvas(
 			}
 			catch (e)
 			{
+				//console.log(e);
 				//window.location.href = '/youlose';
 				game.score.p2 = 11;
 				return;
@@ -344,6 +369,14 @@ function handleCanvas(
 
 		function drawMovingPart()
 		{
+
+			// Draw players
+			// socket.emit('bdd[room].player2-go', game.player.y);
+			// socket.on('bdd[room].player2-go', (data)=>{
+			// 		game.computer.y = data;
+			// 		console.log(data);
+			// });
+
 			socket.on('move-player-draw', (data) =>
 			{
 				game = data;
@@ -366,15 +399,23 @@ function handleCanvas(
 	{
 		if (data === bdd[room].player1)
 		{
+			console.log("je suis ici");
 			scoreP2HTML.innerText = "11";
-			scoreP1 = 11;
+			scoreP2 = 11;
 			game.score.p2 = 11;
+			deconnection1 = true;
+			console.log("score 2= " + game.score.p2)
+			console.log("score= " + game.score.p1)
 		}
 		else
 		{
+			console.log("beaute");
 			scoreP1HTML.innerText = "11";
-			scoreP2 = 11;
+			scoreP1 = 11;
 			game.score.p1 = 11;
+			deconnection2 = true;
+			console.log("score 2= " + game.score.p2)
+			console.log("score= " + game.score.p1)
 		}
 	});
 }
@@ -382,18 +423,19 @@ function handleCanvas(
 function postResults(apiUrl: string, username: string, scoreP1: number, scoreP2: number, player1: string, player2: string)
 {
 	// only the winner will post the match to the api
+	console.log("end of match", username, player1, scoreP1, player2, scoreP2);
 	if ((scoreP1 > scoreP2 && player1 === username) || (scoreP2 > scoreP1 && player2 === username))
 	{
-		console.log("end of match", player1, scoreP1, player2, scoreP2);
+
 		const match_stats = {
-			winner: player1,
-			loser: player2,
-			scoreWinner: scoreP1,
-			scoreLoser: scoreP2
+			p1: player1,
+			p2: player2,
+			scoreP1: scoreP1,
+			scoreP2: scoreP2
 		}
 		axios.post(apiUrl + "/user/match", match_stats);
 		axios.post(apiUrl + "/pong/match", match_stats);
 	}
 }
 
-export default Pong;
+export { Pong, postResults };

@@ -26,7 +26,7 @@ import LoginPage from './components/page/login/login.page';
 import ConnectPage from './components/page/login/connect.page';
 import ChallengePage from './components/page/pong/challenge.page';
 import PongView from './components/page/pong/pong.view';
-import Pong from './components/page/pong/pong.component';
+import {Pong} from './components/page/pong/pong.component';
 import StatusHandler from './components/status.handle';
 
 function App()
@@ -67,7 +67,7 @@ function App()
 							<Route path="/connect/:token" element={<><NavBar /><ConnectPage /></>} />
 							<Route path="/play" element={<RequireAuth><><NavBar /><PongPage /></></RequireAuth>} />
 							<Route path="/pong/:type" element={<RequireAuth><Pong /></RequireAuth>} />
-							<Route path="/challenge/:senderId/:receiverId" element={<RequireAuth><ChallengePage /></RequireAuth>} />
+							<Route path="/challenge/:senderId/:receiverId" element={<ChallengePage />} />
 							<Route path="/chan" element={<RequireAuth><><NavBar /><ChanPage /></></RequireAuth>} />
 							<Route path="/user" element={<RequireAuth><><NavBar /><UserPage /></></RequireAuth>} />
 							<Route path="/user/:username" element={<><NavBar /><UserPage /></>} />

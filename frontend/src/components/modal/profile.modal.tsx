@@ -52,7 +52,6 @@ function ProfileModal(props: { user: i_user, onClose: () => void })
 			{
 				setFriend(state);
 				setUser(res);
-				console.log(res);
 			}).catch(err =>
 			{
 				console.log(err);

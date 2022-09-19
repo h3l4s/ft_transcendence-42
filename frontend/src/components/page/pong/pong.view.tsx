@@ -16,10 +16,10 @@ function goodPath(path: string)
 	return path;
 }
 
-function PongView(props: {goBack: () => void })
+function PongView(props: { goBack: () => void })
 {
-    const { apiUrl } = useContext(ApiUrlContext);
-    const socket = io(apiUrl);
+	const { apiUrl } = useContext(ApiUrlContext);
+	const socket = io(apiUrl + '/pong');
 	const sampleLocation = useLocation();
 	let path: string;
 
@@ -36,12 +36,12 @@ function PongView(props: {goBack: () => void })
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	
+
 	return (
-            <div className='pong'>
-            <div className='pong--header'>
+		<div className='pong'>
+			<div className='pong--header'>
 				<button className='btn--back'
-					onClick={() => <PongPage/>}>
+					onClick={() => <PongPage />}>
 					<Back />
 				</button>
 				<h1>Pong</h1>
@@ -51,10 +51,12 @@ function PongView(props: {goBack: () => void })
 			</div>
 			<p className='pong--player'> <span id="p1-name"></span> vs <span id="p2-name"></span></p>
 			<div id="score">
-				<span id="scoreP1HTML" />-<span id="scoreP2HTML" />
-            </div>
+				<span id="scoreP1HTML" style={{ fontFamily: "var(--alt-font)" }} />
+				-
+				<span id="scoreP2HTML" style={{ fontFamily: "var(--alt-font)" }} />
+			</div>
 			<canvas id="canvas" height="580" width="740" />
-        </div >
+		</div >
 	);
 }
 //<Navigate to="/play/pong" />
@@ -72,7 +74,7 @@ function viewCanvas(socket: Socket, player1: string, player2: string, type: stri
 	const PLAYER_HEIGHT = (type === "hard" ? 50 : 100);
 	const PLAYER_WIDTH = 5;
 	score_color.style.color = "white";
-    let canvas = document.querySelector("#canvas")! as HTMLCanvasElement;
+	let canvas = document.querySelector("#canvas")! as HTMLCanvasElement;
 	let begin = 0;
 	let game = {
 		player: {
@@ -103,7 +105,7 @@ function viewCanvas(socket: Socket, player1: string, player2: string, type: stri
 	socket.on('returnPlay', (data) =>
 	{
 		game = data;
-		if(begin === 0)
+		if (begin === 0)
 		{
 			scoreP1HTML.innerText = game.score.p1.toString();
 			scoreP2HTML.innerText = game.score.p2.toString();
@@ -123,16 +125,16 @@ function viewCanvas(socket: Socket, player1: string, player2: string, type: stri
 			}
 		}
 		play();
-    });
-    socket.on('move-player-draw', (data) =>
+	});
+	socket.on('move-player-draw', (data) =>
 	{
 		game = data;
 		play();
 	});
-	
+
 	function play()
 	{
-		
+
 		draw();
 		setTimeout(play, 1000 / 200);
 	}
@@ -142,7 +144,7 @@ function viewCanvas(socket: Socket, player1: string, player2: string, type: stri
 		const img = document.querySelector("#tennis")! as HTMLImageElement;
 		let context = canvas.getContext('2d')! as CanvasRenderingContext2D;
 
-		if (type === "simple" || type === "hard")
+		if (type === 'simple' || type === 'hard')
 		{
 			// Draw field
 			context.fillStyle = 'black';
@@ -154,9 +156,19 @@ function viewCanvas(socket: Socket, player1: string, player2: string, type: stri
 			context.lineTo(canvas.width / 2, canvas.height);
 			context.stroke();
 		}
+		else
+		{
+			context.drawImage(img, 0, 0, canvas.width, canvas.height);
+		}
 		function drawMovingPart()
 		{
 
+			// Draw players
+			// socket.emit('bdd[room].player2-go', game.player.y);
+			// socket.on('bdd[room].player2-go', (data)=>{
+			// 		game.computer.y = data;
+			// 		console.log(data);
+			// });
 			context.fillStyle = (type === "hard" ? 'red' : 'white');
 			context.fillRect(5, game.player.y, PLAYER_WIDTH, PLAYER_HEIGHT);
 			context.fillRect(canvas.width - 5 - PLAYER_WIDTH, game.computer.y, PLAYER_WIDTH, PLAYER_HEIGHT);

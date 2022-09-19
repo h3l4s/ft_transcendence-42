@@ -1,6 +1,7 @@
 import { IoAdapter } from "@nestjs/platform-socket.io";
 import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { Console } from "console";
+import { checkPrime } from "crypto";
 import { Server, Socket } from 'socket.io';
 //import i_map from '../../../frontend/src/interface/map.interface'
 
@@ -8,6 +9,7 @@ let player = 0;
 let clientNb_simple = 0;
 let clientNb_hard = 100;
 let clientNb_tennis = 50;
+let clientNb_challenge = 500;
 let joueur_simple = [];
 let joueur_hard = [];
 let joueur_tennis = [];
@@ -15,6 +17,7 @@ let bdd = [];
 let bdd_game = [];
 let match: string;
 let current_match = [];
+let challenge = [];
 
 function Move_player(game: any, mouseLocation: number, PLAYER_HEIGHT: number, canvas_height: number, who: number)
 {
@@ -110,7 +113,8 @@ function Angle_Direction(playerPosition: any, game: any, PLAYER_HEIGHT: number,)
 @WebSocketGateway({
 	cors: {
 		origin: '*',
-	}
+	},
+	namespace: '/pong'
 })
 
 export class Matchmaking
@@ -124,6 +128,8 @@ export class Matchmaking
 		client.on('newPlayer', (type) =>
 		{
 			player++;
+			////console.log("New client connected: "+client.id);
+			////console.log("type: "+type);
 			if (type === "simple")
 			{
 				clientNb_simple++;
@@ -158,6 +164,7 @@ export class Matchmaking
 				client.emit('serverToRoom', Math.round(clientNb_hard / 2).toString());
 				client.on('joinRoom', (clientRoom, nameP1) =>
 				{
+					////console.log(nameP1);
 					if (nameP1 !== joueur_hard[0] && joueur_hard[1] === undefined)
 					{
 						joueur_hard.push(nameP1);
@@ -184,6 +191,7 @@ export class Matchmaking
 				client.emit('serverToRoom', Math.round(clientNb_tennis / 2).toString());
 				client.on('joinRoom', (clientRoom, nameP1) =>
 				{
+					////console.log(nameP1);
 					if (nameP1 !== joueur_tennis[0] && joueur_tennis[1] === undefined)
 					{
 						joueur_tennis.push(nameP1);
@@ -232,13 +240,25 @@ export class Matchmaking
 		client.on('finish', (clientRoom, data_match) =>
 		{
 			console.table(current_match);
-			console.log("data = ", data_match);
+			//console.log("data = ", data_match);
 			let pos = current_match.indexOf(data_match.toString());
-			console.log("pos = ", pos);
+			//console.log("pos = ", pos);
 			if (pos !== -1)
 				current_match.splice(pos, 1);
 			console.table(current_match);
 			this.server.to("0").emit('finish-match', current_match);
+		});
+		client.on('challengeMatch', (clientRoom) =>
+		{
+			let count = 0;
+			challenge.push(clientRoom);
+			client.join(clientRoom);
+			for(var i = 0; i< challenge.length; i++) { 
+				if(challenge[i] === clientRoom)
+					count++;
+			}
+			if (count !== 0 && count % 2 === 0)
+				this.server.to(clientRoom).emit('startChallenge' );	
 		});
 	}
 
@@ -246,8 +266,8 @@ export class Matchmaking
 	{
 		let pos = bdd.indexOf(client.id);
 		let restart_room = bdd_game.indexOf(bdd[pos - 2]);
-		console.table(`client disconnected : ${bdd[pos - 2]}`);
-		console.log(`statu of the room : ${restart_room}`);
+		//console.table(`client disconnected : ${bdd[pos - 2]}`);
+		////console.log(`statu of the room : ${restart_room}`);
 		if (restart_room === -1)
 		{
 			if (bdd[pos - 2] < 25)
@@ -260,7 +280,7 @@ export class Matchmaking
 				clientNb_tennis--;
 				joueur_tennis.pop();
 			}
-			else
+			else if (bdd[pos - 2] < 150)
 			{
 				clientNb_hard--;
 				joueur_hard.pop();
@@ -270,4 +290,41 @@ export class Matchmaking
 		this.server.to(bdd[pos - 2]).emit('disconnection', bdd[pos - 1]);
 		player--;
 	}
+	@SubscribeMessage('kill')
+	handleKill(client: Socket, data: string)
+	{
+		//console.log("kill", data);
+		//console.log("[PONG] client disconnected", client.id);
+		console.table(bdd);
+
+		let pos = bdd.lastIndexOf(data);
+		let restart_room = bdd_game.indexOf(bdd[pos - 1]);
+
+		//console.log(`client disconnected : ${bdd[pos + 1]}`);
+
+		if (restart_room === -1)
+		{
+			if (bdd[pos - 1] < 25)
+			{
+				clientNb_simple--;
+				joueur_simple.pop();
+			}
+			else if (bdd[pos - 1] < 50)
+			{
+				clientNb_tennis--;
+				joueur_tennis.pop();
+			}
+			else if (bdd[pos - 1] < 150)
+			{
+				clientNb_hard--;
+				joueur_hard.pop();
+			}
+			return;
+		}
+		console.table(bdd);
+		console.log("pos = " +pos);
+		this.server.to(bdd[pos - 1]).emit('disconnection', bdd[pos]);
+		player--;
+	}
 }
+

@@ -88,7 +88,7 @@ export class UserController
 	@UseInterceptors(FileInterceptor('file', storage))
 	public async create(@Param('id', ParseIntPipe) id: number, @UploadedFile() file: Express.Multer.File)
 	{
-		console.log(id, file);
+		console.log("pp/:id", id, file);
 		return await this.service.create(file, id, file.filename, file.path);
 	}
 

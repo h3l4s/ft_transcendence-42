@@ -2,7 +2,7 @@ import { useState, useContext, useEffect } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 
 import './../../../style/pong.css';
-import Pong from './pong.component';
+import { Pong } from './pong.component';
 import PongView from './pong.view';
 import { io } from 'socket.io-client';
 import { ApiUrlContext } from '../../../context/apiUrl.context';
@@ -22,7 +22,7 @@ function Matches(props: { matches: string[] })
 	{ ret.push(<MatchBtn key={i} match={filteredArray[i]} />); }
 
 	return (
-		<div>
+		<div style={{ width: "100%" }}>
 			{ret}
 		</div>
 	);
@@ -37,12 +37,13 @@ function MatchBtn(props: { match: string })
 		return <Navigate to={"/view/" + props.match} />;
 	}
 	return (
-		<div>
-			<button className='card card--border card--btn' style={{ marginLeft: "4px" }} onClick={() =>
+		<div style={{ width: "100%" }}>
+			<button className='card card--border card--btn' style={{ margin: "0.5rem" }} onClick={() =>
 			{
+				console.log("BECIH");
 				setGoToView(true);
 			}}>
-				<span className='span--card--user truncate'>{props.match}</span>
+				<span className='match--text truncate' style={{ width: "100%" }}>{props.match}</span>
 			</button>
 		</div >
 	);
@@ -54,7 +55,8 @@ function PongPage()
 	const [map, setMap] = useState<'simple' | 'hard' | 'tennis' | null>(null);
 	const [gameLive, setGameLive] = useState<string[]>([]);
 
-	const socket = io(apiUrl);
+	const socket = io(apiUrl + '/pong');
+	let i = 0;
 
 	useEffect(() =>
 	{
@@ -78,7 +80,7 @@ function PongPage()
 		// });
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-
+	// might not store the type of map
 	return (
 		<div className='pong'>
 			{!map ? (
@@ -98,7 +100,7 @@ function PongPage()
 								</button>
 							</div>
 						</div>
-						<div className=/*'card card--border*/'choice2' /* should probably be a card */>
+						<div className='choice2'>
 							<p id="live-game-msg">Live Game</p>
 							<Matches matches={gameLive} />
 						</div>

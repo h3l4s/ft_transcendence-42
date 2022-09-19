@@ -17,7 +17,7 @@ async function bootstrap()
 
 	await app.listen(port, () =>
 	{
-		console.log('[LISTENING] on port', port);
+		console.log('[BACK] listening on port', port);
 	});
 }
 

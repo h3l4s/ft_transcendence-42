@@ -9,12 +9,6 @@ import { ReactComponent as Profile } from '../icon/contact-svgrepo-com.svg'
 
 function NavBar()
 {
-	const path = window.location.pathname.split('/')[1];
-	console.log(path);
-
-	if (path === 'pong' || path === 'challenge')
-		return (<div />);
-
 	return (
 		<nav className='nav'>
 			<Link to='/'><Home /></Link>

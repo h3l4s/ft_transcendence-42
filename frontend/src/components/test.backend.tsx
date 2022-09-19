@@ -12,8 +12,8 @@ function TestBackend()
 	const [isLoaded, setIsLoaded] = useState(false);
 	const [msg, setMsg] = useState("");
 
-	console.log("window.location.hostname: " + window.location.hostname);
-	console.log("apiUrl:", apiUrl);
+	/*console.log("window.location.hostname: " + window.location.hostname);
+	console.log("apiUrl:", apiUrl);*/
 
 	// Note: the empty deps array [] means
 	// this useEffect will run once
