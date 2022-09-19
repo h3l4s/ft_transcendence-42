@@ -143,7 +143,8 @@ function LaunchGame(props: {
 	return (<div />);
 }
 
-window.addEventListener('popstate', () => {
+window.addEventListener('popstate', () =>
+{
 	console.log("AAAAAAAAAAAAAAAAAAAAaaaa");
 	const socket = io('http://' + window.location.hostname + ':3000/pong');
 	const path = window.location.pathname.split('/')[0];
@@ -304,44 +305,15 @@ function handleCanvas(
 			socket.emit('finish', bdd[room].clientRoom, match);
 			statusSocket.emit('updateStatus', { id: id, status: 'online' });
 			canvas.style.display = "none";
-			if (game.score.p1 >= 5)
-			{
-				if (bdd[room].player1 === username)
-				{
-					result.innerHTML = "you won !"
-					result.style.color = "black";
-					result.style.fontSize = "6rem";
-					result.style.fontFamily = "minitel";
-					result.style.paddingTop = "12rem";
-				}
-				else
-				{
-					result.innerHTML = "you lose !"
-					result.style.color = "black";
-					result.style.fontSize = "6rem";
-					result.style.fontFamily = "minitel";
-					result.style.paddingTop = "12rem";
-				}
-			}
-			if (game.score.p2 >= 5)
-			{
-				if (bdd[room].player2 === username)
-				{
-					result.innerHTML = "you won !"
-					result.style.color = "black";
-					result.style.fontSize = "6rem";
-					result.style.fontFamily = "minitel";
-					result.style.paddingTop = "12rem";
-				}
-				else
-				{
-					result.innerHTML = "you lose !"
-					result.style.color = "black";
-					result.style.fontSize = "6rem";
-					result.style.fontFamily = "minitel";
-					result.style.paddingTop = "12rem";
-				}
-			}
+			if ((game.score.p1 > game.score.p2 && bdd[room].player1 === username)
+				|| (game.score.p2 > game.score.p1 && bdd[room].player2 === username))
+				result.innerHTML = "you won !"
+			else
+				result.innerHTML = "you lost !"
+			result.style.color = "black";
+			result.style.fontSize = "6rem";
+			result.style.fontFamily = "minitel";
+			result.style.paddingTop = "12rem";
 			postResults(apiUrl, username, game.score.p1, game.score.p2, bdd[room].player1, bdd[room].player2);
 			bdd[room].clientRoom = -1;
 			return;
