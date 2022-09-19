@@ -404,8 +404,8 @@ function handleCanvas(
 			scoreP2 = 11;
 			game.score.p2 = 11;
 			deconnection1 = true;
-			console.log("score 2= " +game.score.p2)
-			console.log("score= " +game.score.p1)
+			console.log("score 2= " + game.score.p2)
+			console.log("score= " + game.score.p1)
 		}
 		else
 		{
@@ -414,8 +414,8 @@ function handleCanvas(
 			scoreP1 = 11;
 			game.score.p1 = 11;
 			deconnection2 = true;
-			console.log("score 2= " +game.score.p2)
-			console.log("score= " +game.score.p1)
+			console.log("score 2= " + game.score.p2)
+			console.log("score= " + game.score.p1)
 		}
 	});
 }
@@ -423,19 +423,19 @@ function handleCanvas(
 function postResults(apiUrl: string, username: string, scoreP1: number, scoreP2: number, player1: string, player2: string)
 {
 	// only the winner will post the match to the api
-	console.log("end of match",username, player1, scoreP1, player2, scoreP2);
+	console.log("end of match", username, player1, scoreP1, player2, scoreP2);
 	if ((scoreP1 > scoreP2 && player1 === username) || (scoreP2 > scoreP1 && player2 === username))
 	{
-		
+
 		const match_stats = {
-			winner: player1,
-			loser: player2,
-			scoreWinner: scoreP1,
-			scoreLoser: scoreP2
+			p1: player1,
+			p2: player2,
+			scoreP1: scoreP1,
+			scoreP2: scoreP2
 		}
 		axios.post(apiUrl + "/user/match", match_stats);
 		axios.post(apiUrl + "/pong/match", match_stats);
 	}
 }
 
-export {Pong, postResults};
+export { Pong, postResults };
