@@ -58,7 +58,7 @@ function ChallengePage()
 	return (
 		<div className='pong pong--compo'>
 			<div className='pong--header'>
-				<h1>Pong</h1>
+				<p className='pong--player'> <span id="p1-name">{senderUser.reqUser.name}</span> vs <span id="p2-name">{receiverUser.reqUser.name}</span></p>
 			</div>
 			<script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
 			<div style={{ height: "3rem" }}>
@@ -70,9 +70,11 @@ function ChallengePage()
 						<br />
 					</div>
 				}
-				<p id="score" style={{ visibility: (inGame ? "visible" : "hidden") }}>
-					<span id="scoreP1HTML" />-<span id="scoreP2HTML" />
-				</p>
+				<div id="score">
+				<span id="scoreP1HTML" style={{ fontFamily: "var(--alt-font)" }} />
+				-
+				<span id="scoreP2HTML" style={{ fontFamily: "var(--alt-font)" }} />
+				</div>
 			</div>
 			<h6 id="result"></h6>
 			<canvas id="canvas" height="580" width="740" />

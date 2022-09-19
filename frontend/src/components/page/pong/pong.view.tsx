@@ -144,7 +144,7 @@ function viewCanvas(socket: Socket, player1: string, player2: string, type: stri
 		const img = document.querySelector("#tennis")! as HTMLImageElement;
 		let context = canvas.getContext('2d')! as CanvasRenderingContext2D;
 
-		if (type === "simple" || type === "hard")
+		if (type === 'simple' || type === 'hard')
 		{
 			// Draw field
 			context.fillStyle = 'black';
@@ -155,6 +155,10 @@ function viewCanvas(socket: Socket, player1: string, player2: string, type: stri
 			context.moveTo(canvas.width / 2, 0);
 			context.lineTo(canvas.width / 2, canvas.height);
 			context.stroke();
+		}
+		else
+		{
+			context.drawImage(img, 0, 0, canvas.width, canvas.height);
 		}
 		function drawMovingPart()
 		{

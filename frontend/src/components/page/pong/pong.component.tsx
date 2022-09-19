@@ -308,52 +308,6 @@ function handleCanvas(
 			socket.emit('finish', bdd[room].clientRoom, match);
 			statusSocket.emit('updateStatus', { id: id, status: 'online' });
 			canvas.style.display = "none";
-<<<<<<< HEAD
-			if (game.score.p1 >= 5)
-			{
-				if (bdd[room].player1 === username)
-				{
-					result.innerHTML = "you won !"
-					result.style.color = "black";
-					result.style.fontSize = "6rem";
-					result.style.fontFamily = "minitel";
-					result.style.paddingTop = "12rem";
-				}
-				else
-				{
-					result.innerHTML = "you lose !"
-					result.style.color = "black";
-					result.style.fontSize = "6rem";
-					result.style.fontFamily = "minitel";
-					result.style.paddingTop = "12rem";
-				}
-			}
-			if (game.score.p2 >= 5)
-			{
-				if (bdd[room].player2 === username)
-				{
-					result.innerHTML = "you won !"
-					result.style.color = "black";
-					result.style.fontSize = "6rem";
-					result.style.fontFamily = "minitel";
-					result.style.paddingTop = "12rem";
-				}
-				else
-				{
-					result.innerHTML = "you lose !"
-					result.style.color = "black";
-					result.style.fontSize = "6rem";
-					result.style.fontFamily = "minitel";
-					result.style.paddingTop = "12rem";
-				}
-			}
-			if (deconnection1 === true)
-				game.score.p2 = 11;
-			if (deconnection2 === true)
-				game.score.p1 = 11;	
-			console.log("game score2 = " +game.score.p2)
-			console.log("game score = " +game.score.p1)
-=======
 			if ((game.score.p1 > game.score.p2 && bdd[room].player1 === username)
 				|| (game.score.p2 > game.score.p1 && bdd[room].player2 === username))
 				result.innerHTML = "you won !"
@@ -363,7 +317,6 @@ function handleCanvas(
 			result.style.fontSize = "6rem";
 			result.style.fontFamily = "minitel";
 			result.style.paddingTop = "12rem";
->>>>>>> 8e2582a6cd3636aeaf460fa1904862e141402fbe
 			postResults(apiUrl, username, game.score.p1, game.score.p2, bdd[room].player1, bdd[room].player2);
 			bdd[room].clientRoom = -1;
 			return;
