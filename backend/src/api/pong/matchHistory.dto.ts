@@ -4,17 +4,17 @@ export class AddMatchDto
 {
 	@IsString()
 	@IsNotEmpty()
-	public winner: string;
+	public P1: string;
 
 	@IsString()
 	@IsNotEmpty()
-	public loser: string;
+	public P2: string;
 
 	@IsNumber()
 	@IsNotEmpty()
-	public scoreWinner: number;
+	public scoreP1: number;
 
 	@IsNumber()
 	@IsNotEmpty()
-	public scoreLoser: number;
+	public scoreP2: number;
 }
