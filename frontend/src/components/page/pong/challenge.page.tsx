@@ -58,7 +58,7 @@ function ChallengePage()
 	return (
 		<div className='pong pong--compo'>
 			<div className='pong--header'>
-				<p className='pong--player'> <span id="p1-name">{senderUser.reqUser.name}</span> vs <span id="p2-name">{receiverUser.reqUser.name}</span></p>
+				<p className='pong--player' style={{ color: "white"}} > <span id="p1-name">{senderUser.reqUser.name}</span> vs <span id="p2-name">{receiverUser.reqUser.name}</span></p>
 			</div>
 			<script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
 			<div style={{ height: "3rem" }}>
@@ -260,18 +260,16 @@ function handleCanvas(
 			//socket.emit('finish', clientRoom);
 			statusSocket.emit('updateStatus', { id: id, status: 'online' });
 			canvas.style.display = "none";
-			if (game.score.p1 >= 5 || game.score.p2 >= 5)
-			{
-				if ((game.score.p1 >= 5 && player1 === username) || (game.score.p2 >= 5 && player2 === username))
-					result.innerHTML = "you won !"
-				else
-					result.innerHTML = "you lose !"
-				result.style.color = "black";
-				result.style.fontSize = "6rem";
-				result.style.fontFamily = "minitel";
-				result.style.paddingTop = "12rem";
-			}
-			postResults(apiUrl, username, game.score.p1, game.score.p2, player1, player2);
+			if ((game.score.p1 > game.score.p2 && player1 === username)
+				|| (game.score.p2 > game.score.p1 && player2 === username))
+				result.innerHTML = "you won !"
+			else
+				result.innerHTML = "you lost !"
+			result.style.color = "black";
+			result.style.fontSize = "6rem";
+			result.style.fontFamily = "minitel";
+			result.style.paddingTop = "12rem";
+			
 			clientRoom = '-1';
 			return;
 		}
