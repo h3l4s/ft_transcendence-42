@@ -128,8 +128,8 @@ export class Matchmaking
 		client.on('newPlayer', (type) =>
 		{
 			player++;
-			//console.log("New client connected: "+client.id);
-			//console.log("type: "+type);
+			////console.log("New client connected: "+client.id);
+			////console.log("type: "+type);
 			if (type === "simple")
 			{
 				clientNb_simple++;
@@ -164,7 +164,7 @@ export class Matchmaking
 				client.emit('serverToRoom', Math.round(clientNb_hard / 2).toString());
 				client.on('joinRoom', (clientRoom, nameP1) =>
 				{
-					//console.log(nameP1);
+					////console.log(nameP1);
 					if (nameP1 !== joueur_hard[0] && joueur_hard[1] === undefined)
 					{
 						joueur_hard.push(nameP1);
@@ -191,7 +191,7 @@ export class Matchmaking
 				client.emit('serverToRoom', Math.round(clientNb_tennis / 2).toString());
 				client.on('joinRoom', (clientRoom, nameP1) =>
 				{
-					//console.log(nameP1);
+					////console.log(nameP1);
 					if (nameP1 !== joueur_tennis[0] && joueur_tennis[1] === undefined)
 					{
 						joueur_tennis.push(nameP1);
@@ -240,9 +240,9 @@ export class Matchmaking
 		client.on('finish', (clientRoom, data_match) =>
 		{
 			console.table(current_match);
-			console.log("data = ", data_match);
+			//console.log("data = ", data_match);
 			let pos = current_match.indexOf(data_match.toString());
-			console.log("pos = ", pos);
+			//console.log("pos = ", pos);
 			if (pos !== -1)
 				current_match.splice(pos, 1);
 			console.table(current_match);
@@ -267,7 +267,7 @@ export class Matchmaking
 		let pos = bdd.indexOf(client.id);
 		let restart_room = bdd_game.indexOf(bdd[pos - 2]);
 		//console.table(`client disconnected : ${bdd[pos - 2]}`);
-		//console.log(`statu of the room : ${restart_room}`);
+		////console.log(`statu of the room : ${restart_room}`);
 		if (restart_room === -1)
 		{
 			if (bdd[pos - 2] < 25)
@@ -293,14 +293,14 @@ export class Matchmaking
 	@SubscribeMessage('kill')
 	handleKill(client: Socket, data: string)
 	{
-		console.log("kill", data);
-		console.log("[PONG] client disconnected", client.id);
+		//console.log("kill", data);
+		//console.log("[PONG] client disconnected", client.id);
 		console.table(bdd);
 
 		let pos = bdd.lastIndexOf(data);
 		let restart_room = bdd_game.indexOf(bdd[pos - 1]);
 
-		console.log(`client disconnected : ${bdd[pos + 1]}`);
+		//console.log(`client disconnected : ${bdd[pos + 1]}`);
 
 		if (restart_room === -1)
 		{
@@ -321,8 +321,9 @@ export class Matchmaking
 			}
 			return;
 		}
-
-		this.server.to(bdd[pos - 1]).emit('disconnection', bdd[pos - 1]);
+		console.table(bdd);
+		console.log("pos = " +pos);
+		this.server.to(bdd[pos - 1]).emit('disconnection', bdd[pos]);
 		player--;
 	}
 }

@@ -9,6 +9,7 @@ import { useReqUser } from "../../../request/user.request";
 import Error from "../../request_answer_component/error.component";
 import Loading from "../../request_answer_component/loading.component";
 import { io, Socket } from 'socket.io-client';
+import {postResults} from './pong.component';
 
 function ChallengePage()
 {
@@ -268,7 +269,7 @@ function handleCanvas(
 				result.style.fontFamily = "minitel";
 				result.style.paddingTop = "12rem";
 			}
-			//postResults(apiUrl, username, game.score.p1, game.score.p2, player1, player2);
+			postResults(apiUrl, username, game.score.p1, game.score.p2, player1, player2);
 			clientRoom = '-1';
 			return;
 		}
@@ -339,23 +340,6 @@ function handleCanvas(
 		}
 	});
 }
-
-// function postResults(apiUrl: string, username: string, scoreP1: number, scoreP2: number, player1: string, player2: string)
-// {
-// 	// only the winner will post the match to the api
-// 	if ((scoreP1 > scoreP2 && player1 === username) || (scoreP2 > scoreP1 && player2 === username))
-// 	{
-// 		console.log("end of match", player1, scoreP1, player2, scoreP2);
-// 		const match_stats = {
-// 			winner: player1,
-// 			loser: player2,
-// 			scoreWinner: scoreP1,
-// 			scoreLoser: scoreP2
-// 		}
-// 		axios.post(apiUrl + "/user/match", match_stats);
-// 		axios.post(apiUrl + "/pong/match", match_stats);
-// 	}
-// }
 
 
 export default ChallengePage;
