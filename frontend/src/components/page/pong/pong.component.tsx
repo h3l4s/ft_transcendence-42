@@ -419,10 +419,10 @@ function postResults(apiUrl: string, username: string, scoreP1: number, scoreP2:
 	{
 		console.log("end of match", player1, scoreP1, player2, scoreP2);
 		const match_stats = {
-			winner: player1,
-			loser: player2,
-			scoreWinner: scoreP1,
-			scoreLoser: scoreP2
+			p1: player1,
+			p2: player2,
+			scoreP1: scoreP1,
+			scoreP2: scoreP2
 		}
 		axios.post(apiUrl + "/user/match", match_stats);
 		axios.post(apiUrl + "/pong/match", match_stats);

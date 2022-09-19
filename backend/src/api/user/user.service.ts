@@ -176,8 +176,28 @@ export class UserService
 
 	public async updateUsersAfterGame(data: UpdateUsersAfterGameDto)
 	{
-		const winner: User = await this.repository.findOne({ where: { name: data.winner } });
-		const loser: User = await this.repository.findOne({ where: { name: data.loser } });
+		let winnerName: string;
+		let loserName: string;
+		let winnerScore: number;
+		let loserScore: number;
+
+		if (data.scoreP1 > data.scoreP2)
+		{
+			winnerName = data.P1;
+			loserName = data.P2;
+			winnerScore = data.scoreP1;
+			loserScore = data.scoreP2;
+		}
+		else
+		{
+			winnerName = data.P2;
+			loserName = data.P1;
+			winnerScore = data.scoreP2;
+			loserScore = data.scoreP1;
+		}
+
+		const winner: User = await this.repository.findOne({ where: { name: winnerName } });
+		const loser: User = await this.repository.findOne({ where: { name: loserName } });
 
 		winner.win++;
 		loser.lose++;
@@ -185,8 +205,8 @@ export class UserService
 		const K = 42;	// could change it depending on elo:
 		// (higher elo, lower number. But usualy only applies over 2000 elo)
 
-		const Sw = data.scoreWinner / (data.scoreWinner + data.scoreLoser);
-		const Sl = data.scoreLoser / (data.scoreWinner + data.scoreLoser);
+		const Sw = winnerScore / (winnerScore + loserScore);
+		const Sl = loserScore / (winnerScore + loserScore);
 		const Ew = 1 / (1 + Math.pow(10, ((loser.elo - winner.elo) / 400)));
 		const El = 1 / (1 + Math.pow(10, ((winner.elo - loser.elo) / 400)));
 
@@ -195,8 +215,8 @@ export class UserService
 
 		if (winner.elo > 942)
 		{
-			winner.xp += data.scoreWinner / 2 * ((winner.elo - 942) / 142) + 1.42;
-			loser.xp += data.scoreLoser / 2 * ((loser.elo - 942) / 142);
+			winner.xp += winnerScore / 2 * ((winner.elo - 942) / 142) + 1.42;
+			loser.xp += loserScore / 2 * ((loser.elo - 942) / 142);
 		}
 		else
 			winner.xp += 1.42;

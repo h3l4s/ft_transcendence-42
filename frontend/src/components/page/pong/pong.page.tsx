@@ -22,7 +22,7 @@ function Matches(props: { matches: string[] })
 	{ ret.push(<MatchBtn key={i} match={filteredArray[i]} />); }
 
 	return (
-		<div>
+		<div style={{ width: "100%" }}>
 			{ret}
 		</div>
 	);
@@ -37,8 +37,8 @@ function MatchBtn(props: { match: string })
 		return <Navigate to={"/view/" + props.match} />;
 	}
 	return (
-		<div>
-			<button className='card card--border card--btn' style={{ marginLeft: "4px" }} onClick={() =>
+		<div style={{ width: "100%" }}>
+			<button className='card card--border card--btn' style={{ margin: "0.5rem 4rem" }} onClick={() =>
 			{
 				console.log("BECIH");
 				setGoToView(true);
@@ -100,7 +100,7 @@ function PongPage()
 								</button>
 							</div>
 						</div>
-						<div className=/*'card card--border*/'choice2' /* should probably be a card */>
+						<div className='choice2'>
 							<p id="live-game-msg">Live Game</p>
 							<Matches matches={gameLive} />
 						</div>
