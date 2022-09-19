@@ -15,7 +15,8 @@ function SumbitAddChan(props: {
 	name: string,
 	type: 'public' | 'private' | 'protected',
 	pwd: string,
-	callback: (chan: i_chan) => void
+	callback: (chan: i_chan) => void,
+	requestCallback: () => void
 })
 {
 	const { apiUrl } = useContext(ApiUrlContext);
@@ -30,7 +31,10 @@ function SumbitAddChan(props: {
 	useEffect(() =>
 	{
 		if (!loading && !error)
+		{
 			props.callback(data);
+			props.requestCallback();
+		}
 	}, [data, loading, error, props]);
 
 	if (loading)
@@ -41,7 +45,7 @@ function SumbitAddChan(props: {
 		return (<div />);
 }
 
-function AddChanModal(props: { user_id: number, callback: (chan: i_chan) => void })
+function AddChanModal(props: { user_id: number, callback: (chan: i_chan) => void, requestCallback: () => void })
 {
 	const [title, setTitle] = useState("");
 	const [type, setType] = useState<'public' | 'private' | 'protected'>('public');
@@ -76,7 +80,8 @@ function AddChanModal(props: { user_id: number, callback: (chan: i_chan) => void
 				}
 			</div>
 			<div style={{ position: "absolute", top: "-4rem" }}>
-				{sumbit && <SumbitAddChan user_id={props.user_id} name={title} type={type} pwd={pwd} callback={props.callback} />}
+				{sumbit && <SumbitAddChan user_id={props.user_id} name={title} type={type} pwd={pwd}
+					callback={props.callback} requestCallback={props.requestCallback} />}
 			</div>
 			<div style={{ width: "calc(100% - 6rem)" }}>
 				<input className='form--submit' type='submit' value='✔' />

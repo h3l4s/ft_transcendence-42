@@ -1,5 +1,4 @@
 import axios from "axios";
-import { Socket } from "socket.io-client";
 
 import { ApiUrlContext } from "../../context/apiUrl.context";
 import { useContext } from "react";
@@ -31,7 +30,8 @@ function OptionModal(props: {
 		setShowOwnerPwd: (value: React.SetStateAction<boolean>) => void,
 	}
 	onClose: () => void
-	callback: (newId: number, oldId: number) => void
+	callback: (newId: number, oldId: number) => void,
+	requestCallback: () => void
 })
 {
 	const { apiUrl } = useContext(ApiUrlContext);
@@ -45,6 +45,7 @@ function OptionModal(props: {
 
 			props.onClose();
 			props.callback(1, props.chan.id);
+			props.requestCallback();
 		}
 		).catch(err => console.log(err));
 	};

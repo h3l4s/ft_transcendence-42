@@ -1,14 +1,10 @@
-import { useState, useContext, useEffect } from 'react'
-//import { Link } from 'react-router-dom'
+import { useContext, useEffect } from 'react';
 
 import './../../../style/pong.css';
 import { io, Socket } from 'socket.io-client';
 import { ApiUrlContext } from '../../../context/apiUrl.context';
-import { ReactComponent as Back } from '../../../icon/left-svgrepo-com.svg';
-import { useLocation } from "react-router-dom"
-import PongPage from './pong.page';
+import { useLocation } from 'react-router-dom';
 import tennis from './tennis_pong.jpg';
-import { exit } from 'process';
 
 function goodPath(path: string)
 {
@@ -126,13 +122,13 @@ function viewCanvas(socket: Socket, player1: string, player2: string, type: stri
 		draw();
 	});
 
-	
+
 
 	function draw()
 	{
 		const path = window.location.pathname.split('/')[1];
-			if (path !== "view")
-				socket.close();
+		if (path !== "view")
+			socket.close();
 		const img = document.querySelector("#tennis")! as HTMLImageElement;
 		let context = canvas.getContext('2d')! as CanvasRenderingContext2D;
 		if (type === 'simple' || type === 'hard')
@@ -151,7 +147,7 @@ function viewCanvas(socket: Socket, player1: string, player2: string, type: stri
 		{
 			if (path === "view")
 				context.drawImage(img, 0, 0, canvas.width, canvas.height);
-	
+
 		}
 		function drawMovingPart()
 		{

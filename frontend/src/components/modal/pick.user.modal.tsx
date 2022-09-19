@@ -1,7 +1,6 @@
 import { Navigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import axios, { AxiosResponse } from "axios";
-import { Socket } from "socket.io-client";
 
 import { ApiUrlContext } from "../../context/apiUrl.context";
 import { AuthContext } from "../../context/auth.context";
@@ -13,12 +12,12 @@ import { ReactComponent as Undo } from '../../icon/undo-svgrepo-com.svg'
 import { ReactComponent as Back } from '../../icon/left-svgrepo-com.svg'
 
 function PickUser(props: {
-	socket: Socket,
 	c_user: i_user, // clicked
 	chan: i_chan,
 	type: 'add' | 'challenge' | 'mute' | 'admin add' | 'admin ban' | 'admin mute',
 	onClose: () => void,
-	callback: (newId: number, oldId: number) => void
+	callback: (newId: number, oldId: number) => void,
+	requestCallback: () => void
 })
 {
 	const { apiUrl } = useContext(ApiUrlContext);
@@ -82,7 +81,7 @@ function PickUser(props: {
 			props.onClose();
 			props.callback(props.chan.id, props.chan.id);
 		}
-		props.socket.emit('requestUpdate');
+		props.requestCallback();
 	}
 
 	return (
@@ -106,12 +105,12 @@ function PickUser(props: {
 }
 
 function PickUsers(props: {
-	socket: Socket,
 	users: i_user[],
 	chan: i_chan,
 	type: 'add' | 'challenge' | 'mute' | 'admin add' | 'admin ban' | 'admin mute',
 	onClose: () => void,
-	callback: (newId: number, oldId: number) => void
+	callback: (newId: number, oldId: number) => void,
+	requestCallback: () => void
 }): JSX.Element
 {
 	const { user } = useContext(AuthContext);
@@ -123,20 +122,20 @@ function PickUsers(props: {
 
 	for (let i = 0; i < props.users.length; i++)
 		if (props.users[i].id !== user.id)
-			ret.push(<PickUser key={i} socket={props.socket} c_user={props.users[i]} chan={props.chan} type={props.type}
-				onClose={props.onClose} callback={props.callback} />);
+			ret.push(<PickUser key={i} c_user={props.users[i]} chan={props.chan} type={props.type}
+				onClose={props.onClose} callback={props.callback} requestCallback={props.requestCallback} />);
 
 	return (<div>{ret}</div>);
 }
 
 function PickUserModal(props: {
-	socket: Socket,
 	users: i_user[],
 	chan: i_chan,
 	type: 'add' | 'challenge' | 'mute' | 'admin add' | 'admin ban' | 'admin mute',
 	goBack: () => void,
 	onClose: () => void,
-	callback: (newId: number, oldId: number) => void
+	callback: (newId: number, oldId: number) => void,
+	requestCallback: () => void
 })
 {
 	return (
@@ -146,8 +145,8 @@ function PickUserModal(props: {
 				<span style={{ fontSize: "1.5rem", fontWeight: "bolder" }}>{props.type}</span>
 			</div>
 			<div style={{ height: "80%", marginTop: "1rem", overflowY: "scroll" }}>
-				<PickUsers socket={props.socket} users={props.users} chan={props.chan} type={props.type}
-					onClose={props.onClose} callback={props.callback} />
+				<PickUsers users={props.users} chan={props.chan} type={props.type}
+					onClose={props.onClose} callback={props.callback} requestCallback={props.requestCallback} />
 			</div>
 
 		</div>

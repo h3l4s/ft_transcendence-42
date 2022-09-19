@@ -57,7 +57,14 @@ function get_direct_chan_name(usersId: number[], users: i_user[])
 	return (users[i2].name + " ⇋ " + users[i1].name);
 }
 
-function Chans(props: { socket: Socket, chans: i_chan[], users: i_user[], to_chan: number, callback: (newId: number, oldId: number) => void })
+function Chans(props: {
+	socket: Socket,
+	chans: i_chan[],
+	users: i_user[],
+	to_chan: number,
+	callback: (newId: number, oldId: number) => void,
+	requestCallback: () => void
+})
 {
 	const { user } = useContext(AuthContext);
 	const [search, setSearch] = useState("");
@@ -151,7 +158,7 @@ function Chans(props: { socket: Socket, chans: i_chan[], users: i_user[], to_cha
 				{selectedChan && user && <Chat
 					socket={props.socket} chan={selectedChan}
 					all_users={props.users} users={users_in_chan} user={user} is_admin={is_user_admin} is_owner={is_user_owner}
-					callback={props.callback} />}
+					callback={props.callback} requestCallback={props.requestCallback} />}
 			</div>
 
 			<div className='split split--chan split--right' style={{ height: "calc(100vh - var(--nav-h)", overflowY: "scroll" }}>
@@ -159,7 +166,7 @@ function Chans(props: { socket: Socket, chans: i_chan[], users: i_user[], to_cha
 			</div >
 
 			{(showAddChan || showPromptPwd) && <Backdrop onClick={() => { setShowAddChan(false); setShowPomptPwd(false); }} />}
-			{showAddChan && user && user.id && <AddChanModal user_id={user.id} callback={endOfForm} />}
+			{showAddChan && user && user.id && <AddChanModal user_id={user.id} callback={endOfForm} requestCallback={props.requestCallback} />}
 			{showPromptPwd && <PromptPwdModal chan_id={chanPwd.id} user_id={(user ? user.id : undefined)} callback={endOfPromptPwd} />}
 		</div >
 	);

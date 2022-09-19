@@ -18,8 +18,12 @@ import Error from '../../request_answer_component/error.component';
 import i_user from '../../../interface/user.interface';
 
 function ChanReq(props: {
-	socket: Socket, chans: i_chan[] | null, users: i_user[] | null,
-	to_chan: number, callback: (newId: number, oldId: number) => void
+	socket: Socket,
+	chans: i_chan[] | null,
+	users: i_user[] | null,
+	to_chan: number,
+	callback: (newId: number, oldId: number) => void,
+	requestCallback: () => void
 })
 {
 	const reqChans = useReqChans();
@@ -42,7 +46,9 @@ function ChanReq(props: {
 						<Chans socket={props.socket}
 							chans={(props.chans ? props.chans : reqChans.reqChans)}
 							users={(props.users ? props.users : reqUsers.reqUsers)}
-							to_chan={props.to_chan} callback={props.callback} />
+							to_chan={props.to_chan}
+							callback={props.callback}
+							requestCallback={props.requestCallback} />
 					</div>
 				)}
 			</div>
@@ -71,6 +77,7 @@ function ChanPage()
 			console.log("update requested");
 			callback(selectedChan, selectedChan);
 		});
+		window.addEventListener("focus", () => callback(selectedChan, selectedChan));
 		socket.emit('newConnection');
 		socket.emit('joinRoom', selectedChan);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -104,7 +111,13 @@ function ChanPage()
 		}).catch(err => console.log(err));
 	}
 
-	return (<ChanReq socket={socket} chans={chans} users={users} to_chan={selectedChan} callback={callback} />);
+	function requestCallback()
+	{
+		socket.emit('requestUpdate');
+	}
+
+	return (<ChanReq socket={socket} chans={chans} users={users} to_chan={selectedChan}
+		callback={callback} requestCallback={requestCallback} />);
 }
 
 export default ChanPage;

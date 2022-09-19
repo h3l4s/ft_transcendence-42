@@ -1,9 +1,7 @@
 import { useState, useContext, useEffect } from 'react'
-import { Link, Navigate } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 
 import './../../../style/pong.css';
-import { Pong } from './pong.component';
-import PongView from './pong.view';
 import { io } from 'socket.io-client';
 import { ApiUrlContext } from '../../../context/apiUrl.context';
 
@@ -13,7 +11,7 @@ function Matches(props: { matches: string[] })
 
 	const filteredArray = props.matches.filter(function (ele, pos)
 	{
-		return props.matches.indexOf(ele) == pos;
+		return props.matches.indexOf(ele) === pos;
 	})
 
 
@@ -56,7 +54,6 @@ function PongPage()
 	const [gameLive, setGameLive] = useState<string[]>([]);
 
 	const socket = io(apiUrl + '/pong');
-	let i = 0;
 
 	useEffect(() =>
 	{

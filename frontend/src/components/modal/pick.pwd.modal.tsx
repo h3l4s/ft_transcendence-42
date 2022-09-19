@@ -7,7 +7,13 @@ import i_chan from '../../interface/chan.interface';
 
 import { ReactComponent as Back } from '../../icon/left-svgrepo-com.svg'
 
-function PickPwdModal(props: { chan: i_chan, goBack: () => void, onClose: () => void, callback: (newId: number, oldId: number) => void })
+function PickPwdModal(props: {
+	chan: i_chan,
+	goBack: () => void,
+	onClose: () => void,
+	callback: (newId: number, oldId: number) => void,
+	requestCallback: () => void
+})
 {
 	const { apiUrl } = useContext(ApiUrlContext);
 	const [pwd, setPwd] = useState("");
@@ -16,7 +22,10 @@ function PickPwdModal(props: { chan: i_chan, goBack: () => void, onClose: () => 
 	function callback()
 	{
 		if (props.chan.id)
+		{
 			props.callback(props.chan.id, props.chan.id);
+			props.requestCallback();
+		}
 		else
 			console.warn("can't find chan id");
 		setChoose(true);

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { Navigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { io, Socket } from 'socket.io-client';
 import { useNavigate } from "react-router-dom";
@@ -9,20 +9,15 @@ import { ApiUrlContext } from '../../../context/apiUrl.context';
 import { AuthContext } from '../../../context/auth.context';
 import { StatusContext } from '../../../context/status.context';
 
-import i_map from '../../../interface/map.interface'
-
-import { ReactComponent as Back } from '../../../icon/left-svgrepo-com.svg'
 import tennis from './tennis_pong.jpg'
 
 import Error from '../../request_answer_component/error.component';
-import { useReqUser } from '../../../request/user.request';
 
 function Pong()
 {
 	const { apiUrl } = useContext(ApiUrlContext);
 	const { user } = useContext(AuthContext);
 	const statusSocket = useContext(StatusContext);
-	const { reqUser, loading, error } = useReqUser(2);
 	const [inGame, setInGame] = useState(false);
 	const [inPlay, setInPlay] = useState(false);
 	const [gameLaunch, setGameLaunch] = useState(0);
@@ -43,10 +38,8 @@ function Pong()
 		return (<Error msg="failed to get connected user" />);
 	else if (!type || (type !== 'simple' && type !== 'hard' && type !== 'tennis'))
 		return (<Error msg="failed to get type" />);
-	else if (error)
-		return (<Error msg={error.message} />);
 
-	const p2 = (loading ? "..." : reqUser.name);
+	//const p2 = (loading ? "..." : reqUser.name);
 
 	let saloon = {
 		player1: "",
@@ -65,9 +58,9 @@ function Pong()
 	return (
 		<div className='pong pong--compo'>
 			<p className='pong--player'> <span id="p1-name">{user.name}</span> vs <span id="p2-name">...</span></p>
-			<button className='pong--btn--home' onClick={() => {navigate("/play"); socket.emit('kill', user.name);}}>
-							<span id="goBack">home</span>
-						</button>
+			<button className='pong--btn--home' onClick={() => { navigate("/play"); socket.emit('kill', user.name); }}>
+				<span id="goBack">home</span>
+			</button>
 			<div style={{ height: "3rem" }}>
 				{!inGame &&
 					<div style={{ display: "flex", justifyContent: "center" }}>
@@ -83,7 +76,7 @@ function Pong()
 				</p>
 			</div>
 			{type === 'tennis' && <img id='tennis' src={tennis} alt='tennis' style={{ display: "none" }} />}
-			<h6 id="result"></h6>
+			<h6 id="result" style={{ visibility: "hidden" }}> </h6>
 			<canvas id="canvas" height="580" width="740" />
 			{inPlay && <LaunchGame type={type} nameP1={user.name} saloon={saloon} incGameLaunch={() => { setGameLaunch(gameLaunch + 1); return gameLaunch; }} setInGame={setInGame} socket={socket} />}
 		</div >
@@ -172,8 +165,6 @@ function handleCanvas(
 	canvas.style.margin = "auto";
 	const PLAYER_HEIGHT = (type === 'hard' ? 50 : 100);
 	const PLAYER_WIDTH = 5;
-	const win = document.querySelector("#win")! as HTMLImageElement;
-	const lose = document.querySelector("#lose")! as HTMLImageElement;
 	let result = document.querySelector("#result")! as HTMLCanvasElement;
 
 	let game = {
@@ -268,8 +259,8 @@ function handleCanvas(
 		console.log("BBBBBBBBBBBBBBB");
 	}
 
-	let deconnection1 = false;
-	let deconnection2 = false;
+	/*let deconnection1 = false;
+	let deconnection2 = false;*/
 
 	function play()
 	{
@@ -318,7 +309,8 @@ function handleCanvas(
 			result.style.fontSize = "6rem";
 			result.style.fontFamily = "minitel";
 			result.style.paddingTop = "12rem";
-			
+			result.style.visibility = "visible";
+
 			postResults(apiUrl, username, game.score.p1, game.score.p2, bdd[room].player1, bdd[room].player2);
 			bdd[room].clientRoom = -1;
 			return;
@@ -405,7 +397,7 @@ function handleCanvas(
 			scoreP2HTML.innerText = "11";
 			scoreP2 = 11;
 			game.score.p2 = 11;
-			deconnection1 = true;
+			//deconnection1 = true;
 			console.log("score 2= " + game.score.p2)
 			console.log("score= " + game.score.p1)
 		}
@@ -415,7 +407,7 @@ function handleCanvas(
 			scoreP1HTML.innerText = "11";
 			scoreP1 = 11;
 			game.score.p1 = 11;
-			deconnection2 = true;
+			//deconnection2 = true;
 			console.log("score 2= " + game.score.p2)
 			console.log("score= " + game.score.p1)
 		}

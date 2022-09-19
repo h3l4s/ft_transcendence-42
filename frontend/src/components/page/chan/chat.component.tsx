@@ -81,7 +81,8 @@ function Chat(props:
 		user: i_user,
 		is_admin: boolean,
 		is_owner: boolean,
-		callback: (newId: number, oldId: number) => void
+		callback: (newId: number, oldId: number) => void,
+		requestCallback: () => void
 	})
 {
 	const { apiUrl } = useContext(ApiUrlContext);
@@ -205,35 +206,36 @@ function Chat(props:
 					}}
 				onClose={() => { setShowOption(false) }}
 				callback={callback}
+				requestCallback={props.requestCallback}
 			/>}
-			{showAdd && <PickUserModal socket={props.socket} chan={props.chan} users={userNotInChan(props.chan.usersId, props.all_users)} type='add'
+			{showAdd && <PickUserModal chan={props.chan} users={userNotInChan(props.chan.usersId, props.all_users)} type='add'
 				goBack={() => { setShowAdd(false); setShowOption(true); }}
 				onClose={() => { setShowAdd(false); setShowOption(false); }}
-				callback={callback} />}
-			{showChallenge && <PickUserModal socket={props.socket} chan={props.chan} users={userOnline(status, props.users)} type='challenge'
+				callback={callback} requestCallback={props.requestCallback} />}
+			{showChallenge && <PickUserModal chan={props.chan} users={userOnline(status, props.users)} type='challenge'
 				goBack={() => { setShowChallenge(false); setShowOption(true); }}
 				onClose={() => { setShowChallenge(false); setShowOption(false); }}
-				callback={callback} />}
-			{showMute && <PickUserModal socket={props.socket} chan={props.chan} users={props.users} type='mute'
+				callback={callback} requestCallback={props.requestCallback} />}
+			{showMute && <PickUserModal chan={props.chan} users={props.users} type='mute'
 				goBack={() => { setShowMute(false); setShowOption(true); }}
 				onClose={() => { setShowMute(false); setShowOption(false); }}
-				callback={callback} />}
-			{props.is_admin && showAdminAdd && <PickUserModal socket={props.socket} chan={props.chan} users={userNotAdmin(props.chan.adminsId, props.users)} type='admin add'
+				callback={callback} requestCallback={props.requestCallback} />}
+			{props.is_admin && showAdminAdd && <PickUserModal chan={props.chan} users={userNotAdmin(props.chan.adminsId, props.users)} type='admin add'
 				goBack={() => { setShowAdminAdd(false); setShowOption(true); }}
 				onClose={() => { setShowAdminAdd(false); setShowOption(false); }}
-				callback={callback} />}
-			{props.is_admin && showAdminBan && <PickUserModal socket={props.socket} chan={props.chan} users={userNotAdmin(props.chan.adminsId, props.all_users)} type='admin ban'
+				callback={callback} requestCallback={props.requestCallback} />}
+			{props.is_admin && showAdminBan && <PickUserModal chan={props.chan} users={userNotAdmin(props.chan.adminsId, props.all_users)} type='admin ban'
 				goBack={() => { setShowAdminBan(false); setShowOption(true); }}
 				onClose={() => { setShowAdminBan(false); setShowOption(false); }}
-				callback={callback} />}
-			{props.is_admin && showAdminMute && <PickUserModal socket={props.socket} chan={props.chan} users={userNotAdmin(props.chan.adminsId, props.users)} type='admin mute'
+				callback={callback} requestCallback={props.requestCallback} />}
+			{props.is_admin && showAdminMute && <PickUserModal chan={props.chan} users={userNotAdmin(props.chan.adminsId, props.users)} type='admin mute'
 				goBack={() => { setShowAdminMute(false); setShowOption(true); }}
 				onClose={() => { setShowAdminMute(false); setShowOption(false); }}
-				callback={callback} />}
+				callback={callback} requestCallback={props.requestCallback} />}
 			{props.is_owner && showOwnerPwd && <PickPwdModal chan={props.chan}
 				goBack={() => { setShowOwnerPwd(false); setShowOption(true); }}
 				onClose={() => { setShowOwnerPwd(false); setShowOption(false); }}
-				callback={callback} />}
+				callback={callback} requestCallback={props.requestCallback} />}
 		</div>
 	);
 }
