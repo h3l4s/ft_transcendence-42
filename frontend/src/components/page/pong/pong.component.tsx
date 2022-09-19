@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { io, Socket } from 'socket.io-client';
-
+import { useNavigate } from "react-router-dom";
 import './../../../style/pong.css';
 
 import { ApiUrlContext } from '../../../context/apiUrl.context';
@@ -28,7 +28,7 @@ function Pong()
 	const [gameLaunch, setGameLaunch] = useState(0);
 	const [socket] = useState(io(apiUrl + '/pong'));
 	const type = useParams().type;
-
+	const navigate = useNavigate();
 	useEffect(() =>
 	{
 		if (!user || !user.name || !user.id
@@ -65,9 +65,13 @@ function Pong()
 	return (
 		<div className='pong pong--compo'>
 			<p className='pong--player'> <span id="p1-name">{user.name}</span> vs <span id="p2-name">...</span></p>
+			<button className='pong--btn--home' onClick={() => {navigate("/play"); socket.emit('kill', JSON.parse(localStorage.getItem("user") as string).name);}}>
+							<span id="goBack">home</span>
+						</button>
 			<div style={{ height: "3rem" }}>
 				{!inGame &&
 					<div style={{ display: "flex", justifyContent: "center" }}>
+						<br />
 						<button className='pong--btn--play' id="lets-go" onClick={() => setInPlay(true)}>
 							<span id="play-pong">play</span>
 						</button>
@@ -106,9 +110,6 @@ function LaunchGame(props: {
 	let bdd_pong: any[] = [];
 	if (playbtn !== null)
 		playbtn.style.display = "none";
-
-
-
 	useEffect(() =>
 	{
 		if (!props.type)
@@ -317,6 +318,7 @@ function handleCanvas(
 			result.style.fontSize = "6rem";
 			result.style.fontFamily = "minitel";
 			result.style.paddingTop = "12rem";
+			
 			postResults(apiUrl, username, game.score.p1, game.score.p2, bdd[room].player1, bdd[room].player2);
 			bdd[room].clientRoom = -1;
 			return;

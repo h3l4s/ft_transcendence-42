@@ -51,7 +51,25 @@
 	transition: 300ms;
 }
 
+.pong--btn--home {
+	background-color: rgba(0, 160, 13, 0.533);
+	border: unset;
+	color: white;
+	border-radius: 1rem;
+	font-size: 1.5rem;
+	padding: 0.3rem 0.5rem;
+	font-family: var(--alt-font);
+	transition: 300ms;
+	margin-bottom: 10px !important;
+}
+
 .pong--btn--play:hover {
+	color: #fff;
+	background-color: #0006;
+	border-radius: unset;
+}
+
+.pong--btn--home:hover {
 	color: #fff;
 	background-color: #0006;
 	border-radius: unset;
