@@ -135,7 +135,6 @@ function viewCanvas(socket: Socket, player1: string, player2: string, type: stri
 				socket.close();
 		const img = document.querySelector("#tennis")! as HTMLImageElement;
 		let context = canvas.getContext('2d')! as CanvasRenderingContext2D;
-		console.log(type);
 		if (type === 'simple' || type === 'hard')
 		{
 			// Draw field
