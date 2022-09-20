@@ -69,12 +69,10 @@ function ChanPage()
 	{
 		socket.on('newClient', (data: { userId: number }) =>
 		{
-			console.log("newClient", data);
 			callback(selectedChan, selectedChan);
 		});
 		socket.on('update', () =>
 		{
-			console.log("update requested");
 			softUpdate();
 		});
 		window.addEventListener("focus", () => callback(selectedChan, selectedChan));
