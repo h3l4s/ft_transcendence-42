@@ -91,7 +91,7 @@ function ChanPage()
 			socket.emit('leaveRoom', oldId.toString());
 			socket.emit('joinRoom', newId.toString());
 
-			softUpdate();
+			softUpdate(newId);
 		}).catch(err => console.log(err));
 	}
 
