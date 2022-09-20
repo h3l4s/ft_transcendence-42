@@ -42,8 +42,6 @@ function uploadFile(apiUrl: string, user_id: number | undefined, image: File | n
 	const formData = new FormData();
 	formData.append('file', image, image.name);
 
-	console.log("formData: ", formData);
-
 	axios.post(apiUrl + "/user/pp/" + user_id, formData).catch((err) => console.log(err));
 };
 
