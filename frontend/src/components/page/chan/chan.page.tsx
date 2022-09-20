@@ -75,7 +75,7 @@ function ChanPage()
 		socket.on('update', () =>
 		{
 			console.log("update requested");
-			callback(selectedChan, selectedChan);
+			softUpdate();
 		});
 		window.addEventListener("focus", () => callback(selectedChan, selectedChan));
 		socket.emit('newConnection');
@@ -93,17 +93,26 @@ function ChanPage()
 			socket.emit('leaveRoom', oldId.toString());
 			socket.emit('joinRoom', newId.toString());
 
-			axios.get(apiUrl + "/chan/").then(chans =>
+			softUpdate();
+		}).catch(err => console.log(err));
+	}
+
+	function softUpdate(to_chan?: number)
+	{
+		if (!user || !user.id)
+			return;
+
+		axios.get(apiUrl + "/chan/").then(chans =>
+		{
+			axios.get(apiUrl + "/user/" + user.id).then(user =>
 			{
-				axios.get(apiUrl + "/user/" + user.id).then(user =>
+				axios.get(apiUrl + "/user/").then(users =>
 				{
-					axios.get(apiUrl + "/user/").then(users =>
-					{
-						setChans(chans.data);
-						setSelectedChan(newId);
-						setUser(user.data);
-						setUsers(users.data);
-					}).catch(err => console.log(err));
+					setChans(chans.data);
+					if (to_chan)
+						setSelectedChan(to_chan);
+					setUser(user.data);
+					setUsers(users.data);
 				}).catch(err => console.log(err));
 			}).catch(err => console.log(err));
 		}).catch(err => console.log(err));
