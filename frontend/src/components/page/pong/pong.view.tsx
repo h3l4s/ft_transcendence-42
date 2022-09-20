@@ -10,7 +10,6 @@ function goodPath(path: string)
 {
 	path = path.replace("/view/", "");
 	path = path.replaceAll("%20", " ");
-	console.log(path);
 	return path;
 }
 
@@ -28,7 +27,6 @@ function PongView(props: { goBack: () => void })
 		socket.emit('viewer', info[4]);
 		socket.on('start-stream', () =>
 		{
-			console.log("start game viewing");
 			viewCanvas(socket, info[0], info[2], info[5]);
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps

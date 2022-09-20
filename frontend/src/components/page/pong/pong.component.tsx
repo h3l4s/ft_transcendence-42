@@ -30,7 +30,6 @@ function Pong()
 			|| !type || (type !== 'simple' && type !== 'hard' && type !== 'tennis')
 			|| !statusSocket || !statusSocket.socket)
 			return;
-		console.log("first appel");
 		handleCanvas(apiUrl, user.id, user.name, true, type, bdd_pong, 0, socket, statusSocket.socket, "");
 	});
 
@@ -110,7 +109,6 @@ function LaunchGame(props: {
 		props.socket.emit('newPlayer', props.type.toString());
 		props.socket.on('serverToRoom', (data: string) =>
 		{
-			console.log(`je suis ds la room data ${data}`);
 			client_Room = data;
 			props.socket.emit('joinRoom', client_Room, props.nameP1, window.innerWidth / 2);
 		});
@@ -120,7 +118,6 @@ function LaunchGame(props: {
 			props.saloon.player1 = joueur[0].toString()!;
 			props.saloon.player2 = joueur[1].toString()!;
 			props.saloon.clientRoom = client_Room;
-			console.log(props.saloon);
 			bdd_pong.push(props.saloon);
 		});
 		props.socket.on('start', (data) =>
@@ -128,7 +125,6 @@ function LaunchGame(props: {
 			props.setInGame(true);
 			if (!user || !user.name || !user.id || !socket)
 				return;
-			console.log("second appel");
 			handleCanvas(apiUrl, user.id, user.name, false, props.type, bdd_pong, props.incGameLaunch(), props.socket, socket, data.toString());
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -202,7 +198,6 @@ function handleCanvas(
 	if (init)
 		return;
 
-	console.log(bdd[room]);
 	let parsing_player: string;
 	let p1name = document.querySelector("#p1-name")!;
 	let p2name = document.querySelector("#p2-name")!;
@@ -250,7 +245,6 @@ function handleCanvas(
 
 	p1name.innerHTML = bdd[room].player1;
 	p2name.innerHTML = bdd[room].player2;
-	console.log(`p1 = ${bdd[room].player1}, p2 = ${bdd[room].player2} et parsing-player = ${parsing_player}`);
 
 	if (game.score.p1 === 0)
 	{
@@ -395,7 +389,6 @@ function handleCanvas(
 	{
 		if (data === bdd[room].player1)
 		{
-			console.log("je suis ici");
 			scoreP2HTML.innerText = "11";
 			scoreP2 = 11;
 			game.score.p2 = 11;
@@ -403,7 +396,6 @@ function handleCanvas(
 		}
 		else
 		{
-			console.log("beaute");
 			scoreP1HTML.innerText = "11";
 			scoreP1 = 11;
 			game.score.p1 = 11;
@@ -416,7 +408,6 @@ function handleCanvas(
 function postResults(apiUrl: string, username: string, scoreP1: number, scoreP2: number, player1: string, player2: string)
 {
 	// only the winner will post the match to the api
-	console.log("end of match", username, player1, scoreP1, player2, scoreP2);
 	if ((scoreP1 > scoreP2 && player1 === username) || (scoreP2 > scoreP1 && player2 === username))
 	{
 

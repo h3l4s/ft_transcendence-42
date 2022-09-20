@@ -38,7 +38,6 @@ function MatchBtn(props: { match: string })
 		<div style={{ width: "100%" }}>
 			<button className='card card--border card--btn' style={{ margin: "0.5rem" }} onClick={() =>
 			{
-				console.log("BECIH");
 				setGoToView(true);
 			}}>
 				<span className='match--text truncate' style={{ width: "100%" }}>{props.match}</span>

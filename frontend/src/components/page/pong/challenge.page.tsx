@@ -34,7 +34,6 @@ function ChallengePage()
 
 	useEffect(() =>
 	{
-		console.log("first appel");
 		if (!user || !user.name || !user.id || !statusSocket.socket || !senderUser.reqUser.name || !receiverUser.reqUser.name)
 			return;
 		handleCanvas(apiUrl, user.id, senderUser.reqUser.name, receiverUser.reqUser.name, true, "a", socketGame, statusSocket.socket, user.name);
@@ -50,9 +49,6 @@ function ChallengePage()
 		return (<div className='ontop'><Error msg={receiverUser.error.message} /></div>);
 	else if (!senderUser.reqUser.id || !receiverUser.reqUser.id)
 		return (<div className='ontop'><Error msg={"no user"} /></div>);
-
-	console.log("sender", senderUser.reqUser);
-	console.log("receiver", receiverUser.reqUser);
 
 	return (
 		<div className='pong pong--compo'>
@@ -108,7 +104,6 @@ function LaunchGame(props: {
 		props.socketGame.on('startChallenge', () =>
 		{
 			props.setInGame(true);
-			console.log("je suis ds la room " + clientRoom);
 			if (!user || !user.name || !user.id || !statusSocket.socket || !props.player1 || !props.player2)
 				return;
 			handleCanvas(apiUrl, user.id, props.player1, props.player2, false, props.player1 + "/" + props.player2, props.socketGame, statusSocket.socket, user.name);
@@ -169,10 +164,8 @@ function handleCanvas(
 	let scoreP2 = 0;
 
 	draw();
-	console.log("here");
 	if (init)
 		return;
-	console.log("ok bb " + clientRoom);
 	let info = {
 		player: {
 			height: PLAYER_HEIGHT
