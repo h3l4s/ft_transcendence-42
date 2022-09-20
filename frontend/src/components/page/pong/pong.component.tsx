@@ -139,7 +139,6 @@ function LaunchGame(props: {
 
 window.addEventListener('popstate', () =>
 {
-	console.log("AAAAAAAAAAAAAAAAAAAAaaaa");
 	const socket = io('http://' + window.location.hostname + ':3000/pong');
 	const path = window.location.pathname.split('/')[1];
 	const JWT = JSON.parse(localStorage.getItem('user') as string);
@@ -256,7 +255,6 @@ function handleCanvas(
 	if (game.score.p1 === 0)
 	{
 		play();
-		console.log("BBBBBBBBBBBBBBB");
 	}
 
 	/*let deconnection1 = false;
@@ -289,10 +287,13 @@ function handleCanvas(
 					scoreP2HTML.innerText = game.score.p2.toString();
 				}
 			}
-			if (game.score.p1 >= 11 || game.score.p2 >= 11)
+			if (game.score.p2 >= 11)
+			{
+				scoreP2 = 11;
+			}
+			if (game.score.p1 >= 11 )
 			{
 				scoreP1 = 11;
-				scoreP2 = 11;
 			}
 		});
 		if (scoreP1 >= 11 || scoreP2 >= 11)
@@ -300,8 +301,9 @@ function handleCanvas(
 			socket.emit('finish', bdd[room].clientRoom, match);
 			statusSocket.emit('updateStatus', { id: id, status: 'online' });
 			canvas.style.display = "none";
-			if ((game.score.p1 > game.score.p2 && bdd[room].player1 === username)
-				|| (game.score.p2 > game.score.p1 && bdd[room].player2 === username))
+			if (scoreP1 >= 11 && bdd[room].player1 === username)
+				result.innerHTML = "you won !"
+			else if (scoreP2 >= 11 && bdd[room].player2 === username)
 				result.innerHTML = "you won !"
 			else
 				result.innerHTML = "you lost !"
