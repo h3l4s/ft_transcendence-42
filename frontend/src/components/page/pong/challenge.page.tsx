@@ -247,7 +247,7 @@ function handleCanvas(
 					scoreP2HTML.innerText = game.score.p2.toString();
 				}
 			}
-			if (game.score.p1 >= 5 || game.score.p2 >= 5)
+			if (game.score.p1 >= 11 || game.score.p2 >= 11)
 			{
 				scoreP1 = 11;
 				scoreP2 = 11;

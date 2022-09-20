@@ -289,7 +289,7 @@ function handleCanvas(
 					scoreP2HTML.innerText = game.score.p2.toString();
 				}
 			}
-			if (game.score.p1 >= 5 || game.score.p2 >= 5)
+			if (game.score.p1 >= 11 || game.score.p2 >= 11)
 			{
 				scoreP1 = 11;
 				scoreP2 = 11;
@@ -398,8 +398,6 @@ function handleCanvas(
 			scoreP2 = 11;
 			game.score.p2 = 11;
 			//deconnection1 = true;
-			console.log("score 2= " + game.score.p2)
-			console.log("score= " + game.score.p1)
 		}
 		else
 		{
@@ -408,8 +406,7 @@ function handleCanvas(
 			scoreP1 = 11;
 			game.score.p1 = 11;
 			//deconnection2 = true;
-			console.log("score 2= " + game.score.p2)
-			console.log("score= " + game.score.p1)
+			
 		}
 	});
 }
