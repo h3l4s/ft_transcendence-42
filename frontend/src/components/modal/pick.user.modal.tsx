@@ -75,7 +75,7 @@ function PickUser(props: {
 				answer = await axios.put(apiUrl + "/chan/" + props.chan.id, { mutedId: props.c_user.id }).catch(err => console.log(err));
 				break;
 		}
-		console.log("action", props.type, answer);
+		console.info("action", props.type, answer);
 		if (props.type !== 'challenge' && answer)
 		{
 			props.onClose();

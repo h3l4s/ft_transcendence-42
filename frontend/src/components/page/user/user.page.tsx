@@ -83,8 +83,6 @@ function UserPage()
 		return (<div />);
 	}
 
-	console.log("image: ", image);
-
 	function callback(user: i_user)
 	{
 		setUserToLoad(user);
@@ -109,7 +107,21 @@ function UserPage()
 							&& <div className='input--file'>
 								<input type='file' style={{ zIndex: "99" }} onChange={(e) =>
 								{
-									uploadFile(apiUrl, (user ? user.id : undefined), (e.target.files ? e.target.files[0] : null));
+									if (!e.target.files || !e.target.files[0] || !user || !user.id)
+										return;
+									if (e.target.files[0].size > 1000000)
+									{
+										window.alert("file too big");
+										return;
+									}
+									if (e.target.files[0].type !== "image/jpeg"
+										&& e.target.files[0].type !== "image/png"
+										&& e.target.files[0].type !== "image/gif")
+									{
+										window.alert("image type not supported");
+										return;
+									}
+									uploadFile(apiUrl, user.id, e.target.files[0]);
 									setImage((e.target.files ? e.target.files[0] : null));
 								}} />
 								<Edit className='input--file--icon' />

@@ -23,8 +23,6 @@ function Connect(props: { token: string, callback: (new_user: i_user, bTwoFA: bo
 		secret: process.env.REACT_APP_SECRET
 	});
 
-	console.log("connecting:", data, loading, error);
-
 	useEffect(() =>
 	{
 		if (data)
@@ -41,7 +39,7 @@ function Connect(props: { token: string, callback: (new_user: i_user, bTwoFA: bo
 
 function ConnectPage()
 {
-	const { user, setUser } = useContext(AuthContext);
+	const { setUser } = useContext(AuthContext);
 	const token = useParams().token;
 	const [connected, setConnected] = useState(false);
 	const [twoFA, setTwoFA] = useState<i_user | null>(null);
@@ -56,8 +54,6 @@ function ConnectPage()
 
 	function connect(new_user: i_user, bTwoFA: boolean)
 	{
-		console.log("connect function:", new_user, bTwoFA);
-
 		if (bTwoFA && new_user.twofa && new_user.twofa.length > 0)
 		{
 			setTwoFA(new_user);
@@ -77,11 +73,6 @@ function ConnectPage()
 		setUser(new_user);
 		setChooseUsername(false);
 	}
-
-	console.log("connected val", connected);
-	console.log("twoFA val", twoFA);
-	console.log("user val", user);
-	console.log("chooseUsername val", chooseUsername);
 
 	return (
 		<div>

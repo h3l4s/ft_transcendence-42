@@ -21,7 +21,6 @@ async function requestUser(apiUrl: string, id: number): Promise<i_user | null>
 
 	await axios.get(apiUrl + "/user/" + id).then(res =>
 	{
-		console.log(res);
 		user = userBacktoFront(res.data);
 	}).catch(err =>
 	{

@@ -135,7 +135,7 @@ function Chans(props: {
 	{
 		if (!chan.id || !user || !user.id)
 		{
-			console.log("ERROR: endOfPromptPwd unset values:", chan, user)
+			console.warn("ERROR: endOfPromptPwd unset values:", chan, user)
 			return;
 		}
 		setShowPomptPwd(false);

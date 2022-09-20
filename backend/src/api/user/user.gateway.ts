@@ -63,7 +63,7 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect
 	@SubscribeMessage('getStatus')
 	handleGetStatus(client: Socket, status: UserStatusDto)
 	{
-		console.log("[STATUS] get", status.id);
+		//console.log("[STATUS] get", status.id);
 
 		let index = -1;
 		for (let i = 0; i < this.db.length; i++)

@@ -142,7 +142,6 @@ function Chat(props:
 
 		props.socket.on('chatToClient', (msg: i_msg) =>
 		{
-			console.log("received at:", msg.chanId, msg);
 			setIcomingMsg(msg);
 		});
 		callback(props.chan.id!, props.chan.id!);

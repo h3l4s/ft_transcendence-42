@@ -30,8 +30,6 @@ function PromptPwdModal(props: { chan_id: number | undefined, user_id: number | 
 			event.preventDefault();
 			axios.post(apiUrl + "/chan/pwd/" + props.chan_id, { userId: props.user_id, pwd: pwd }).then((res) =>
 			{
-				console.log(res);
-				console.log(res.data);
 				if (res.data.usersId.includes(props.user_id))
 					props.callback(res.data);
 				else

@@ -26,7 +26,7 @@ import LoginPage from './components/page/login/login.page';
 import ConnectPage from './components/page/login/connect.page';
 import ChallengePage from './components/page/pong/challenge.page';
 import PongView from './components/page/pong/pong.view';
-import {Pong} from './components/page/pong/pong.component';
+import { Pong } from './components/page/pong/pong.component';
 import StatusHandler from './components/status.handle';
 
 function App()
@@ -42,17 +42,10 @@ function App()
 	if (!user && localStorage.getItem("user"))
 	{
 		const JWT_user = JSON.parse(localStorage.getItem("user") as string);
-		console.info("JWT user:", JWT_user);
 		axios.get(apiUrl + "/user/" + JWT_user.id).then(res => setUser(res.data)).catch(err => console.log(err));
 	}
-	else if (user)
-	{
-		console.info("connected:", user);
-		if (socket)
-			socket.emit('updateStatus', { id: user.id, status: 'online' });
-	}
-	else
-		console.info("not connected");
+	else if (user && socket)
+		socket.emit('updateStatus', { id: user.id, status: 'online' });
 
 	return (
 		<Router>

@@ -59,10 +59,7 @@ function InitChan()
 	else if (error)
 		return (<div className='back'><Error msg={error.message} /></div>);
 	else
-	{
-		console.log(data);
 		return (<ChanPage />);
-	}
 }
 
 export { chanBacktoFront, useReqChan, useReqChans, InitChan }

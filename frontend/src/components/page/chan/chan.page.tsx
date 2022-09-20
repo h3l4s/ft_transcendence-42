@@ -83,8 +83,6 @@ function ChanPage()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	console.log(socket);
-
 	function callback(newId: number, oldId: number)
 	{
 		if (!user || !user.id)
