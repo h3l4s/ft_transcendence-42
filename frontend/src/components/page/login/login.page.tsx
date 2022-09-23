@@ -1,21 +1,15 @@
-import { KeyboardEvent, useContext, useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
-import axios from 'axios'
+import { useContext } from 'react';
+import { Navigate } from 'react-router-dom';
 
 import '../../../style/login.css';
 
-import { ApiUrlContext } from '../../../context/apiUrl.context';
 import { AuthContext } from '../../../context/auth.context';
-
-import i_user from '../../../interface/user.interface';
 
 import { ReactComponent as Auth42 } from '../../../icon/42_Logo.svg'
 
-import { Users } from '../user/user.component';
-import { userBacktoFront, } from '../../../request/user.request';
 import LogoutButton from './logout.button';
 
-async function requestUser(apiUrl: string, id: number): Promise<i_user | null>
+/*async function requestUser(apiUrl: string, id: number): Promise<i_user | null>
 {
 	let user: i_user | null = null;
 
@@ -28,17 +22,18 @@ async function requestUser(apiUrl: string, id: number): Promise<i_user | null>
 	});
 
 	return (user);
-}
+}*/
 
 function LoginPage()
 {
-	const { apiUrl } = useContext(ApiUrlContext);
-	const { user, setUser } = useContext(AuthContext);
+	const { user } = useContext(AuthContext);
 
 	// debug variable
+	/*
 	const [id, setId] = useState(2);
 	const [users, setUsers] = useState<i_user[]>([]);
 	const navigate = useNavigate();
+	*/
 	// end of debug variable
 
 	const access_token = new URLSearchParams(window.location.search).get('code');
@@ -46,6 +41,7 @@ function LoginPage()
 		return (<Navigate to={"/connect/" + access_token} />);
 
 	// debug function
+	/*
 	function debugKeyHandle(event: KeyboardEvent<HTMLInputElement>)
 	{
 		const target = event.target as HTMLInputElement;
@@ -72,6 +68,7 @@ function LoginPage()
 			t_users.push(userBacktoFront(get_answer.data[i]));
 		setUsers(t_users);
 	}
+	*/
 	// end of debug
 
 	function auth42()
@@ -90,6 +87,10 @@ function LoginPage()
 			) : (
 				<LogoutButton icon={false} style={{ width: "10vh", height: "10vh", margin: "0 auto", padding: "1.5vh 2vh 1.5vh 1vh" }} />
 			)}
+		</div>
+	);
+}
+/*
 			<div className='login--debug'>
 				<h3>🚧 DEBUG 🚧</h3>
 				{user ? (
@@ -122,8 +123,6 @@ function LoginPage()
 					<Users users={users} />
 				</div>
 			</div>
-		</div>
-	);
-}
+*/
 
 export default LoginPage;

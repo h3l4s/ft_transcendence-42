@@ -109,6 +109,8 @@ function ChanPage()
 					setChans(chans.data);
 					if (to_chan)
 						setSelectedChan(to_chan);
+					else
+						setSelectedChan(selectedChan);
 					setUser(user.data);
 					setUsers(users.data);
 				}).catch(err => console.log(err));

@@ -121,7 +121,9 @@ function Chat(props:
 		setIcomingMsg(null);
 	}
 
-	if (msgsSocket.length > 0 && +msgsSocket[0].chanId! !== props.chan.id!)
+	if ((msgsSocket.length > 0 && +msgsSocket[0].chanId! !== props.chan.id!)
+		|| (msgs.length > 0 && msgsSocket.length > 0
+			&& msgs[msgs.length - 1].sendAt >= msgsSocket[0].sendAt))
 		setMsgsSocket([]);
 
 	function callback(newId: number, oldId: number): void
